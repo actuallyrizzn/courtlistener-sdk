@@ -22,10 +22,13 @@ class BaseModel:
     
     def _parse_data(self):
         """Parse raw data into model attributes. Override in subclasses."""
-        # Default implementation - copy all data to attributes
         for key, value in self._data.items():
             if not key.startswith('_'):
-                setattr(self, key, value)
+                # If this is a property, set the private attribute instead
+                if hasattr(self.__class__, key) and isinstance(getattr(self.__class__, key), property):
+                    setattr(self, f'_{key}', value)
+                else:
+                    setattr(self, key, value)
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""

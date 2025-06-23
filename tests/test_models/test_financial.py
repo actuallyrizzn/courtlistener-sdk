@@ -1,6 +1,90 @@
 import pytest
-from courtlistener.models.financial import Financial
+from courtlistener.models.financial import (
+    FinancialDisclosure, Investment, NonInvestmentIncome, Agreement, Gift, Reimbursement, Debt, Financial
+)
 from datetime import datetime
+
+
+class TestFinancialDisclosure:
+    def test_from_dict_and_to_dict(self):
+        data = {
+            'id': 1,
+            'date_received': '2020-01-01T00:00:00Z',
+            'description': 'Disclosure',
+        }
+        obj = FinancialDisclosure.from_dict(data)
+        assert obj.id == 1
+        assert isinstance(obj.date_received, datetime)
+        assert obj.description == 'Disclosure'
+        d = obj.to_dict()
+        assert d['id'] == 1
+        assert d['description'] == 'Disclosure'
+
+
+class TestInvestment:
+    def test_from_dict_and_to_dict(self):
+        data = {'id': 2, 'description': 'Investment'}
+        obj = Investment.from_dict(data)
+        assert obj.id == 2
+        assert obj.description == 'Investment'
+        d = obj.to_dict()
+        assert d['id'] == 2
+        assert d['description'] == 'Investment'
+
+
+class TestNonInvestmentIncome:
+    def test_from_dict_and_to_dict(self):
+        data = {'id': 3, 'description': 'Non-Investment Income'}
+        obj = NonInvestmentIncome.from_dict(data)
+        assert obj.id == 3
+        assert obj.description == 'Non-Investment Income'
+        d = obj.to_dict()
+        assert d['id'] == 3
+        assert d['description'] == 'Non-Investment Income'
+
+
+class TestAgreement:
+    def test_from_dict_and_to_dict(self):
+        data = {'id': 4, 'description': 'Agreement'}
+        obj = Agreement.from_dict(data)
+        assert obj.id == 4
+        assert obj.description == 'Agreement'
+        d = obj.to_dict()
+        assert d['id'] == 4
+        assert d['description'] == 'Agreement'
+
+
+class TestGift:
+    def test_from_dict_and_to_dict(self):
+        data = {'id': 5, 'description': 'Gift'}
+        obj = Gift.from_dict(data)
+        assert obj.id == 5
+        assert obj.description == 'Gift'
+        d = obj.to_dict()
+        assert d['id'] == 5
+        assert d['description'] == 'Gift'
+
+
+class TestReimbursement:
+    def test_from_dict_and_to_dict(self):
+        data = {'id': 6, 'description': 'Reimbursement'}
+        obj = Reimbursement.from_dict(data)
+        assert obj.id == 6
+        assert obj.description == 'Reimbursement'
+        d = obj.to_dict()
+        assert d['id'] == 6
+        assert d['description'] == 'Reimbursement'
+
+
+class TestDebt:
+    def test_from_dict_and_to_dict(self):
+        data = {'id': 7, 'description': 'Debt'}
+        obj = Debt.from_dict(data)
+        assert obj.id == 7
+        assert obj.description == 'Debt'
+        d = obj.to_dict()
+        assert d['id'] == 7
+        assert d['description'] == 'Debt'
 
 
 class TestFinancial:
