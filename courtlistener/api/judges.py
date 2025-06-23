@@ -30,7 +30,7 @@ class JudgesAPI:
         
         judges = []
         for judge_data in response.get("results", []):
-            judges.append(Judge(**judge_data))
+            judges.append(Judge(judge_data))
         
         return judges
     
@@ -49,7 +49,7 @@ class JudgesAPI:
         """
         url = f"{self.base_url}/{judge_id}"
         response = self.client._make_request("GET", url)
-        return Judge(**response)
+        return Judge(response)
     
     def search_judges(self, q: str, page: int = 1, **filters) -> List[Judge]:
         """
@@ -68,6 +68,6 @@ class JudgesAPI:
         
         judges = []
         for judge_data in response.get("results", []):
-            judges.append(Judge(**judge_data))
+            judges.append(Judge(judge_data))
         
         return judges 

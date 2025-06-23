@@ -45,8 +45,10 @@ class Court(BaseModel):
     def start_date(self) -> Optional[date]:
         """Court start date."""
         start_date_val = self._data.get('start_date', None)
-        if isinstance(start_date_val, date):
+        if isinstance(start_date_val, date) and not isinstance(start_date_val, datetime):
             return start_date_val
+        elif isinstance(start_date_val, datetime):
+            return start_date_val.date()
         elif isinstance(start_date_val, str):
             return self._parse_date(start_date_val)
         return None
@@ -55,8 +57,10 @@ class Court(BaseModel):
     def end_date(self) -> Optional[date]:
         """Court end date."""
         end_date_val = self._data.get('end_date', None)
-        if isinstance(end_date_val, date):
+        if isinstance(end_date_val, date) and not isinstance(end_date_val, datetime):
             return end_date_val
+        elif isinstance(end_date_val, datetime):
+            return end_date_val.date()
         elif isinstance(end_date_val, str):
             return self._parse_date(end_date_val)
         return None
