@@ -70,7 +70,7 @@ This project is currently in development. See the [project plan](docs/project-pl
 
 ## License
 
-MIT License - see LICENSE file for details.
+This project is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
