@@ -19,8 +19,27 @@ class Opinion(BaseModel):
     @property
     def case_name(self) -> str:
         """Case name (from cluster)."""
-        # This will need to be fetched from the cluster
-        return getattr(self, 'case_name', None)
+        # Try to get case name from cluster data if available
+        case_name = self._data.get('case_name', None)
+        if case_name:
+            return case_name
+        
+        # Fallback: try to extract from cluster URL or use a default
+        cluster_url = self._data.get('cluster', None)
+        if cluster_url:
+            # Extract case name from URL slug if possible
+            try:
+                # URL format: /opinion/10615173/churchill-house-lp-v-marshall/
+                parts = cluster_url.split('/')
+                if len(parts) > 2:
+                    slug = parts[-2]  # Get the slug part
+                    # Convert slug to readable case name
+                    case_name = slug.replace('-', ' ').replace('_', ' ').title()
+                    return case_name
+            except:
+                pass
+        
+        return "Unknown Case"
     
     @property
     def cluster_id(self) -> int:

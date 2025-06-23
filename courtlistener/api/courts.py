@@ -14,25 +14,15 @@ class CourtsAPI:
         self.client = client
         self.base_url = f"{client.config.base_url}/courts"
     
-    def list_courts(self, page: int = 1, **filters) -> List[Court]:
-        """
-        List courts.
+    def list_courts(self, page: int = 1, q: str = None, **filters) -> List[Court]:
+        """List courts."""
+        params = {"page": page}
+        if q:
+            params["q"] = q
+        params.update(filters)
         
-        Args:
-            page: Page number for pagination
-            **filters: Additional filters to apply
-            
-        Returns:
-            List of Court objects
-        """
-        params = {"page": page, **filters}
-        response = self.client._make_request("GET", self.base_url, params=params)
-        
-        courts = []
-        for court_data in response.get("results", []):
-            courts.append(Court(court_data))
-        
-        return courts
+        response = self.client._make_request("GET", "/courts/", params=params)
+        return [Court(item) for item in response.get("results", [])]
     
     def get_court(self, court_id: str) -> Court:
         """
@@ -52,25 +42,8 @@ class CourtsAPI:
         return Court(response)
     
     def search_courts(self, q: str, page: int = 1, **filters) -> List[Court]:
-        """
-        Search for courts.
-        
-        Args:
-            q: Search query
-            page: Page number for pagination
-            **filters: Additional filters to apply
-            
-        Returns:
-            List of Court objects
-        """
-        params = {"q": q, "page": page, **filters}
-        response = self.client._make_request("GET", self.base_url, params=params)
-        
-        courts = []
-        for court_data in response.get("results", []):
-            courts.append(Court(court_data))
-        
-        return courts
+        """Search courts."""
+        return self.list_courts(page=page, q=q, **filters)
     
     def get_federal_courts(self, page: int = 1) -> List[Court]:
         """

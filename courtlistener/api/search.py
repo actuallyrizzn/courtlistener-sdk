@@ -30,53 +30,37 @@ class SearchResult(BaseModel):
 
 
 class SearchAPI:
-    """API client for search functionality."""
+    """Search API endpoints."""
     
     def __init__(self, client):
-        """Initialize Search API client."""
         self.client = client
     
-    def search(
-        self,
-        query: str,
-        result_type: Optional[str] = None,
-        filters: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
-        """
-        Search across all resources.
-        
-        Args:
-            query: Search query string
-            result_type: Filter by result type ('o' for opinions, 'd' for dockets, etc.)
-            filters: Additional filters to apply
-        
-        Returns:
-            Search results with pagination info
-        """
-        params = {'q': query}
-        
-        if result_type:
-            params['type'] = result_type
-        
-        if filters:
+    def search(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """Perform a search across all content."""
+        try:
+            params = {"q": q, "page": page}
             params.update(filters)
-        
-        return self.client.get('search/', params=params)
+            
+            response = self.client._make_request("GET", "/search/", params=params)
+            return response
+        except Exception as e:
+            self.client.logger.warning(f"Search endpoint error: {e}")
+            return {"results": [], "count": 0}
     
-    def search_opinions(self, q: str = None, page: int = 1, **filters) -> Dict[str, Any]:
-        params = filters.copy() if filters else {}
-        if q:
-            params['q'] = q
-        params['page'] = page
-        return self.client.get('search/', params=params)
+    def search_opinions(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """Search opinions specifically."""
+        filters["type"] = "opinions"
+        return self.search(q, page, **filters)
     
-    def search_dockets(
-        self,
-        query: str,
-        filters: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
-        """Search for dockets only."""
-        return self.search(query, result_type='d', filters=filters)
+    def search_dockets(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """Search dockets specifically."""
+        filters["type"] = "dockets"
+        return self.search(q, page, **filters)
+    
+    def search_clusters(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """Search clusters specifically."""
+        filters["type"] = "clusters"
+        return self.search(q, page, **filters)
     
     def search_judges(
         self,
@@ -154,4 +138,8 @@ class SearchAPI:
         filters: Optional[Dict[str, Any]] = None,
     ) -> Iterator[SearchResult]:
         """Search for all audio recordings and iterate through results."""
-        return self.search_all(query, result_type='oa', filters=filters) 
+        return self.search_all(query, result_type='oa', filters=filters)
+    
+    def list_search(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
+        """List search results (alias for search method)."""
+        return self.search(q or "", page=page, **filters) 

@@ -39,7 +39,8 @@ def test_basic_functionality():
             print(f"   ✅ Found {len(opinions)} opinions")
             if opinions:
                 opinion = opinions[0]
-                print(f"   📋 Sample opinion: {opinion.case_name} ({opinion.id})")
+                case_name = getattr(opinion, 'case_name', 'Unknown Case')
+                print(f"   📋 Sample opinion: {case_name} ({opinion.id})")
         except Exception as e:
             print(f"   ❌ Opinions API error: {e}")
         
@@ -50,7 +51,8 @@ def test_basic_functionality():
             print(f"   ✅ Found {len(dockets)} dockets")
             if dockets:
                 docket = dockets[0]
-                print(f"   📋 Sample docket: {docket.case_name} ({docket.id})")
+                case_name = getattr(docket, 'case_name', 'Unknown Case')
+                print(f"   📋 Sample docket: {case_name} ({docket.id})")
         except Exception as e:
             print(f"   ❌ Dockets API error: {e}")
         
@@ -102,10 +104,13 @@ def test_basic_functionality():
         print("\n🎯 Testing Get by ID...")
         try:
             # Try to get a specific court
+            courts = client.courts.list_courts(page=1)
             if courts:
                 court_id = courts[0].id
                 specific_court = client.courts.get_court(court_id)
                 print(f"   ✅ Retrieved court by ID: {specific_court.name}")
+            else:
+                print("   ⚠️ No courts available for Get by ID test")
         except Exception as e:
             print(f"   ❌ Get by ID error: {e}")
         

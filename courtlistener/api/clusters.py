@@ -25,27 +25,15 @@ class ClustersAPI:
         self.client = client
         self.base_url = "/api/rest/v4/clusters/"
     
-    def list_clusters(self, page: int = 1, **filters) -> List[OpinionCluster]:
-        """List opinion clusters with optional filtering.
+    def list_clusters(self, page: int = 1, q: str = None, **filters) -> List[OpinionCluster]:
+        """List opinion clusters."""
+        params = {"page": page}
+        if q:
+            params["q"] = q
+        params.update(filters)
         
-        Args:
-            page: Page number for pagination
-            **filters: Additional filters to apply
-            
-        Returns:
-            List of OpinionCluster objects
-            
-        Raises:
-            CourtListenerError: If the API request fails
-        """
-        params = {"page": page, **filters}
-        response = self.client._make_request("GET", f"{self.client.config.base_url}/clusters", params=params)
-        
-        clusters = []
-        for cluster_data in response.get("results", []):
-            clusters.append(OpinionCluster(cluster_data))
-        
-        return clusters
+        response = self.client._make_request("GET", "/clusters/", params=params)
+        return [OpinionCluster(item) for item in response.get("results", [])]
     
     def get_cluster(self, cluster_id: int) -> OpinionCluster:
         """Get a specific opinion cluster by ID.
@@ -222,4 +210,8 @@ class ClustersAPI:
         if q:
             params['q'] = q
         params['page'] = page
-        return self.client.get('clusters/', params=params) 
+        return self.client.get('clusters/', params=params)
+
+    def search_clusters(self, q: str, page: int = 1, **filters) -> List[OpinionCluster]:
+        """Search opinion clusters."""
+        return self.list_clusters(page=page, q=q, **filters) 

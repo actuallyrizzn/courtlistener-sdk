@@ -25,19 +25,19 @@ class PositionsAPI:
         self.client = client
         self.base_url = "/api/rest/v4/positions/"
     
-    def list_positions(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
-        params = filters.copy() if filters else {}
-        params['page'] = page
+    def list_positions(self, page: int = 1, q: str = None, **filters) -> List[Position]:
+        """List positions."""
+        params = {"page": page}
         if q:
-            params['q'] = q
-        return self.client.get('positions/', params=params)
+            params["q"] = q
+        params.update(filters)
+        
+        response = self.client._make_request("GET", "/positions/", params=params)
+        return [Position(item) for item in response.get("results", [])]
 
-    def search_positions(self, q: str = None, page: int = 1, **filters) -> Dict[str, Any]:
-        params = filters.copy() if filters else {}
-        if q:
-            params['q'] = q
-        params['page'] = page
-        return self.client.get('positions/', params=params)
+    def search_positions(self, q: str, page: int = 1, **filters) -> List[Position]:
+        """Search positions."""
+        return self.list_positions(page=page, q=q, **filters)
     
     def get_position(self, position_id: int) -> Position:
         """Get a specific judicial position by ID.

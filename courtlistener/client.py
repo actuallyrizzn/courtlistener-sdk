@@ -4,6 +4,7 @@ Main client class for the CourtListener SDK.
 
 import time
 import requests
+import logging
 from typing import Dict, Any, Optional, Union
 from urllib.parse import urljoin, urlencode
 
@@ -21,6 +22,28 @@ from .utils.pagination import PageIterator
 from .api.docket_entries import DocketEntriesAPI
 from .api.clusters import ClustersAPI
 from .api.positions import PositionsAPI
+from .api.dockets import DocketsAPI
+from .api.opinions import OpinionsAPI
+from .api.judges import JudgesAPI
+from .api.courts import CourtsAPI
+from .api.audio import AudioAPI
+from .api.financial import FinancialAPI
+from .api.search import SearchAPI
+
+
+class DisabledEndpoint:
+    """Placeholder for disabled endpoints."""
+    
+    def __init__(self, endpoint_name: str, reason: str):
+        self.endpoint_name = endpoint_name
+        self.reason = reason
+    
+    def __getattr__(self, name):
+        """Raise an informative error for any method call."""
+        raise CourtListenerError(
+            f"Endpoint '{self.endpoint_name}' is disabled: {self.reason}. "
+            f"This endpoint requires special permissions or does not exist in the API."
+        )
 
 
 class CourtListenerClient:
@@ -58,6 +81,9 @@ class CourtListenerClient:
         self.session = requests.Session()
         self.session.headers.update(self.config.get_headers())
         
+        # Initialize logger
+        self.logger = logging.getLogger(__name__)
+        
         # Initialize API modules
         self._init_api_modules()
     
@@ -75,23 +101,32 @@ class CourtListenerClient:
         from .api.financial import FinancialAPI
         
         # Initialize API modules (only working endpoints)
-        self.search = SearchAPI(self)
-        self.dockets = DocketsAPI(self)
-        self.opinions = OpinionsAPI(self)
-        self.judges = JudgesAPI(self)  # Uses /people/ endpoint
         self.courts = CourtsAPI(self)
-        self.audio = AudioAPI(self)
         self.clusters = ClustersAPI(self)
+        self.opinions = OpinionsAPI(self)
+        self.dockets = DocketsAPI(self)
+        self.opinion_clusters = self.clusters  # Alias for compatibility
+        
+        # Available endpoints
         self.positions = PositionsAPI(self)
         self.financial = FinancialAPI(self)
-        self.opinion_clusters = ClustersAPI(self)  # Alias for clusters
+        self.audio = AudioAPI(self)
+        self.search = SearchAPI(self)
         
-        # Note: The following endpoints are not available or require special permissions:
-        # - parties (403 Forbidden)
-        # - attorneys (403 Forbidden) 
-        # - documents (404 Not Found)
-        # - citations (404 Not Found)
-        # - docket_entries (403 Forbidden)
+        # Disabled endpoints (403 Forbidden or 404 Not Found)
+        # These endpoints require special permissions or don't exist
+        self._disabled_endpoints = {
+            'docket_entries': '403 Forbidden - Requires special permissions',
+            'attorneys': '403 Forbidden - Requires special permissions', 
+            'parties': '403 Forbidden - Requires special permissions',
+            'documents': '404 Not Found - Endpoint does not exist',
+            'judges': '404 Not Found - Endpoint does not exist',
+            'citations': '404 Not Found - Endpoint does not exist'
+        }
+        
+        # Add disabled endpoint placeholders with warnings
+        for endpoint_name, reason in self._disabled_endpoints.items():
+            setattr(self, endpoint_name, DisabledEndpoint(endpoint_name, reason))
     
     def _make_request(
         self,

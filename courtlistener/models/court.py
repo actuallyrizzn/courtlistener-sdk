@@ -45,25 +45,55 @@ class Court(BaseModel):
     def start_date(self) -> Optional[date]:
         """Court start date."""
         start_date_val = self._data.get('start_date', None)
-        if isinstance(start_date_val, date) and not isinstance(start_date_val, datetime):
+        if start_date_val is None:
+            return None
+        elif isinstance(start_date_val, date) and not isinstance(start_date_val, datetime):
             return start_date_val
         elif isinstance(start_date_val, datetime):
             return start_date_val.date()
         elif isinstance(start_date_val, str):
-            return self._parse_date(start_date_val)
-        return None
+            try:
+                return self._parse_date(start_date_val)
+            except:
+                try:
+                    # Try parsing as datetime first
+                    dt = self._parse_datetime(start_date_val)
+                    return dt.date() if dt else None
+                except:
+                    return None
+        else:
+            # Handle any other type by converting to string first
+            try:
+                return self._parse_date(str(start_date_val))
+            except:
+                return None
     
     @property
     def end_date(self) -> Optional[date]:
         """Court end date."""
         end_date_val = self._data.get('end_date', None)
-        if isinstance(end_date_val, date) and not isinstance(end_date_val, datetime):
+        if end_date_val is None:
+            return None
+        elif isinstance(end_date_val, date) and not isinstance(end_date_val, datetime):
             return end_date_val
         elif isinstance(end_date_val, datetime):
             return end_date_val.date()
         elif isinstance(end_date_val, str):
-            return self._parse_date(end_date_val)
-        return None
+            try:
+                return self._parse_date(end_date_val)
+            except:
+                try:
+                    # Try parsing as datetime first
+                    dt = self._parse_datetime(end_date_val)
+                    return dt.date() if dt else None
+                except:
+                    return None
+        else:
+            # Handle any other type by converting to string first
+            try:
+                return self._parse_date(str(end_date_val))
+            except:
+                return None
     
     @property
     def date_modified(self) -> Optional[datetime]:
@@ -118,18 +148,6 @@ class Court(BaseModel):
     def _parse_data(self):
         """Parse court data."""
         super()._parse_data()
-        
-        for field in [
-            'id', 'name', 'name_abbreviation', 'short_name', 'jurisdiction', 'slug', 'url', 'start_date', 'end_date',
-            'absolute_url', 'resource_uri', 'defunct']:
-            if not hasattr(self, field):
-                setattr(self, field, None)
-        
-        # Parse dates
-        if hasattr(self, 'start_date') and self.start_date:
-            self.start_date = self._parse_datetime(self.start_date)
-        if hasattr(self, 'end_date') and self.end_date:
-            self.end_date = self._parse_datetime(self.end_date)
         
         # Map API fields to expected properties
         if hasattr(self, 'full_name') and not hasattr(self, 'name'):

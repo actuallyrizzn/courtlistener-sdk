@@ -10,23 +10,6 @@ from ..models.base import BaseModel
 from ..models.docket import Docket
 
 
-class Docket(BaseModel):
-    """Model for docket data."""
-    
-    def _parse_data(self):
-        """Parse docket data."""
-        super()._parse_data()
-        
-        # Parse dates
-        if hasattr(self, 'date_filed'):
-            self.date_filed = self._parse_date(self.date_filed)
-        
-        # Parse related models if they exist
-        if hasattr(self, 'court') and isinstance(self.court, dict):
-            from ..models.court import Court
-            self.court = self._parse_related_model(self.court, Court)
-
-
 class DocketsAPI:
     """API client for dockets functionality."""
     
