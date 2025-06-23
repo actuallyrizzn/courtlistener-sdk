@@ -213,4 +213,16 @@ class ClustersAPI:
             CourtListenerError: If the API request fails
         """
         filters = {'citations__isnull': False}
-        return self.list_clusters(filters=filters, limit=limit) 
+        return self.list_clusters(filters=filters, limit=limit)
+
+    def list_opinion_clusters(self, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        return self.client.get('clusters/', params=params)
+
+    def search_opinion_clusters(self, q: str = None, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        if q:
+            params['q'] = q
+        params['page'] = page
+        return self.client.get('clusters/', params=params) 

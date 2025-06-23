@@ -24,10 +24,10 @@ class Position(BaseModel):
         self.court = kwargs.get('court')
         self.position_type = kwargs.get('position_type')
         self.title = kwargs.get('title')
-        self.date_start = self._parse_date(kwargs.get('date_start'))
-        self.date_termination = self._parse_date(kwargs.get('date_termination'))
-        self.date_created = self._parse_date(kwargs.get('date_created'))
-        self.date_modified = self._parse_date(kwargs.get('date_modified'))
+        self.date_start = self._parse_datetime(kwargs.get('date_start'))
+        self.date_termination = self._parse_datetime(kwargs.get('date_termination'))
+        self.date_created = self._parse_datetime(kwargs.get('date_created'))
+        self.date_modified = self._parse_datetime(kwargs.get('date_modified'))
         self.supervisor = kwargs.get('supervisor')
         self.predecessor = kwargs.get('predecessor')
         self.appointer = kwargs.get('appointer')
@@ -48,6 +48,16 @@ class Position(BaseModel):
         self.supervisor_obj = kwargs.get('supervisor_obj')
         self.predecessor_obj = kwargs.get('predecessor_obj')
         self.appointer_obj = kwargs.get('appointer_obj')
+        
+        # Parse dates
+        if hasattr(self, 'date_start') and self.date_start:
+            self.date_start = self._parse_datetime(self.date_start)
+        if hasattr(self, 'date_end') and self.date_end:
+            self.date_end = self._parse_datetime(self.date_end)
+        if hasattr(self, 'date_granularity_start') and self.date_granularity_start:
+            self.date_granularity_start = self._parse_datetime(self.date_granularity_start)
+        if hasattr(self, 'date_granularity_end') and self.date_granularity_end:
+            self.date_granularity_end = self._parse_datetime(self.date_granularity_end)
     
     def _parse_date(self, date_str: Optional[str]) -> Optional[datetime]:
         """Parse date string to datetime object.
@@ -187,4 +197,14 @@ class Position(BaseModel):
         Returns:
             Detailed string representation
         """
-        return f"<Position(id={self.id}, judge={self.judge}, court={self.court}, position_type={self.position_type}, date_start={self.date_start})>" 
+        return f"<Position(id={self.id}, judge={self.judge}, court={self.court}, position_type={self.position_type}, date_start={self.date_start})>"
+    
+    @property
+    def is_current(self) -> bool:
+        """Check if position is current."""
+        return bool(getattr(self, 'date_end', None) is None)
+    
+    @property
+    def has_end_date(self) -> bool:
+        """Check if position has end date."""
+        return bool(getattr(self, 'date_end', None) is not None) 

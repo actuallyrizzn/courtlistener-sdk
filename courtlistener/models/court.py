@@ -10,10 +10,16 @@ class Court(BaseModel):
         """Parse court data."""
         super()._parse_data()
         
+        for field in [
+            'id', 'name', 'name_abbreviation', 'short_name', 'jurisdiction', 'slug', 'url', 'start_date', 'end_date',
+            'absolute_url', 'resource_uri', 'defunct']:
+            if not hasattr(self, field):
+                setattr(self, field, None)
+        
         # Parse dates
-        if hasattr(self, 'start_date'):
+        if hasattr(self, 'start_date') and self.start_date:
             self.start_date = self._parse_datetime(self.start_date)
-        if hasattr(self, 'end_date'):
+        if hasattr(self, 'end_date') and self.end_date:
             self.end_date = self._parse_datetime(self.end_date)
         
         # Map API fields to expected properties
@@ -21,12 +27,6 @@ class Court(BaseModel):
             self.name = self.full_name
         elif not hasattr(self, 'name'):
             self.name = None
-        
-        for field in [
-            'id', 'name', 'name_abbreviation', 'short_name', 'jurisdiction', 'slug', 'url', 'start_date', 'end_date',
-            'absolute_url', 'resource_uri', 'defunct']:
-            if not hasattr(self, field):
-                setattr(self, field, None)
     
     @property
     def is_defunct(self) -> bool:
@@ -43,8 +43,8 @@ class Court(BaseModel):
         class_name = self.__class__.__name__
         if hasattr(self, 'id'):
             name = getattr(self, 'name', 'Unknown')
-            short_name = self.short_name
-            return f"<Court(id={self.id}, name='{name}', short_name='{short_name}')>"
+            jurisdiction = getattr(self, 'jurisdiction', None)
+            return f"<Court(id={self.id}, name='{name}', jurisdiction={jurisdiction})>"
         return f"<Court()>"
     
     def __str__(self) -> str:

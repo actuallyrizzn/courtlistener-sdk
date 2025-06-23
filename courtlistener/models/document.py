@@ -23,8 +23,10 @@ class Document(BaseModel):
             self.docket = None
         
         # Parse dates
-        if hasattr(self, 'date_filed'):
-            self.date_filed = self._parse_date(self.date_filed)
+        if hasattr(self, 'date_modified') and self.date_modified:
+            self.date_modified = self._parse_datetime(self.date_modified)
+        if hasattr(self, 'date_created') and self.date_created:
+            self.date_created = self._parse_datetime(self.date_created)
     
     @property
     def has_local_file(self) -> bool:
@@ -38,7 +40,8 @@ class Document(BaseModel):
     
     @property
     def has_ia_file(self) -> bool:
-        return self.has_local_file
+        """Check if document has IA file."""
+        return bool(getattr(self, 'ia_upload_date', None))
     
     def __repr__(self) -> str:
         """String representation of the document."""

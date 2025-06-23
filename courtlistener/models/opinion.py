@@ -21,12 +21,15 @@ class Opinion(BaseModel):
             self.cluster = None
         
         for field in [
-            'id', 'cluster', 'author', 'type', 'type_name', 'date_filed', 'court', 'absolute_url', 'resource_uri', 'joined_by']:
+            'id', 'cluster', 'author', 'type', 'type_name', 'date_filed', 'court', 'absolute_url', 'resource_uri', 'joined_by', 'html']:
             if not hasattr(self, field):
                 if field == 'joined_by':
                     setattr(self, field, [])
                 else:
                     setattr(self, field, None)
+        # Set author as attribute if it's a property
+        if hasattr(self, '_author'):
+            self.author = getattr(self, '_author')
     
     @property
     def author(self) -> str:
@@ -44,6 +47,11 @@ class Opinion(BaseModel):
         """Check if this is a concurring opinion."""
         opinion_type = (self.type or '').lower()
         return opinion_type in ['concurrence', 'concurring', '020concurring']
+    
+    @property
+    def is_dissenting_opinion(self) -> bool:
+        opinion_type = (self.type or '').lower()
+        return opinion_type in ['dissent', 'dissenting', '030dissent']
     
     def __repr__(self) -> str:
         """String representation of the opinion."""

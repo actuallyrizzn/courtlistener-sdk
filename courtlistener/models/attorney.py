@@ -9,10 +9,8 @@ class Attorney(BaseModel):
     def _parse_data(self):
         """Parse attorney data."""
         super()._parse_data()
-        # Ensure all expected fields are present
         for field in [
-            'name', 'firm', 'contact', 'phone', 'fax', 'address1', 'address2', 'city', 'state', 'zip_code',
-            'absolute_url', 'resource_uri']:
+            'id', 'name', 'firm', 'contact_info', 'absolute_url', 'resource_uri']:
             if not hasattr(self, field):
                 setattr(self, field, None)
         
@@ -31,6 +29,16 @@ class Attorney(BaseModel):
             self.firm = self.law_firm
         elif not hasattr(self, 'firm'):
             self.firm = None
+    
+    @property
+    def is_active(self) -> bool:
+        """Check if attorney is active."""
+        return bool(getattr(self, 'contact_info', None))
+    
+    @property
+    def has_firm(self) -> bool:
+        """Check if attorney has firm information."""
+        return bool(getattr(self, 'firm', None))
     
     @property
     def has_address(self) -> bool:
@@ -79,10 +87,9 @@ class Attorney(BaseModel):
         class_name = self.__class__.__name__
         if hasattr(self, 'id'):
             name = getattr(self, 'name', 'Unknown')
-            firm = getattr(self, 'firm', 'Unknown')
-            city = getattr(self, 'city', None)
-            return f"<{class_name}(id={self.id}, name='{name}', firm='{firm}', city={city})>"
-        return f"<{class_name}()>"
+            firm = getattr(self, 'firm', None)
+            return f"<Attorney(id={self.id}, name='{name}', firm={firm})>"
+        return f"<Attorney()>"
     
     def __str__(self) -> str:
         class_name = self.__class__.__name__

@@ -24,9 +24,7 @@ class Judge(BaseModel):
             self._date_dob = None
         
         # Parse dates
-        if hasattr(self, 'date_dob'):
-            self.date_dob = self._parse_datetime(self.date_dob)
-        if hasattr(self, 'date_died'):
+        if hasattr(self, 'date_died') and self.date_died:
             self.date_died = self._parse_datetime(self.date_died)
         
         # Map API fields to expected properties

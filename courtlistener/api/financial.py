@@ -36,4 +36,14 @@ class FinancialAPI:
         """Get a specific financial disclosure by ID."""
         validate_id(disclosure_id)
         data = self.client.get(f'financial-disclosures/{disclosure_id}/')
-        return FinancialDisclosure(data) 
+        return FinancialDisclosure(data)
+
+    def list_financial(self, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        return self.client.get('financial-disclosures/', params=params)
+
+    def search_financial(self, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        return self.client.get('financial-disclosures/', params=params) 

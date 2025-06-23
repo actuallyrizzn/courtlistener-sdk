@@ -25,30 +25,19 @@ class PositionsAPI:
         self.client = client
         self.base_url = "/api/rest/v4/positions/"
     
-    def list_positions(self, filters: Optional[Dict[str, Any]] = None,
-                      limit: Optional[int] = None) -> List[Position]:
-        """List judicial positions with optional filtering.
-        
-        Args:
-            filters: Optional dictionary of filters to apply
-            limit: Optional limit on number of results
-            
-        Returns:
-            List of Position objects
-            
-        Raises:
-            CourtListenerError: If the API request fails
-        """
-        params = {}
-        
-        if filters:
-            params.update(build_filters(**filters))
-            
-        if limit:
-            params['limit'] = limit
-            
-        response = self.client.get(self.base_url, params=params)
-        return [Position.from_dict(position) for position in response.get('results', [])]
+    def list_positions(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        if q:
+            params['q'] = q
+        return self.client.get('positions/', params=params)
+
+    def search_positions(self, q: str = None, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        if q:
+            params['q'] = q
+        params['page'] = page
+        return self.client.get('positions/', params=params)
     
     def get_position(self, position_id: int) -> Position:
         """Get a specific judicial position by ID.

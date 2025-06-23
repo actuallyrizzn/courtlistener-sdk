@@ -17,13 +17,22 @@ class PartiesAPI:
     def __init__(self, client):
         self.client = client
     
-    def list_parties(self, filters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def list_parties(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
         """List parties with optional filtering."""
-        params = filters or {}
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        if q:
+            params['q'] = q
         return self.client.get('parties/', params=params)
     
     def get_party(self, party_id: int) -> Party:
         """Get a specific party by ID."""
         validate_id(party_id)
         data = self.client.get(f'parties/{party_id}/')
-        return Party(data) 
+        return Party(data)
+
+    def search_parties(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['q'] = q
+        params['page'] = page
+        return self.client.get('parties/', params=params) 

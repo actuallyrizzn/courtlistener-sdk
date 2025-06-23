@@ -10,7 +10,7 @@ API_TOKEN = os.environ.get('COURTLISTENER_API_TOKEN')
 def client():
     if not API_TOKEN:
         pytest.skip('No API token set for integration tests')
-    return CourtListenerClient(api_key=API_TOKEN)
+    return CourtListenerClient(api_token=API_TOKEN)
 
 class TestCourtsIntegration:
     """Integration tests for Courts API."""

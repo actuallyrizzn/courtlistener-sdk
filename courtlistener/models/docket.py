@@ -11,9 +11,9 @@ class Docket(BaseModel):
         super()._parse_data()
         
         # Parse dates
-        if hasattr(self, 'date_filed'):
+        if hasattr(self, 'date_filed') and self.date_filed:
             self.date_filed = self._parse_datetime(self.date_filed)
-        if hasattr(self, 'date_terminated'):
+        if hasattr(self, 'date_terminated') and self.date_terminated:
             self.date_terminated = self._parse_datetime(self.date_terminated)
         
         # Map API fields to expected properties

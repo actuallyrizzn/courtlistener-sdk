@@ -16,20 +16,20 @@ API_TOKEN = os.environ.get('COURTLISTENER_API_TOKEN')
 def client():
     if not API_TOKEN:
         pytest.skip('No API token set for integration tests')
-    return CourtListenerClient(api_key=API_TOKEN)
+    return CourtListenerClient(api_token=API_TOKEN)
 
 class TestAuthenticationErrors:
     """Test authentication error scenarios."""
     
     def test_invalid_token(self):
         """Test error handling for invalid authentication token."""
-        bad_client = CourtListenerClient(api_key='invalid_token_12345')
+        bad_client = CourtListenerClient(api_token='invalid_token_12345')
         with pytest.raises(AuthenticationError):
             bad_client.search.search_opinions(q='test')
     
     def test_missing_token(self):
         """Test error handling for missing authentication token."""
-        bad_client = CourtListenerClient(api_key='')
+        bad_client = CourtListenerClient(api_token='')
         with pytest.raises(AuthenticationError):
             bad_client.search.search_opinions(q='test')
     
@@ -37,7 +37,7 @@ class TestAuthenticationErrors:
         """Test error handling for expired token (mocked)."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = AuthenticationError('Token expired')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             with pytest.raises(AuthenticationError):
                 client.search.search_opinions(q='test')
 
@@ -73,7 +73,7 @@ class TestAPIErrors:
         """Test 429 Rate Limited error handling (mocked)."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = RateLimitError('Rate limit exceeded')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             with pytest.raises(RateLimitError):
                 client.search.search_opinions(q='test')
     
@@ -81,7 +81,7 @@ class TestAPIErrors:
         """Test 500 Server Error handling (mocked)."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = APIError('Internal server error', status_code=500)
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             with pytest.raises(APIError) as exc_info:
                 client.search.search_opinions(q='test')
             assert exc_info.value.status_code == 500
@@ -93,7 +93,7 @@ class TestNetworkErrors:
         """Test connection timeout error handling."""
         with patch('requests.Session.request') as mock_request:
             mock_request.side_effect = requests.exceptions.Timeout('Connection timeout')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             with pytest.raises(CourtListenerError):
                 client.search.search_opinions(q='test')
     
@@ -101,7 +101,7 @@ class TestNetworkErrors:
         """Test DNS resolution failure error handling."""
         with patch('requests.Session.request') as mock_request:
             mock_request.side_effect = requests.exceptions.ConnectionError('DNS resolution failed')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             with pytest.raises(CourtListenerError):
                 client.search.search_opinions(q='test')
     
@@ -109,7 +109,7 @@ class TestNetworkErrors:
         """Test SSL certificate error handling."""
         with patch('requests.Session.request') as mock_request:
             mock_request.side_effect = requests.exceptions.SSLError('SSL certificate error')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             with pytest.raises(CourtListenerError):
                 client.search.search_opinions(q='test')
     
@@ -117,7 +117,7 @@ class TestNetworkErrors:
         """Test connection refused error handling."""
         with patch('requests.Session.request') as mock_request:
             mock_request.side_effect = requests.exceptions.ConnectionError('Connection refused')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             with pytest.raises(CourtListenerError):
                 client.search.search_opinions(q='test')
 
@@ -156,7 +156,7 @@ class TestRetryLogic:
                 requests.exceptions.Timeout('Connection timeout'),
                 Mock(status_code=200, json=lambda: {'results': [], 'count': 0})
             ]
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             # Should retry and eventually succeed
             resp = client.search.search_opinions(q='test')
             assert 'results' in resp
@@ -169,7 +169,7 @@ class TestRetryLogic:
                 APIError('Internal server error', status_code=500),
                 {'results': [], 'count': 0}
             ]
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             # Should retry and eventually succeed
             resp = client.search.search_opinions(q='test')
             assert 'results' in resp 

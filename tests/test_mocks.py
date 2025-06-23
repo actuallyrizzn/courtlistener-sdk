@@ -24,7 +24,7 @@ class TestMockSuccessfulResponses:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             result = client.search.search_opinions(q='test')
             
             assert result == mock_response
@@ -44,7 +44,7 @@ class TestMockSuccessfulResponses:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             result = client.dockets.get_docket(1)
             
             assert result == mock_response
@@ -64,7 +64,7 @@ class TestMockSuccessfulResponses:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             result = client.opinions.get_opinion(1)
             
             assert result == mock_response
@@ -83,7 +83,7 @@ class TestMockSuccessfulResponses:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             result = client.courts.get_court(1)
             
             assert result == mock_response
@@ -98,7 +98,7 @@ class TestMockErrorResponses:
         """Test mocking authentication error response."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = AuthenticationError('Invalid token')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             with pytest.raises(AuthenticationError) as exc_info:
                 client.search.search_opinions(q='test')
@@ -108,7 +108,7 @@ class TestMockErrorResponses:
         """Test mocking rate limit error response."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = RateLimitError('Rate limit exceeded')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             with pytest.raises(RateLimitError) as exc_info:
                 client.search.search_opinions(q='test')
@@ -118,7 +118,7 @@ class TestMockErrorResponses:
         """Test mocking 404 Not Found error response."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = CourtListenerError('Not found', status_code=404)
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             with pytest.raises(CourtListenerError) as exc_info:
                 client.dockets.get_docket(999999)
@@ -128,7 +128,7 @@ class TestMockErrorResponses:
         """Test mocking 400 Bad Request error response."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = CourtListenerError('Bad request', status_code=400)
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             with pytest.raises(CourtListenerError) as exc_info:
                 client.search.search_opinions(q='')
@@ -138,7 +138,7 @@ class TestMockErrorResponses:
         """Test mocking 500 Server Error response."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = APIError('Internal server error', status_code=500)
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             with pytest.raises(APIError) as exc_info:
                 client.search.search_opinions(q='test')
@@ -148,7 +148,7 @@ class TestMockErrorResponses:
         """Test mocking validation error response."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = ValidationError('Invalid date format')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             with pytest.raises(ValidationError) as exc_info:
                 client.search.search_opinions(date_filed_min='invalid-date')
@@ -169,7 +169,7 @@ class TestMockPaginationScenarios:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             result = client.opinions.list_opinions(page=1)
             
             assert result['count'] == 100
@@ -188,7 +188,7 @@ class TestMockPaginationScenarios:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             result = client.opinions.list_opinions(page=2)
             
             assert result['count'] == 100
@@ -207,7 +207,7 @@ class TestMockPaginationScenarios:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             result = client.opinions.list_opinions(page=2)
             
             assert result['count'] == 100
@@ -225,7 +225,7 @@ class TestMockPaginationScenarios:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             result = client.opinions.list_opinions(page=10)
             
             assert result['count'] == 100
@@ -243,7 +243,7 @@ class TestMockPaginationScenarios:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             result = client.search.search_opinions(q='nonexistent')
             
             assert result['count'] == 0
@@ -259,7 +259,7 @@ class TestMockRateLimiting:
         """Test mocking rate limit exceeded."""
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = RateLimitError('Rate limit exceeded')
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             with pytest.raises(RateLimitError):
                 client.search.search_opinions(q='test')
@@ -272,7 +272,7 @@ class TestMockRateLimiting:
                 RateLimitError('Rate limit exceeded'),
                 {'results': [], 'count': 0}
             ]
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             # Should retry and eventually succeed
             result = client.search.search_opinions(q='test')
@@ -291,7 +291,7 @@ class TestMockRateLimiting:
         
         with patch('requests.Session.request') as mock_request:
             mock_request.return_value = mock_response
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             with pytest.raises(RateLimitError) as exc_info:
                 client.search.search_opinions(q='test')
@@ -307,7 +307,7 @@ class TestMockRateLimiting:
                 RateLimitError('Rate limit exceeded'),
                 {'results': [], 'count': 0}
             ]
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             # Should retry multiple times and eventually succeed
             result = client.search.search_opinions(q='test')
@@ -353,7 +353,7 @@ class TestMockComplexScenarios:
                     return mock_responses['/opinions/']
             
             mock_request.side_effect = mock_request_side_effect
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             # Execute workflow
             opinions = client.search.search_opinions(q='test')
@@ -381,7 +381,7 @@ class TestMockComplexScenarios:
         
         with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
             mock_request.side_effect = mock_responses
-            client = CourtListenerClient(api_key='dummy')
+            client = CourtListenerClient(api_token='dummy')
             
             # Test first page
             page1 = client.opinions.list_opinions(page=1)

@@ -12,7 +12,7 @@ API_TOKEN = os.environ.get('COURTLISTENER_API_TOKEN')
 def client():
     if not API_TOKEN:
         pytest.skip('No API token set for integration tests')
-    return CourtListenerClient(api_key=API_TOKEN)
+    return CourtListenerClient(api_token=API_TOKEN)
 
 def test_authentication_flow(client):
     """Test that the client authenticates and can make a request."""
@@ -28,7 +28,7 @@ def test_request_response_cycle(client):
 
 def test_error_handling_invalid_token():
     """Test error handling for invalid authentication."""
-    bad_client = CourtListenerClient(api_key='invalid')
+    bad_client = CourtListenerClient(api_token='invalid')
     with pytest.raises(AuthenticationError):
         bad_client.search.search_opinions(q='Miranda')
 
@@ -42,7 +42,7 @@ def test_rate_limiting_behavior():
     """Test rate limiting handling (mocked)."""
     with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
         mock_request.side_effect = RateLimitError('Rate limit exceeded')
-        client = CourtListenerClient(api_key='dummy')
+        client = CourtListenerClient(api_token='dummy')
         with pytest.raises(RateLimitError):
             client.search.search_opinions(q='Miranda')
 

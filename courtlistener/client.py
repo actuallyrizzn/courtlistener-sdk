@@ -94,6 +94,7 @@ class CourtListenerClient:
         self.docket_entries = DocketEntriesAPI(self)
         self.clusters = ClustersAPI(self)
         self.positions = PositionsAPI(self)
+        self.opinion_clusters = ClustersAPI(self)
     
     def _make_request(
         self,
@@ -236,4 +237,8 @@ class CourtListenerClient:
     
     def __repr__(self) -> str:
         """String representation of the client."""
-        return f"CourtListenerClient(base_url='{self.config.base_url}')" 
+        return f"CourtListenerClient(base_url='{self.config.base_url}')"
+
+    def _request(self, method: str, endpoint: str, **kwargs):
+        """Internal request method for test mocking compatibility."""
+        return self._make_request(method, endpoint, **kwargs) 

@@ -9,11 +9,15 @@ class FinancialDisclosure(BaseModel):
     def _parse_data(self):
         """Parse financial disclosure data."""
         super()._parse_data()
+        for field in [
+            'id', 'date_received', 'date_filed', 'description', 'absolute_url', 'resource_uri']:
+            if not hasattr(self, field):
+                setattr(self, field, None)
         
         # Parse dates
-        if hasattr(self, 'date_received'):
+        if hasattr(self, 'date_received') and self.date_received:
             self.date_received = self._parse_datetime(self.date_received)
-        if hasattr(self, 'date_filed'):
+        if hasattr(self, 'date_filed') and self.date_filed:
             self.date_filed = self._parse_datetime(self.date_filed)
 
 
@@ -122,7 +126,8 @@ class Financial(BaseModel):
         """String representation of the financial record."""
         class_name = self.__class__.__name__
         if hasattr(self, 'id'):
+            docket = getattr(self, 'docket', None)
             type_ = getattr(self, 'type', 'Unknown')
             amount = getattr(self, 'amount', 0)
-            return f"Financial(id={self.id}, type='{type_}', amount={amount})"
+            return f"<Financial(id={self.id}, docket={docket}, type='{type_}', amount={amount})>"
         return f"{class_name}()" 

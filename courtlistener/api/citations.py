@@ -30,4 +30,14 @@ class CitationsAPI:
     def lookup_citations(self, text: str) -> List[Dict[str, Any]]:
         """Look up citations in text."""
         data = {'text': text}
-        return self.client.post('citation-lookup/', json_data=data) 
+        return self.client.post('citation-lookup/', json_data=data)
+
+    def list_citations(self, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        return self.client.get('citations/', params=params)
+
+    def search_citations(self, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        return self.client.get('citations/', params=params) 

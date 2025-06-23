@@ -157,4 +157,14 @@ class DocketEntriesAPI:
             'docket': docket_id,
             'recap_documents__isnull': False
         }
-        return self.list_entries(filters=filters, limit=limit) 
+        return self.list_entries(filters=filters, limit=limit)
+
+    def list_docket_entries(self, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        return self.client.get('docket-entries/', params=params)
+
+    def search_docket_entries(self, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        return self.client.get('docket-entries/', params=params) 

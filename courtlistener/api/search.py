@@ -63,13 +63,12 @@ class SearchAPI:
         
         return self.client.get('search/', params=params)
     
-    def search_opinions(
-        self,
-        query: str,
-        filters: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
-        """Search for opinions only."""
-        return self.search(query, result_type='o', filters=filters)
+    def search_opinions(self, q: str = None, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        if q:
+            params['q'] = q
+        params['page'] = page
+        return self.client.get('search/', params=params)
     
     def search_dockets(
         self,

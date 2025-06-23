@@ -35,18 +35,14 @@ class DocketsAPI:
     
     def list_dockets(
         self,
-        filters: Optional[Dict[str, Any]] = None,
+        page: int = 1,
+        **filters
     ) -> Dict[str, Any]:
         """
-        List dockets with optional filtering.
-        
-        Args:
-            filters: Filter parameters (court, docket_number, date_filed, etc.)
-        
-        Returns:
-            Paginated docket results
+        List dockets with optional filtering and pagination.
         """
-        params = filters or {}
+        params = filters.copy() if filters else {}
+        params['page'] = page
         return self.client.get('dockets/', params=params)
     
     def get_docket(self, docket_id: Union[int, str]) -> Docket:

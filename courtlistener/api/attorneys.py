@@ -17,13 +17,22 @@ class AttorneysAPI:
     def __init__(self, client):
         self.client = client
     
-    def list_attorneys(self, filters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def list_attorneys(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
         """List attorneys with optional filtering."""
-        params = filters or {}
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        if q:
+            params['q'] = q
         return self.client.get('attorneys/', params=params)
     
     def get_attorney(self, attorney_id: int) -> Attorney:
         """Get a specific attorney by ID."""
         validate_id(attorney_id)
         data = self.client.get(f'attorneys/{attorney_id}/')
-        return Attorney(data) 
+        return Attorney(data)
+
+    def search_attorneys(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        params['q'] = q
+        params['page'] = page
+        return self.client.get('attorneys/', params=params) 

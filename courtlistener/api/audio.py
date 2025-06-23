@@ -17,13 +17,23 @@ class AudioAPI:
     def __init__(self, client):
         self.client = client
     
-    def list_audio(self, filters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def list_audio(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
         """List audio recordings with optional filtering."""
-        params = filters or {}
+        params = filters.copy() if filters else {}
+        params['page'] = page
+        if q:
+            params['q'] = q
         return self.client.get('audio/', params=params)
     
     def get_audio(self, audio_id: int) -> Audio:
         """Get a specific audio recording by ID."""
         validate_id(audio_id)
         data = self.client.get(f'audio/{audio_id}/')
-        return Audio(data) 
+        return Audio(data)
+
+    def search_audio(self, q: str = None, page: int = 1, **filters) -> Dict[str, Any]:
+        params = filters.copy() if filters else {}
+        if q:
+            params['q'] = q
+        params['page'] = page
+        return self.client.get('audio/', params=params) 
