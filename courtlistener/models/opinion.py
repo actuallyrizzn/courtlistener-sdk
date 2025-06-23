@@ -19,26 +19,43 @@ class Opinion(BaseModel):
             self.cluster = self.cluster_id
         elif not hasattr(self, 'cluster'):
             self.cluster = None
-    
-    @property
-    def is_majority_opinion(self) -> bool:
-        """Check if this is a majority opinion."""
-        opinion_type = getattr(self, 'type', '').lower()
-        return opinion_type in ['majority', '010combined', 'combined']
+        
+        for field in [
+            'id', 'cluster', 'author', 'type', 'type_name', 'date_filed', 'court', 'absolute_url', 'resource_uri', 'joined_by']:
+            if not hasattr(self, field):
+                if field == 'joined_by':
+                    setattr(self, field, [])
+                else:
+                    setattr(self, field, None)
     
     @property
     def author(self) -> str:
         """Get opinion author."""
-        return self._data.get('author_id', self._data.get('author', None))
+        return getattr(self, '_author', None)
+    
+    @property
+    def is_majority_opinion(self) -> bool:
+        """Check if this is a majority opinion."""
+        opinion_type = (self.type or '').lower()
+        return opinion_type in ['majority', '010combined', 'combined']
     
     @property
     def is_concurring_opinion(self) -> bool:
         """Check if this is a concurring opinion."""
-        opinion_type = getattr(self, 'type', '').lower()
-        return opinion_type in ['concurrence', 'concurring']
+        opinion_type = (self.type or '').lower()
+        return opinion_type in ['concurrence', 'concurring', '020concurring']
     
     def __repr__(self) -> str:
         """String representation of the opinion."""
+        class_name = self.__class__.__name__
+        if hasattr(self, 'id'):
+            cluster = getattr(self, 'cluster', None)
+            author = getattr(self, 'author', None)
+            opinion_type = getattr(self, 'type', 'Unknown')
+            return f"<Opinion(id={self.id}, cluster={cluster}, author={author}, type='{opinion_type}')>"
+        return f"<Opinion()>"
+    
+    def __str__(self) -> str:
         class_name = self.__class__.__name__
         if hasattr(self, 'id'):
             opinion_type = getattr(self, 'type', 'Unknown')

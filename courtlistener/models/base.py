@@ -33,6 +33,7 @@ class BaseModel:
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""
         result = {}
+        # Include normal attributes
         for key, value in self.__dict__.items():
             if not key.startswith('_'):
                 if isinstance(value, (datetime, date)):
@@ -46,6 +47,13 @@ class BaseModel:
                     ]
                 else:
                     result[key] = value
+        # Include properties that are not private and not already in result
+        for key in dir(self.__class__):
+            if not key.startswith('_') and isinstance(getattr(self.__class__, key), property) and key not in result:
+                try:
+                    result[key] = getattr(self, key)
+                except Exception:
+                    pass
         return result
     
     def to_json(self, indent: Optional[int] = None) -> str:

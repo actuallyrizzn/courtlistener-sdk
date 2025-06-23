@@ -36,6 +36,10 @@ class Document(BaseModel):
         """Get docket entry ID."""
         return getattr(self, '_docket_entry', None)
     
+    @property
+    def has_ia_file(self) -> bool:
+        return self.has_local_file
+    
     def __repr__(self) -> str:
         """String representation of the document."""
         class_name = self.__class__.__name__

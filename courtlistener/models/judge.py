@@ -15,6 +15,14 @@ class Judge(BaseModel):
             if not hasattr(self, field):
                 setattr(self, field, None)
         
+        # Set private attribute for date_dob to avoid property setter error
+        if hasattr(self, 'birthday'):
+            self._date_dob = self._parse_datetime(self.birthday)
+        elif hasattr(self, 'date_dob'):
+            self._date_dob = self._parse_datetime(self.date_dob)
+        else:
+            self._date_dob = None
+        
         # Parse dates
         if hasattr(self, 'date_dob'):
             self.date_dob = self._parse_datetime(self.date_dob)
@@ -60,7 +68,7 @@ class Judge(BaseModel):
     @property
     def date_dob(self) -> str:
         """Get date of birth."""
-        return getattr(self, '_date_dob', None) or getattr(self, 'birthday', None)
+        return getattr(self, '_date_dob', None)
     
     def __repr__(self) -> str:
         """String representation of the judge."""

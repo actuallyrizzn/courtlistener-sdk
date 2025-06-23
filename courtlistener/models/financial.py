@@ -73,40 +73,44 @@ class Financial(BaseModel):
         super()._parse_data()
         
         # Parse dates
+        for field in [
+            'id', 'docket', 'type', 'amount', 'date', 'description', 'absolute_url', 'resource_uri']:
+            if not hasattr(self, field):
+                setattr(self, field, None)
         if hasattr(self, 'date'):
             self.date = self._parse_datetime(self.date)
     
     @property
     def is_filing_fee(self) -> bool:
         """Check if this is a filing fee."""
-        return getattr(self, 'type', '').lower() == 'filing_fee'
+        return (self.type or '').lower() == 'filing_fee'
     
     @property
     def is_costs(self) -> bool:
         """Check if this is costs."""
-        return getattr(self, 'type', '').lower() == 'costs'
+        return (self.type or '').lower() == 'costs'
     
     @property
     def is_damages(self) -> bool:
         """Check if this is damages."""
-        return getattr(self, 'type', '').lower() == 'damages'
+        return (self.type or '').lower() == 'damages'
     
     @property
     def is_positive(self) -> bool:
         """Check if amount is positive."""
-        amount = getattr(self, 'amount', 0)
+        amount = self.amount or 0
         return amount > 0
     
     @property
     def is_negative(self) -> bool:
         """Check if amount is negative."""
-        amount = getattr(self, 'amount', 0)
+        amount = self.amount or 0
         return amount < 0
     
     @property
     def amount_formatted(self) -> str:
         """Get formatted amount string."""
-        amount = getattr(self, 'amount', 0)
+        amount = self.amount or 0
         if not amount:
             return '$0.00'
         
@@ -118,7 +122,7 @@ class Financial(BaseModel):
         """String representation of the financial record."""
         class_name = self.__class__.__name__
         if hasattr(self, 'id'):
+            type_ = getattr(self, 'type', 'Unknown')
             amount = getattr(self, 'amount', 0)
-            description = getattr(self, 'description', 'Unknown')
-            return f"{class_name}(id={self.id}, amount={amount}, description='{description}')"
+            return f"Financial(id={self.id}, type='{type_}', amount={amount})"
         return f"{class_name}()" 

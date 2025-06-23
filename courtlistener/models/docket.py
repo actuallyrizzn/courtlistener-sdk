@@ -26,21 +26,32 @@ class Docket(BaseModel):
         if hasattr(self, 'court') and isinstance(self.court, dict):
             from .court import Court
             self.court = self._parse_related_model(self.court, Court)
+        
+        for field in [
+            'id', 'docket_number', 'case_name', 'date_filed', 'date_terminated', 'terminated', 'court',
+            'absolute_url', 'resource_uri']:
+            if not hasattr(self, field):
+                setattr(self, field, None)
     
     @property
     def is_terminated(self) -> bool:
         """Check if docket is terminated."""
-        return bool(
-            getattr(self, 'date_terminated', None) or
-            getattr(self, 'terminated', False) or
-            self._data.get('is_terminated', False)
-        )
+        return bool(self.date_terminated or self.terminated)
     
     def __repr__(self) -> str:
         """String representation of the docket."""
         class_name = self.__class__.__name__
         if hasattr(self, 'id'):
-            docket_number = getattr(self, 'docket_number', 'Unknown')
-            case_name = getattr(self, 'case_name', 'Unknown')
-            return f"{class_name}(id={self.id}, docket_number='{docket_number}', case_name='{case_name}')"
+            docket_number = getattr(self, 'docket_number', 'None')
+            court = getattr(self, 'court', None)
+            date_filed = getattr(self, 'date_filed', None)
+            return f"<Docket(id={self.id}, docket_number='{docket_number}', court={court}, date_filed={date_filed})>"
+        return f"<Docket()>"
+    
+    def __str__(self) -> str:
+        class_name = self.__class__.__name__
+        if hasattr(self, 'id'):
+            docket_number = getattr(self, 'docket_number', 'None')
+            case_name = getattr(self, 'case_name', 'None')
+            return f"Docket(id={self.id}, docket_number='{docket_number}', case_name='{case_name}')"
         return f"{class_name}()" 

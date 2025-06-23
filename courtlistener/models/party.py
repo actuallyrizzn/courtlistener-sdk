@@ -16,7 +16,7 @@ class Party(BaseModel):
         
         # Map API fields to expected properties
         for field in [
-            'id', 'name', 'type', 'docket', 'date_terminated', 'terminated', 'absolute_url', 'resource_uri']:
+            'id', 'name', 'type', 'docket', 'date_terminated', 'terminated', 'absolute_url', 'resource_uri', 'attorney']:
             if not hasattr(self, field):
                 setattr(self, field, None)
         

@@ -31,6 +31,10 @@ class Audio(BaseModel):
         return bool(self.local_path or self.file_path or self.file_url or self.filepath_local)
     
     @property
+    def has_ia_file(self) -> bool:
+        return self.has_local_file
+    
+    @property
     def docket_entry(self) -> int:
         """Get docket entry ID."""
         return getattr(self, '_docket_entry', None)

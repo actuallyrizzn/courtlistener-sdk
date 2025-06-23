@@ -14,6 +14,9 @@ class Citation(BaseModel):
             'absolute_url', 'resource_uri']:
             if not hasattr(self, field):
                 setattr(self, field, None)
+        # Set _reporter if reporter is present
+        if hasattr(self, 'reporter'):
+            self._reporter = getattr(self, 'reporter')
     
     @property
     def citation_string(self) -> str:
@@ -36,7 +39,7 @@ class Citation(BaseModel):
     @property
     def reporter(self) -> str:
         """Get reporter name."""
-        return getattr(self, '_reporter', None) or getattr(self, 'reporter', None)
+        return getattr(self, '_reporter', None)
     
     @property
     def is_federal(self) -> bool:
