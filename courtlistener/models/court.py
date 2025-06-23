@@ -21,26 +21,37 @@ class Court(BaseModel):
             self.name = self.full_name
         elif not hasattr(self, 'name'):
             self.name = None
+        
+        for field in [
+            'id', 'name', 'name_abbreviation', 'short_name', 'jurisdiction', 'slug', 'url', 'start_date', 'end_date',
+            'absolute_url', 'resource_uri', 'defunct']:
+            if not hasattr(self, field):
+                setattr(self, field, None)
     
     @property
     def is_defunct(self) -> bool:
         """Check if court is defunct."""
-        return bool(
-            getattr(self, 'end_date', None) or
-            getattr(self, 'defunct', False) or
-            self._data.get('is_defunct', False)
-        )
+        return bool(self.end_date or self.defunct)
     
     @property
     def short_name(self) -> str:
         """Get short name of the court."""
-        return self._data.get('name_abbreviation', self._data.get('short_name', None))
+        return getattr(self, '_short_name', None) or getattr(self, 'name_abbreviation', None)
     
     def __repr__(self) -> str:
         """String representation of the court."""
         class_name = self.__class__.__name__
         if hasattr(self, 'id'):
             name = getattr(self, 'name', 'Unknown')
-            short_name = getattr(self, 'short_name', getattr(self, 'name_abbreviation', 'Unknown'))
+            short_name = self.short_name
+            return f"<Court(id={self.id}, name='{name}', short_name='{short_name}')>"
+        return f"<Court()>"
+    
+    def __str__(self) -> str:
+        """String representation of the court."""
+        class_name = self.__class__.__name__
+        if hasattr(self, 'id'):
+            name = getattr(self, 'name', 'Unknown')
+            short_name = self.short_name
             return f"{class_name}(id={self.id}, name='{name}', short_name='{short_name}')"
         return f"{class_name}()" 

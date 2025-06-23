@@ -15,10 +15,10 @@ class Party(BaseModel):
             self.date_terminated = self._parse_datetime(self.date_terminated)
         
         # Map API fields to expected properties
-        if hasattr(self, 'name') and not hasattr(self, 'name'):
-            pass  # Already exists
-        elif not hasattr(self, 'name'):
-            self.name = None
+        for field in [
+            'id', 'name', 'type', 'docket', 'date_terminated', 'terminated', 'absolute_url', 'resource_uri']:
+            if not hasattr(self, field):
+                setattr(self, field, None)
         
         # Parse related models if they exist
         if hasattr(self, 'attorneys') and isinstance(self.attorneys, list):
@@ -28,11 +28,7 @@ class Party(BaseModel):
     @property
     def is_terminated(self) -> bool:
         """Check if party is terminated."""
-        return bool(
-            getattr(self, 'date_terminated', None) or
-            getattr(self, 'terminated', False) or
-            self._data.get('is_terminated', False)
-        )
+        return bool(self.date_terminated or self.terminated)
     
     def __repr__(self) -> str:
         """String representation of the party."""
@@ -40,5 +36,14 @@ class Party(BaseModel):
         if hasattr(self, 'id'):
             name = getattr(self, 'name', 'Unknown')
             party_type = getattr(self, 'type', 'Unknown')
-            return f"{class_name}(id={self.id}, name='{name}', type='{party_type}')"
+            docket = getattr(self, 'docket', None)
+            return f"<Party(id={self.id}, name='{name}', type='{party_type}', docket={docket})>"
+        return f"<Party()>"
+    
+    def __str__(self) -> str:
+        class_name = self.__class__.__name__
+        if hasattr(self, 'id'):
+            name = getattr(self, 'name', 'Unknown')
+            party_type = getattr(self, 'type', 'Unknown')
+            return f"Party(id={self.id}, name='{name}', type='{party_type}')"
         return f"{class_name}()" 

@@ -9,28 +9,26 @@ class Citation(BaseModel):
     def _parse_data(self):
         """Parse citation data."""
         super()._parse_data()
-        
-        # Map API fields to expected properties
-        if hasattr(self, 'reporter') and not hasattr(self, 'volume'):
-            # Extract volume from reporter if possible
-            self.volume = None
-        elif not hasattr(self, 'volume'):
-            self.volume = None
+        for field in [
+            'id', 'volume', 'reporter', 'page', 'citation', 'year', 'reporter_name', 'type',
+            'absolute_url', 'resource_uri']:
+            if not hasattr(self, field):
+                setattr(self, field, None)
     
     @property
     def citation_string(self) -> str:
         """Get formatted citation string."""
         parts = []
-        if hasattr(self, 'volume') and self.volume:
+        if self.volume:
             parts.append(str(self.volume))
-        if hasattr(self, 'reporter') and self.reporter:
+        if self.reporter:
             parts.append(self.reporter)
-        if hasattr(self, 'page') and self.page:
+        if self.page:
             parts.append(str(self.page))
         
         if parts:
             return ' '.join(parts)
-        elif hasattr(self, 'citation') and self.citation:
+        elif self.citation:
             return self.citation
         else:
             return ''
@@ -38,12 +36,12 @@ class Citation(BaseModel):
     @property
     def reporter(self) -> str:
         """Get reporter name."""
-        return self._data.get('reporter_name', self._data.get('reporter', None))
+        return getattr(self, '_reporter', None) or getattr(self, 'reporter', None)
     
     @property
     def is_federal(self) -> bool:
         """Check if this is a federal citation."""
-        reporter = getattr(self, 'reporter', '').lower()
+        reporter = (self.reporter or '').lower()
         return 'u.s.' in reporter or 'f.' in reporter or 'f.2d' in reporter or 'f.3d' in reporter
     
     def __repr__(self) -> str:

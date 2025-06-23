@@ -9,6 +9,11 @@ class Judge(BaseModel):
     def _parse_data(self):
         """Parse judge data."""
         super()._parse_data()
+        for field in [
+            'id', 'name', 'name_first', 'name_last', 'name_middle', 'name_suffix', 'birthday', 'date_dob', 'date_died',
+            'court', 'positions', 'absolute_url', 'resource_uri', 'deceased']:
+            if not hasattr(self, field):
+                setattr(self, field, None)
         
         # Parse dates
         if hasattr(self, 'date_dob'):
@@ -36,41 +41,38 @@ class Judge(BaseModel):
     @property
     def is_deceased(self) -> bool:
         """Check if judge is deceased."""
-        return bool(
-            getattr(self, 'date_died', None) or
-            getattr(self, 'deceased', False) or
-            self._data.get('is_deceased', False)
-        )
+        return bool(self.date_died or self.deceased)
     
     @property
     def full_name(self) -> str:
         """Get formatted full name."""
         parts = []
-        if hasattr(self, 'name_first') and self.name_first:
+        if self.name_first:
             parts.append(self.name_first)
-        if hasattr(self, 'name_middle') and self.name_middle:
+        if self.name_middle:
             parts.append(self.name_middle)
-        if hasattr(self, 'name_last') and self.name_last:
+        if self.name_last:
             parts.append(self.name_last)
-        if hasattr(self, 'name_suffix') and self.name_suffix:
+        if self.name_suffix:
             parts.append(self.name_suffix)
-        
-        if parts:
-            return ' '.join(parts)
-        elif hasattr(self, 'name') and self.name:
-            return self.name
-        else:
-            return ''
+        return ' '.join([p for p in parts if p]) or self.name or ''
     
     @property
     def date_dob(self) -> str:
         """Get date of birth."""
-        return self._data.get('birthday', self._data.get('date_dob', None))
+        return getattr(self, '_date_dob', None) or getattr(self, 'birthday', None)
     
     def __repr__(self) -> str:
         """String representation of the judge."""
         class_name = self.__class__.__name__
         if hasattr(self, 'id'):
             name = getattr(self, 'name', 'Unknown')
-            return f"{class_name}(id={self.id}, name='{name}')"
+            return f"<Judge(id={self.id}, name='{name}')>"
+        return f"<Judge()>"
+    
+    def __str__(self) -> str:
+        class_name = self.__class__.__name__
+        if hasattr(self, 'id'):
+            name = getattr(self, 'name', 'Unknown')
+            return f"Judge(id={self.id}, name='{name}')"
         return f"{class_name}()" 
