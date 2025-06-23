@@ -42,7 +42,7 @@ class PositionsAPI:
         params = {}
         
         if filters:
-            params.update(build_filters(filters))
+            params.update(build_filters(**filters))
             
         if limit:
             params['limit'] = limit

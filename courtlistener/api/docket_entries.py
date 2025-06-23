@@ -47,7 +47,7 @@ class DocketEntriesAPI:
             params['docket'] = docket_id
             
         if filters:
-            params.update(build_filters(filters))
+            params.update(build_filters(**filters))
             
         if limit:
             params['limit'] = limit

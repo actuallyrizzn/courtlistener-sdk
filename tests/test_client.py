@@ -25,4 +25,25 @@ def test_client_headers():
     client = CourtListenerClient(api_token="test_token")
     headers = client.config.get_headers()
     assert headers["Authorization"] == "Token test_token"
-    assert headers["Content-Type"] == "application/json" 
+    assert headers["Content-Type"] == "application/json"
+
+
+def test_client_instantiation():
+    client = CourtListenerClient(api_token="dummy")
+    assert client.config.api_token == "dummy"
+    # Check all API modules are present
+    for attr in [
+        'search', 'dockets', 'opinions', 'judges', 'courts',
+        'parties', 'attorneys', 'documents', 'audio', 'financial',
+        'citations', 'docket_entries', 'clusters', 'positions']:
+        assert hasattr(client, attr)
+
+
+def test_missing_token_raises(monkeypatch):
+    # Remove env var if present
+    monkeypatch.delenv('COURTLISTENER_API_TOKEN', raising=False)
+    from courtlistener.config import Config
+    with pytest.raises(ValidationError):
+        config = Config()
+        config.api_token = None
+        CourtListenerClient(config=config) 
