@@ -18,6 +18,9 @@ from .exceptions import (
     TimeoutError,
 )
 from .utils.pagination import PageIterator
+from .api.docket_entries import DocketEntriesAPI
+from .api.clusters import ClustersAPI
+from .api.positions import PositionsAPI
 
 
 class CourtListenerClient:
@@ -72,6 +75,9 @@ class CourtListenerClient:
         from .api.audio import AudioAPI
         from .api.financial import FinancialAPI
         from .api.citations import CitationsAPI
+        from .api.docket_entries import DocketEntriesAPI
+        from .api.clusters import ClustersAPI
+        from .api.positions import PositionsAPI
         
         # Initialize API modules
         self.search = SearchAPI(self)
@@ -85,6 +91,9 @@ class CourtListenerClient:
         self.audio = AudioAPI(self)
         self.financial = FinancialAPI(self)
         self.citations = CitationsAPI(self)
+        self.docket_entries = DocketEntriesAPI(self)
+        self.clusters = ClustersAPI(self)
+        self.positions = PositionsAPI(self)
     
     def _make_request(
         self,

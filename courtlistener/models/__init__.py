@@ -11,8 +11,19 @@ from .party import Party
 from .attorney import Attorney
 from .document import Document
 from .audio import Audio
-from .financial import FinancialDisclosure, Investment, NonInvestmentIncome
+from .financial import (
+    FinancialDisclosure,
+    Investment,
+    NonInvestmentIncome,
+    Agreement,
+    Gift,
+    Reimbursement,
+    Debt
+)
 from .citation import Citation
+from .docket_entry import DocketEntry
+from .cluster import OpinionCluster
+from .position import Position
 
 __all__ = [
     "BaseModel",
@@ -27,5 +38,12 @@ __all__ = [
     "FinancialDisclosure",
     "Investment",
     "NonInvestmentIncome",
+    "Agreement",
+    "Gift",
+    "Reimbursement",
+    "Debt",
     "Citation",
+    "DocketEntry",
+    "OpinionCluster",
+    "Position",
 ] 
