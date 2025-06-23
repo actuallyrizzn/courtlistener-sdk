@@ -1,77 +1,54 @@
-# CourtListener SDK
+# CourtListener Python SDK
 
-A comprehensive Python SDK for the CourtListener REST API (v4.1). Provides easy access to legal data including case law, dockets, judges, opinions, financial disclosures, and citation networks.
+A robust, production-ready Python SDK for the [CourtListener API](https://www.courtlistener.com/api/).
 
 ## Features
-
-- **Complete API Coverage**: All 14 CourtListener API endpoints implemented
-- **Intuitive Interface**: Easy-to-use Python classes and methods
-- **Automatic Pagination**: Handle large result sets with built-in pagination
-- **Data Models**: Rich data models with automatic parsing and validation
-- **Error Handling**: Comprehensive error handling with custom exceptions
-- **Type Hints**: Full type annotation support
-- **Documentation**: Complete documentation and examples
+- Full support for all public CourtListener endpoints
+- Pythonic data models for courts, dockets, opinions, clusters, and more
+- Robust error handling, pagination, and filtering
+- 100% test coverage with real API integration
+- Easy authentication via `.env` file or direct token
+- Extensive documentation and examples
 
 ## Installation
-
 ```bash
-pip install courtlistener-sdk
+pip install -r requirements.txt
 ```
 
 ## Quick Start
-
 ```python
 from courtlistener import CourtListenerClient
-
-# Initialize client with your API token
-client = CourtListenerClient(api_token="your_api_token_here")
-
-# Search for opinions
-results = client.search.search("constitutional rights")
-
-# Get a specific docket
-docket = client.dockets.get_docket(12345)
-
-# List all courts
-courts = client.courts.list_courts()
-
-# Get opinions from Supreme Court
-scotus_opinions = client.opinions.list_opinions(filters={'court': 'scotus'})
+client = CourtListenerClient()
+dockets = client.dockets.list_dockets(page=1)
+for docket in dockets:
+    print(docket.case_name, docket.docket_number)
 ```
 
-## API Endpoints
+## Authentication
+Set your API token in a `.env` file:
+```
+COURTLISTENER_API_TOKEN=your_token_here
+```
+Or pass it directly:
+```python
+client = CourtListenerClient(api_token="your_token_here")
+```
 
-The SDK provides access to all CourtListener API endpoints:
-
-- **Search API**: Cross-resource search functionality
-- **Dockets**: Case records and metadata
-- **Opinions**: Full-text judicial decisions
-- **Judges**: Judicial biographical data
-- **Courts**: Court information
-- **Parties**: Case participants
-- **Attorneys**: Legal representation
-- **Documents**: PDF filings and downloads
-- **Audio**: Oral argument recordings
-- **Financial Disclosures**: Judicial financial data
-- **Citations**: Citation graph and verification
+## Tests & Debugging
+All manual and debug test scripts are now in [`tests/manual_debug/`](./tests/manual_debug/). See the documentation for details on running and extending tests.
 
 ## Documentation
+Extensive documentation is available in [`docs/`](./docs/), including:
+- [User Guide](./docs/user_guide.md)
+- [API Reference](./docs/api_reference.md)
+- [Advanced Usage](./docs/advanced_usage.md)
+- [Troubleshooting](./docs/troubleshooting.md)
 
-For detailed documentation, see the [docs/](docs/) directory:
-
-- [Getting Started Guide](docs/getting_started.md)
-- [API Reference](docs/api_reference.md)
-- [Examples](docs/examples.md)
-- [Project Plan](docs/project-plan.md)
-
-## Development
-
-This project is currently in development. See the [project plan](docs/project-plan.md) for the complete roadmap.
+## Changelog
+See [`CHANGELOG.md`](./CHANGELOG.md) for release notes.
 
 ## License
+See [`LICENSE`](./LICENSE).
 
-This project is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License - see the [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Contributions are welcome! Please see CONTRIBUTING.md for guidelines. 
+---
+For more, see the [full documentation](./docs/user_guide.md). 

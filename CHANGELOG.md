@@ -20,12 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Retry logic with exponential backoff
 - Rate limiting support
 - Type hints throughout the codebase
+- Moved all manual/debug test scripts to `tests/manual_debug/` for better organization
+- Added extensive documentation in `docs/` (User Guide, API Reference, Advanced Usage, Troubleshooting)
+- Updated README to reflect new structure and documentation
 
 ### Changed
 - Switched license from MIT to Creative Commons Attribution-ShareAlike 4.0 International
 
 ### Fixed
 - N/A
+- Ensured all test and debug files are organized and referenced in documentation
 
 ### Deprecated
 - N/A
