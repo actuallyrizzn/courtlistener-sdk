@@ -25,13 +25,12 @@ class ClustersAPI:
         self.client = client
         self.base_url = "/api/rest/v4/clusters/"
     
-    def list_clusters(self, filters: Optional[Dict[str, Any]] = None,
-                     limit: Optional[int] = None) -> List[OpinionCluster]:
+    def list_clusters(self, page: int = 1, **filters) -> List[OpinionCluster]:
         """List opinion clusters with optional filtering.
         
         Args:
-            filters: Optional dictionary of filters to apply
-            limit: Optional limit on number of results
+            page: Page number for pagination
+            **filters: Additional filters to apply
             
         Returns:
             List of OpinionCluster objects
@@ -39,16 +38,14 @@ class ClustersAPI:
         Raises:
             CourtListenerError: If the API request fails
         """
-        params = {}
+        params = {"page": page, **filters}
+        response = self.client._make_request("GET", f"{self.client.config.base_url}/clusters", params=params)
         
-        if filters:
-            params.update(build_filters(**filters))
-            
-        if limit:
-            params['limit'] = limit
-            
-        response = self.client.get(self.base_url, params=params)
-        return [OpinionCluster.from_dict(cluster) for cluster in response.get('results', [])]
+        clusters = []
+        for cluster_data in response.get("results", []):
+            clusters.append(OpinionCluster(cluster_data))
+        
+        return clusters
     
     def get_cluster(self, cluster_id: int) -> OpinionCluster:
         """Get a specific opinion cluster by ID.
@@ -63,9 +60,9 @@ class ClustersAPI:
             NotFoundError: If the cluster is not found
             CourtListenerError: If the API request fails
         """
-        url = f"{self.base_url}{cluster_id}/"
-        response = self.client.get(url)
-        return OpinionCluster.from_dict(response)
+        url = f"{self.client.config.base_url}/clusters/{cluster_id}"
+        response = self.client._make_request("GET", url)
+        return OpinionCluster(response)
     
     def get_clusters_by_court(self, court_id: int,
                              filters: Optional[Dict[str, Any]] = None,

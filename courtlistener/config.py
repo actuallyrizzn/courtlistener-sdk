@@ -6,6 +6,13 @@ import os
 from typing import Optional
 from .exceptions import ValidationError
 
+# Load environment variables from .env file if it exists
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 
 class Config:
     """Configuration class for CourtListener SDK."""

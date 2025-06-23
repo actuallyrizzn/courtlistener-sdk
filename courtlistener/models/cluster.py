@@ -13,50 +13,162 @@ from .base import BaseModel
 class OpinionCluster(BaseModel):
     """Model representing an opinion cluster."""
     
-    def __init__(self, **kwargs):
+    def __init__(self, data: dict):
         """Initialize an OpinionCluster instance.
         
         Args:
-            **kwargs: Opinion cluster data from the API
+            data: Dictionary containing opinion cluster data from the API
         """
-        self.id = kwargs.get('id')
-        self.case_name = kwargs.get('case_name')
-        self.case_name_short = kwargs.get('case_name_short')
-        self.case_name_full = kwargs.get('case_name_full')
-        self.case_name_slug = kwargs.get('case_name_slug')
-        self.date_filed = self._parse_date(kwargs.get('date_filed'))
-        self.date_created = self._parse_date(kwargs.get('date_created'))
-        self.date_modified = self._parse_date(kwargs.get('date_modified'))
-        self.court = kwargs.get('court')
-        self.docket = kwargs.get('docket')
-        self.citations = kwargs.get('citations', [])
-        self.sub_opinions = kwargs.get('sub_opinions', [])
-        self.absolute_url = kwargs.get('absolute_url')
-        self.resource_uri = kwargs.get('resource_uri')
-        self.slug = kwargs.get('slug')
-        self.lexis_cite = kwargs.get('lexis_cite')
-        self.westlaw_cite = kwargs.get('westlaw_cite')
-        self.scdb_id = kwargs.get('scdb_id')
-        self.scdb_decision_direction = kwargs.get('scdb_decision_direction')
-        self.scdb_votes_majority = kwargs.get('scdb_votes_majority')
-        self.scdb_votes_minority = kwargs.get('scdb_votes_minority')
-        self.scdb_justice_votes = kwargs.get('scdb_justice_votes', {})
-        self.attorneys = kwargs.get('attorneys', [])
-        self.panel = kwargs.get('panel', [])
-        self.non_participating_judges = kwargs.get('non_participating_judges', [])
-        self.citation_count = kwargs.get('citation_count', 0)
-        self.precedential = kwargs.get('precedential', True)
-        self.date_blocked = self._parse_date(kwargs.get('date_blocked'))
-        self.blocked = kwargs.get('blocked', False)
-        
-        # Related objects (if included in response)
-        self.court_obj = kwargs.get('court_obj')
-        self.docket_obj = kwargs.get('docket_obj')
-        self.citations_objs = kwargs.get('citations_objs', [])
-        self.sub_opinions_objs = kwargs.get('sub_opinions_objs', [])
-        self.attorneys_objs = kwargs.get('attorneys_objs', [])
-        self.panel_objs = kwargs.get('panel_objs', [])
-        self.non_participating_judges_objs = kwargs.get('non_participating_judges_objs', [])
+        super().__init__(data)
+    
+    @property
+    def id(self) -> int:
+        """Cluster ID."""
+        return self._data.get('id', None)
+    
+    @property
+    def case_name(self) -> str:
+        """Case name."""
+        return self._data.get('case_name', None)
+    
+    @property
+    def case_name_short(self) -> str:
+        """Short case name."""
+        return self._data.get('case_name_short', None)
+    
+    @property
+    def case_name_full(self) -> str:
+        """Full case name."""
+        return self._data.get('case_name_full', None)
+    
+    @property
+    def case_name_slug(self) -> str:
+        """Case name slug."""
+        return self._data.get('case_name_slug', None)
+    
+    @property
+    def date_filed(self) -> Optional[datetime]:
+        """Date when case was filed."""
+        date_str = self._data.get('date_filed', None)
+        return self._parse_datetime(date_str) if date_str else None
+    
+    @property
+    def date_created(self) -> Optional[datetime]:
+        """Date when cluster was created."""
+        date_str = self._data.get('date_created', None)
+        return self._parse_datetime(date_str) if date_str else None
+    
+    @property
+    def date_modified(self) -> Optional[datetime]:
+        """Date when cluster was last modified."""
+        date_str = self._data.get('date_modified', None)
+        return self._parse_datetime(date_str) if date_str else None
+    
+    @property
+    def court(self) -> str:
+        """Court URL."""
+        return self._data.get('court', None)
+    
+    @property
+    def docket(self) -> str:
+        """Docket URL."""
+        return self._data.get('docket', None)
+    
+    @property
+    def citations(self) -> List[dict]:
+        """List of citations."""
+        return self._data.get('citations', [])
+    
+    @property
+    def sub_opinions(self) -> List[dict]:
+        """List of sub-opinions."""
+        return self._data.get('sub_opinions', [])
+    
+    @property
+    def absolute_url(self) -> str:
+        """Absolute URL for the cluster."""
+        return self._data.get('absolute_url', None)
+    
+    @property
+    def resource_uri(self) -> str:
+        """Resource URI for the cluster."""
+        return self._data.get('resource_uri', None)
+    
+    @property
+    def slug(self) -> str:
+        """URL slug."""
+        return self._data.get('slug', None)
+    
+    @property
+    def lexis_cite(self) -> str:
+        """Lexis citation."""
+        return self._data.get('lexis_cite', None)
+    
+    @property
+    def westlaw_cite(self) -> str:
+        """Westlaw citation."""
+        return self._data.get('westlaw_cite', None)
+    
+    @property
+    def scdb_id(self) -> str:
+        """Supreme Court Database ID."""
+        return self._data.get('scdb_id', None)
+    
+    @property
+    def scdb_decision_direction(self) -> str:
+        """SCDB decision direction."""
+        return self._data.get('scdb_decision_direction', None)
+    
+    @property
+    def scdb_votes_majority(self) -> int:
+        """SCDB majority votes."""
+        return self._data.get('scdb_votes_majority', None)
+    
+    @property
+    def scdb_votes_minority(self) -> int:
+        """SCDB minority votes."""
+        return self._data.get('scdb_votes_minority', None)
+    
+    @property
+    def scdb_justice_votes(self) -> dict:
+        """SCDB justice votes."""
+        return self._data.get('scdb_justice_votes', {})
+    
+    @property
+    def attorneys(self) -> List[dict]:
+        """List of attorneys."""
+        return self._data.get('attorneys', [])
+    
+    @property
+    def panel(self) -> List[dict]:
+        """List of panel judges."""
+        return self._data.get('panel', [])
+    
+    @property
+    def non_participating_judges(self) -> List[dict]:
+        """List of non-participating judges."""
+        return self._data.get('non_participating_judges', [])
+    
+    @property
+    def citation_count(self) -> int:
+        """Number of citations."""
+        return self._data.get('citation_count', 0)
+    
+    @property
+    def precedential(self) -> bool:
+        """Whether the cluster is precedential."""
+        return self._data.get('precedential', True)
+    
+    @property
+    def date_blocked(self) -> Optional[datetime]:
+        """Date when cluster was blocked."""
+        date_str = self._data.get('date_blocked', None)
+        return self._parse_datetime(date_str) if date_str else None
+    
+    @property
+    def blocked(self) -> bool:
+        """Whether the cluster is blocked."""
+        return self._data.get('blocked', False)
     
     def _parse_date(self, date_str: Optional[str]) -> Optional[datetime]:
         """Parse date string to datetime object.
@@ -201,7 +313,7 @@ class OpinionCluster(BaseModel):
         Returns:
             OpinionCluster instance
         """
-        return cls(**data)
+        return cls(data)
     
     def __str__(self) -> str:
         """String representation of the opinion cluster.

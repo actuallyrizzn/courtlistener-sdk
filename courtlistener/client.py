@@ -69,32 +69,29 @@ class CourtListenerClient:
         from .api.opinions import OpinionsAPI
         from .api.judges import JudgesAPI
         from .api.courts import CourtsAPI
-        from .api.parties import PartiesAPI
-        from .api.attorneys import AttorneysAPI
-        from .api.documents import DocumentsAPI
         from .api.audio import AudioAPI
-        from .api.financial import FinancialAPI
-        from .api.citations import CitationsAPI
-        from .api.docket_entries import DocketEntriesAPI
         from .api.clusters import ClustersAPI
         from .api.positions import PositionsAPI
+        from .api.financial import FinancialAPI
         
-        # Initialize API modules
+        # Initialize API modules (only working endpoints)
         self.search = SearchAPI(self)
         self.dockets = DocketsAPI(self)
         self.opinions = OpinionsAPI(self)
-        self.judges = JudgesAPI(self)
+        self.judges = JudgesAPI(self)  # Uses /people/ endpoint
         self.courts = CourtsAPI(self)
-        self.parties = PartiesAPI(self)
-        self.attorneys = AttorneysAPI(self)
-        self.documents = DocumentsAPI(self)
         self.audio = AudioAPI(self)
-        self.financial = FinancialAPI(self)
-        self.citations = CitationsAPI(self)
-        self.docket_entries = DocketEntriesAPI(self)
         self.clusters = ClustersAPI(self)
         self.positions = PositionsAPI(self)
-        self.opinion_clusters = ClustersAPI(self)
+        self.financial = FinancialAPI(self)
+        self.opinion_clusters = ClustersAPI(self)  # Alias for clusters
+        
+        # Note: The following endpoints are not available or require special permissions:
+        # - parties (403 Forbidden)
+        # - attorneys (403 Forbidden) 
+        # - documents (404 Not Found)
+        # - citations (404 Not Found)
+        # - docket_entries (403 Forbidden)
     
     def _make_request(
         self,

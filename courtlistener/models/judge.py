@@ -1,84 +1,163 @@
-"""Judge model for CourtListener SDK."""
+"""
+Judge model for CourtListener SDK.
+"""
 
+from typing import Optional, List
+from datetime import datetime, date
 from .base import BaseModel
 
 
 class Judge(BaseModel):
-    """Model for judge data."""
+    """Model for judge/people data."""
     
-    def _parse_data(self):
-        """Parse judge data."""
-        super()._parse_data()
-        for field in [
-            'id', 'name', 'name_first', 'name_last', 'name_middle', 'name_suffix', 'birthday', 'date_dob', 'date_died',
-            'court', 'positions', 'absolute_url', 'resource_uri', 'deceased']:
-            if not hasattr(self, field):
-                setattr(self, field, None)
-        
-        # Set private attribute for date_dob to avoid property setter error
-        if hasattr(self, 'birthday'):
-            self._date_dob = self._parse_datetime(self.birthday)
-        elif hasattr(self, 'date_dob'):
-            self._date_dob = self._parse_datetime(self.date_dob)
-        else:
-            self._date_dob = None
-        
-        # Parse dates
-        if hasattr(self, 'date_died') and self.date_died:
-            self.date_died = self._parse_datetime(self.date_died)
-        
-        # Map API fields to expected properties
-        if hasattr(self, 'name_first') and hasattr(self, 'name_last'):
-            self.name_first = self.name_first
-            self.name_last = self.name_last
-        elif hasattr(self, 'name') and not hasattr(self, 'name_first'):
-            # Try to split full name
-            name_parts = self.name.split()
-            if len(name_parts) >= 2:
-                self.name_first = name_parts[0]
-                self.name_last = name_parts[-1]
-            else:
-                self.name_first = None
-                self.name_last = self.name
-        else:
-            self.name_first = None
-            self.name_last = None
+    def __init__(self, data: dict):
+        super().__init__(data)
     
     @property
-    def is_deceased(self) -> bool:
-        """Check if judge is deceased."""
-        return bool(self.date_died or self.deceased)
+    def id(self) -> int:
+        """Judge ID."""
+        return self._data.get('id', None)
     
     @property
-    def full_name(self) -> str:
-        """Get formatted full name."""
-        parts = []
-        if self.name_first:
-            parts.append(self.name_first)
-        if self.name_middle:
-            parts.append(self.name_middle)
-        if self.name_last:
-            parts.append(self.name_last)
-        if self.name_suffix:
-            parts.append(self.name_suffix)
-        return ' '.join([p for p in parts if p]) or self.name or ''
+    def name(self) -> str:
+        """Full name of the judge."""
+        first = self._data.get('name_first', '')
+        middle = self._data.get('name_middle', '')
+        last = self._data.get('name_last', '')
+        suffix = self._data.get('name_suffix', '')
+        
+        parts = [first, middle, last, suffix]
+        return ' '.join(part for part in parts if part)
     
     @property
-    def date_dob(self) -> str:
-        """Get date of birth."""
-        return getattr(self, '_date_dob', None)
+    def name_first(self) -> str:
+        """First name."""
+        return self._data.get('name_first', None)
+    
+    @property
+    def name_middle(self) -> str:
+        """Middle name."""
+        return self._data.get('name_middle', None)
+    
+    @property
+    def name_last(self) -> str:
+        """Last name."""
+        return self._data.get('name_last', None)
+    
+    @property
+    def name_suffix(self) -> str:
+        """Name suffix."""
+        return self._data.get('name_suffix', None)
+    
+    @property
+    def slug(self) -> str:
+        """URL slug for the judge."""
+        return self._data.get('slug', None)
+    
+    @property
+    def date_dob(self) -> Optional[date]:
+        """Date of birth."""
+        date_str = self._data.get('date_dob', None)
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def date_dod(self) -> Optional[date]:
+        """Date of death."""
+        date_str = self._data.get('date_dod', None)
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def date_created(self) -> Optional[datetime]:
+        """Date when record was created."""
+        date_str = self._data.get('date_created', None)
+        return self._parse_datetime(date_str) if date_str else None
+    
+    @property
+    def date_modified(self) -> Optional[datetime]:
+        """Date when record was last modified."""
+        date_str = self._data.get('date_modified', None)
+        return self._parse_datetime(date_str) if date_str else None
+    
+    @property
+    def gender(self) -> str:
+        """Gender."""
+        return self._data.get('gender', None)
+    
+    @property
+    def religion(self) -> str:
+        """Religion."""
+        return self._data.get('religion', None)
+    
+    @property
+    def dob_city(self) -> str:
+        """City of birth."""
+        return self._data.get('dob_city', None)
+    
+    @property
+    def dob_state(self) -> str:
+        """State of birth."""
+        return self._data.get('dob_state', None)
+    
+    @property
+    def dob_country(self) -> str:
+        """Country of birth."""
+        return self._data.get('dob_country', None)
+    
+    @property
+    def dod_city(self) -> str:
+        """City of death."""
+        return self._data.get('dod_city', None)
+    
+    @property
+    def dod_state(self) -> str:
+        """State of death."""
+        return self._data.get('dod_state', None)
+    
+    @property
+    def dod_country(self) -> str:
+        """Country of death."""
+        return self._data.get('dod_country', None)
+    
+    @property
+    def fjc_id(self) -> Optional[str]:
+        """Federal Judicial Center ID."""
+        return self._data.get('fjc_id', None)
+    
+    @property
+    def positions(self) -> List[str]:
+        """List of position URLs."""
+        return self._data.get('positions', [])
+    
+    @property
+    def educations(self) -> List[str]:
+        """List of education URLs."""
+        return self._data.get('educations', [])
+    
+    @property
+    def political_affiliations(self) -> List[str]:
+        """List of political affiliation URLs."""
+        return self._data.get('political_affiliations', [])
+    
+    @property
+    def aba_ratings(self) -> List[str]:
+        """List of ABA rating URLs."""
+        return self._data.get('aba_ratings', [])
+    
+    @property
+    def sources(self) -> List[str]:
+        """List of source URLs."""
+        return self._data.get('sources', [])
+    
+    @property
+    def race(self) -> List[str]:
+        """List of race URLs."""
+        return self._data.get('race', [])
+    
+    @property
+    def resource_uri(self) -> str:
+        """Resource URI for the judge."""
+        return self._data.get('resource_uri', None)
     
     def __repr__(self) -> str:
         """String representation of the judge."""
-        class_name = self.__class__.__name__
-        if hasattr(self, 'id'):
-            name = getattr(self, 'name', 'Unknown')
-            return f"<Judge(id={self.id}, name='{name}')>"
-        return f"<Judge()>"
-    
-    def __str__(self) -> str:
-        class_name = self.__class__.__name__
-        if hasattr(self, 'id'):
-            name = getattr(self, 'name', 'Unknown')
-            return f"Judge(id={self.id}, name='{name}')"
-        return f"{class_name}()" 
+        return f"Judge(id={self.id}, name='{self.name}')" 
