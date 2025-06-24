@@ -1,6 +1,8 @@
-# CourtListener Python SDK — API Reference
+# CourtListener Python SDK — API Reference (Unofficial)
 
-This reference documents all major classes, methods, and data models in the SDK.
+This reference documents all major classes, methods, and data models in the **unofficial** CourtListener Python SDK.
+
+**⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
 ## Table of Contents
 - [CourtListenerClient](#courtlistenerclient)

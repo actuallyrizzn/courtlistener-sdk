@@ -1,6 +1,8 @@
-# CourtListener Python SDK
+# CourtListener Python SDK (Unofficial)
 
-A robust, production-ready Python SDK for the [CourtListener API](https://www.courtlistener.com/api/).
+An **unofficial**, robust, production-ready Python SDK for the [CourtListener API](https://www.courtlistener.com/api/).
+
+**⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
 ## Features
 - Full support for all public CourtListener endpoints

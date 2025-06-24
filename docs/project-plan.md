@@ -1,7 +1,9 @@
-# CourtListener SDK Project Plan
+# CourtListener SDK Project Plan (Unofficial)
 
 ## Overview
-This project plan outlines the development of a comprehensive Python SDK for the CourtListener REST API (v4.1). The SDK will provide easy access to legal data including case law, dockets, judges, opinions, financial disclosures, and citation networks.
+This project plan outlines the development of a comprehensive **unofficial** Python SDK for the CourtListener REST API (v4.1). The SDK will provide easy access to legal data including case law, dockets, judges, opinions, financial disclosures, and citation networks.
+
+**⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
 ## Project Structure
 

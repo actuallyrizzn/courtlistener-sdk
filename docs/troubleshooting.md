@@ -1,6 +1,8 @@
-# CourtListener Python SDK — Troubleshooting
+# CourtListener Python SDK — Troubleshooting (Unofficial)
 
-This guide covers common issues, error messages, and debugging tips.
+This guide covers common issues, error messages, and debugging tips for the **unofficial** CourtListener Python SDK.
+
+**⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
 ## Table of Contents
 - [Common Errors](#common-errors)

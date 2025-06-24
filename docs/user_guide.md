@@ -1,6 +1,8 @@
-# CourtListener Python SDK — User Guide
+# CourtListener Python SDK — User Guide (Unofficial)
 
-Welcome to the CourtListener Python SDK! This guide will help you get started, use all major features, and follow best practices for working with the CourtListener API.
+Welcome to the **unofficial** CourtListener Python SDK! This guide will help you get started, use all major features, and follow best practices for working with the CourtListener API.
+
+**⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
 ## Table of Contents
 - [Installation](#installation)

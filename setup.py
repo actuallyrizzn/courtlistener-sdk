@@ -24,9 +24,9 @@ def read_requirements():
 setup(
     name="courtlistener-sdk",
     version="0.1.0",
-    author="CourtListener SDK Team",
-    author_email="support@courtlistener.com",
-    description="A comprehensive Python SDK for the CourtListener REST API",
+    author="CourtListener SDK Community",
+    author_email="actuallyrizzn@gmail.com",
+    description="An unofficial Python SDK for the CourtListener REST API",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/actuallyrizzn/courtlistener-sdk",
@@ -56,7 +56,7 @@ setup(
             "isort>=5.0.0",
         ],
     },
-    keywords="legal, court, api, sdk, courtlistener, case law, dockets, judges",
+    keywords="legal, court, api, sdk, courtlistener, case law, dockets, judges, unofficial",
     project_urls={
         "Bug Reports": "https://github.com/actuallyrizzn/courtlistener-sdk/issues",
         "Source": "https://github.com/actuallyrizzn/courtlistener-sdk",

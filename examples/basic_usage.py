@@ -1,6 +1,10 @@
 """
-Basic usage example for CourtListener SDK.
-This example demonstrates how to use the SDK with real CourtListener API data.
+Basic usage example for CourtListener SDK (Unofficial).
+This example demonstrates how to use the unofficial SDK with real CourtListener API data.
+
+⚠️ Important Notice: This is an unofficial SDK developed by the community 
+and is not affiliated with, endorsed by, or officially supported by 
+CourtListener or Free Law Project.
 """
 
 from courtlistener import CourtListenerClient
@@ -10,8 +14,10 @@ from courtlistener.exceptions import ValidationError, NotFoundError
 def main():
     """Demonstrate basic SDK usage with real API data."""
     
-    print("🚀 CourtListener SDK Basic Usage Example")
-    print("=" * 50)
+    print("🚀 CourtListener SDK (Unofficial) Basic Usage Example")
+    print("=" * 60)
+    print("⚠️  This is an unofficial SDK not endorsed by CourtListener")
+    print("=" * 60)
     
     # Initialize client (will use API token from environment)
     try:

@@ -1,6 +1,8 @@
-# CourtListener Python SDK — Advanced Usage
+# CourtListener Python SDK — Advanced Usage (Unofficial)
 
-This guide covers advanced features and power-user tips for the SDK.
+This guide covers advanced features and power-user tips for the **unofficial** CourtListener Python SDK.
+
+**⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
 ## Table of Contents
 - [Custom Filtering](#custom-filtering)
