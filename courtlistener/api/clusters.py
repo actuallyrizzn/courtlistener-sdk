@@ -8,12 +8,13 @@ together (e.g., majority, concurring, dissenting opinions in the same case).
 from typing import Dict, List, Optional, Any, TYPE_CHECKING
 from ..models.cluster import OpinionCluster
 from ..utils.filters import build_filters
+from .base import BaseAPI
 
 if TYPE_CHECKING:
     from ..client import CourtListenerClient
 
 
-class ClustersAPI:
+class ClustersAPI(BaseAPI):
     """API client for opinion clusters endpoints."""
     
     def __init__(self, client: 'CourtListenerClient'):
@@ -24,6 +25,14 @@ class ClustersAPI:
         """
         self.client = client
         self.base_url = "/api/rest/v4/clusters/"
+    
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "clusters/"
+    
+    def _get_model_class(self):
+        """Get the model class associated with this API."""
+        return OpinionCluster
     
     def list_clusters(self, page: int = 1, q: str = None, **filters) -> List[OpinionCluster]:
         """List opinion clusters."""

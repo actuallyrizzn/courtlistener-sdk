@@ -13,51 +13,13 @@ from .base import BaseModel
 class Position(BaseModel):
     """Model representing a judicial position."""
     
-    def __init__(self, **kwargs):
+    def __init__(self, data: dict):
         """Initialize a Position instance.
         
         Args:
-            **kwargs: Position data from the API
+            data: Position data from the API
         """
-        self.id = kwargs.get('id')
-        self.judge = kwargs.get('judge')
-        self.court = kwargs.get('court')
-        self.position_type = kwargs.get('position_type')
-        self.title = kwargs.get('title')
-        self.date_start = self._parse_datetime(kwargs.get('date_start'))
-        self.date_termination = self._parse_datetime(kwargs.get('date_termination'))
-        self.date_created = self._parse_datetime(kwargs.get('date_created'))
-        self.date_modified = self._parse_datetime(kwargs.get('date_modified'))
-        self.supervisor = kwargs.get('supervisor')
-        self.predecessor = kwargs.get('predecessor')
-        self.appointer = kwargs.get('appointer')
-        self.nomination_process = kwargs.get('nomination_process')
-        self.vote_type = kwargs.get('vote_type')
-        self.vote_yes = kwargs.get('vote_yes')
-        self.vote_no = kwargs.get('vote_no')
-        self.vote_other = kwargs.get('vote_other')
-        self.vote_total = kwargs.get('vote_total')
-        self.termination_reason = kwargs.get('termination_reason')
-        self.seat = kwargs.get('seat')
-        self.absolute_url = kwargs.get('absolute_url')
-        self.resource_uri = kwargs.get('resource_uri')
-        
-        # Related objects (if included in response)
-        self.judge_obj = kwargs.get('judge_obj')
-        self.court_obj = kwargs.get('court_obj')
-        self.supervisor_obj = kwargs.get('supervisor_obj')
-        self.predecessor_obj = kwargs.get('predecessor_obj')
-        self.appointer_obj = kwargs.get('appointer_obj')
-        
-        # Parse dates
-        if hasattr(self, 'date_start') and self.date_start:
-            self.date_start = self._parse_datetime(self.date_start)
-        if hasattr(self, 'date_end') and self.date_end:
-            self.date_end = self._parse_datetime(self.date_end)
-        if hasattr(self, 'date_granularity_start') and self.date_granularity_start:
-            self.date_granularity_start = self._parse_datetime(self.date_granularity_start)
-        if hasattr(self, 'date_granularity_end') and self.date_granularity_end:
-            self.date_granularity_end = self._parse_datetime(self.date_granularity_end)
+        super().__init__(data)
     
     def _parse_date(self, date_str: Optional[str]) -> Optional[datetime]:
         """Parse date string to datetime object.
@@ -74,6 +36,120 @@ class Position(BaseModel):
             return datetime.fromisoformat(date_str.replace('Z', '+00:00'))
         except (ValueError, AttributeError):
             return None
+    
+    @property
+    def id(self) -> Optional[int]:
+        """Position ID."""
+        return self._data.get('id')
+    
+    @property
+    def judge(self) -> Optional[str]:
+        """Judge URL."""
+        return self._data.get('judge')
+    
+    @property
+    def court(self) -> Optional[str]:
+        """Court URL."""
+        return self._data.get('court')
+    
+    @property
+    def position_type(self) -> Optional[str]:
+        """Position type."""
+        return self._data.get('position_type')
+    
+    @property
+    def title(self) -> Optional[str]:
+        """Position title."""
+        return self._data.get('title')
+    
+    @property
+    def date_start(self) -> Optional[datetime]:
+        """Start date."""
+        date_str = self._data.get('date_start')
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def date_termination(self) -> Optional[datetime]:
+        """Termination date."""
+        date_str = self._data.get('date_termination')
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def date_created(self) -> Optional[datetime]:
+        """Date created."""
+        date_str = self._data.get('date_created')
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def date_modified(self) -> Optional[datetime]:
+        """Date modified."""
+        date_str = self._data.get('date_modified')
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def supervisor(self) -> Optional[str]:
+        """Supervisor URL."""
+        return self._data.get('supervisor')
+    
+    @property
+    def predecessor(self) -> Optional[str]:
+        """Predecessor URL."""
+        return self._data.get('predecessor')
+    
+    @property
+    def appointer(self) -> Optional[str]:
+        """Appointer URL."""
+        return self._data.get('appointer')
+    
+    @property
+    def nomination_process(self) -> Optional[str]:
+        """Nomination process."""
+        return self._data.get('nomination_process')
+    
+    @property
+    def vote_type(self) -> Optional[str]:
+        """Vote type."""
+        return self._data.get('vote_type')
+    
+    @property
+    def vote_yes(self) -> Optional[int]:
+        """Yes votes."""
+        return self._data.get('vote_yes')
+    
+    @property
+    def vote_no(self) -> Optional[int]:
+        """No votes."""
+        return self._data.get('vote_no')
+    
+    @property
+    def vote_other(self) -> Optional[int]:
+        """Other votes."""
+        return self._data.get('vote_other')
+    
+    @property
+    def vote_total(self) -> Optional[int]:
+        """Total votes."""
+        return self._data.get('vote_total')
+    
+    @property
+    def termination_reason(self) -> Optional[str]:
+        """Termination reason."""
+        return self._data.get('termination_reason')
+    
+    @property
+    def seat(self) -> Optional[str]:
+        """Seat information."""
+        return self._data.get('seat')
+    
+    @property
+    def absolute_url(self) -> Optional[str]:
+        """Absolute URL."""
+        return self._data.get('absolute_url')
+    
+    @property
+    def resource_uri(self) -> Optional[str]:
+        """Resource URI."""
+        return self._data.get('resource_uri')
     
     @property
     def is_active(self) -> bool:

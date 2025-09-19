@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional, List
 from ..utils.filters import build_filters
 from ..utils.validators import validate_id
 from ..models.base import BaseModel
+from .base import BaseAPI
 
 
 class FinancialDisclosure(BaseModel):
@@ -21,11 +22,19 @@ class NonInvestmentIncome(BaseModel):
     pass
 
 
-class FinancialAPI:
+class FinancialAPI(BaseAPI):
     """API client for financial disclosure functionality."""
     
     def __init__(self, client):
         self.client = client
+    
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "financial-disclosures/"
+    
+    def _get_model_class(self):
+        """Get the model class associated with this API."""
+        return FinancialDisclosure
     
     def list_disclosures(self, filters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """List financial disclosures with optional filtering."""

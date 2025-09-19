@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional, List
 from ..utils.filters import build_filters
 from ..utils.validators import validate_id
 from ..models.base import BaseModel
+from .base import BaseAPI
 
 
 class Citation(BaseModel):
@@ -11,11 +12,19 @@ class Citation(BaseModel):
     pass
 
 
-class CitationsAPI:
+class CitationsAPI(BaseAPI):
     """API client for citations functionality."""
     
     def __init__(self, client):
         self.client = client
+    
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "citations/"
+    
+    def _get_model_class(self):
+        """Get the model class associated with this API."""
+        return Citation
     
     def get_citations_by_opinion(self, opinion_id: int) -> Dict[str, Any]:
         """Get citations by a specific opinion."""

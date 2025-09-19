@@ -8,15 +8,24 @@ from ..utils.pagination import PageIterator
 from ..utils.validators import validate_id, validate_docket_number
 from ..models.base import BaseModel
 from ..models.docket import Docket
+from .base import BaseAPI
 
 
-class DocketsAPI:
+class DocketsAPI(BaseAPI):
     """API client for dockets functionality."""
     
     def __init__(self, client):
         """Initialize Dockets API client."""
         self.client = client
         self.base_url = f"{client.config.base_url}/dockets"
+    
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "dockets/"
+    
+    def _get_model_class(self):
+        """Get the model class associated with this API."""
+        return Docket
     
     def list_dockets(self, page: int = 1, **filters) -> List[Docket]:
         """

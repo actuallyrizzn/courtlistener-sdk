@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional
 from ..utils.filters import build_filters
 from ..utils.validators import validate_id
 from ..models.base import BaseModel
+from .base import BaseAPI
 
 
 class Party(BaseModel):
@@ -11,11 +12,19 @@ class Party(BaseModel):
     pass
 
 
-class PartiesAPI:
+class PartiesAPI(BaseAPI):
     """API client for parties functionality."""
     
     def __init__(self, client):
         self.client = client
+    
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "parties/"
+    
+    def _get_model_class(self):
+        """Get the model class associated with this API."""
+        return Party
     
     def list_parties(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
         """List parties with optional filtering."""

@@ -13,34 +13,13 @@ from .base import BaseModel
 class DocketEntry(BaseModel):
     """Model representing a docket entry."""
     
-    def __init__(self, **kwargs):
+    def __init__(self, data: dict):
         """Initialize a DocketEntry instance.
         
         Args:
-            **kwargs: Docket entry data from the API
+            data: Docket entry data from the API
         """
-        self.id = kwargs.get('id')
-        self.docket = kwargs.get('docket')
-        self.entry_number = kwargs.get('entry_number')
-        self.description = kwargs.get('description')
-        self.date_filed = self._parse_date(kwargs.get('date_filed'))
-        self.date_created = self._parse_date(kwargs.get('date_created'))
-        self.date_modified = self._parse_date(kwargs.get('date_modified'))
-        self.recap_documents = kwargs.get('recap_documents', [])
-        self.seal = kwargs.get('seal', False)
-        self.sealed_date = self._parse_date(kwargs.get('sealed_date'))
-        self.entry_number_str = kwargs.get('entry_number_str')
-        self.description_short = kwargs.get('description_short')
-        self.description_plain = kwargs.get('description_plain')
-        self.description_html = kwargs.get('description_html')
-        self.recap_sequence_number = kwargs.get('recap_sequence_number')
-        self.recap_documents_count = kwargs.get('recap_documents_count', 0)
-        self.absolute_url = kwargs.get('absolute_url')
-        self.resource_uri = kwargs.get('resource_uri')
-        
-        # Related objects (if included in response)
-        self.docket_obj = kwargs.get('docket_obj')
-        self.recap_documents_objs = kwargs.get('recap_documents_objs', [])
+        super().__init__(data)
     
     def _parse_date(self, date_str: Optional[str]) -> Optional[datetime]:
         """Parse date string to datetime object.
@@ -57,6 +36,100 @@ class DocketEntry(BaseModel):
             return datetime.fromisoformat(date_str.replace('Z', '+00:00'))
         except (ValueError, AttributeError):
             return None
+    
+    @property
+    def id(self) -> Optional[int]:
+        """Docket entry ID."""
+        return self._data.get('id')
+    
+    @property
+    def docket(self) -> Optional[str]:
+        """Docket URL."""
+        return self._data.get('docket')
+    
+    @property
+    def entry_number(self) -> Optional[int]:
+        """Entry number."""
+        return self._data.get('entry_number')
+    
+    @property
+    def description(self) -> Optional[str]:
+        """Entry description."""
+        return self._data.get('description')
+    
+    @property
+    def date_filed(self) -> Optional[datetime]:
+        """Date filed."""
+        date_str = self._data.get('date_filed')
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def date_created(self) -> Optional[datetime]:
+        """Date created."""
+        date_str = self._data.get('date_created')
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def date_modified(self) -> Optional[datetime]:
+        """Date modified."""
+        date_str = self._data.get('date_modified')
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def recap_documents(self) -> List[str]:
+        """List of RECAP document URLs."""
+        return self._data.get('recap_documents', [])
+    
+    @property
+    def seal(self) -> bool:
+        """Whether entry is sealed."""
+        return self._data.get('seal', False)
+    
+    @property
+    def sealed_date(self) -> Optional[datetime]:
+        """Sealed date."""
+        date_str = self._data.get('sealed_date')
+        return self._parse_date(date_str) if date_str else None
+    
+    @property
+    def entry_number_str(self) -> Optional[str]:
+        """Entry number as string."""
+        return self._data.get('entry_number_str')
+    
+    @property
+    def description_short(self) -> Optional[str]:
+        """Short description."""
+        return self._data.get('description_short')
+    
+    @property
+    def description_plain(self) -> Optional[str]:
+        """Plain text description."""
+        return self._data.get('description_plain')
+    
+    @property
+    def description_html(self) -> Optional[str]:
+        """HTML description."""
+        return self._data.get('description_html')
+    
+    @property
+    def recap_sequence_number(self) -> Optional[int]:
+        """RECAP sequence number."""
+        return self._data.get('recap_sequence_number')
+    
+    @property
+    def recap_documents_count(self) -> int:
+        """Number of RECAP documents."""
+        return self._data.get('recap_documents_count', 0)
+    
+    @property
+    def absolute_url(self) -> Optional[str]:
+        """Absolute URL."""
+        return self._data.get('absolute_url')
+    
+    @property
+    def resource_uri(self) -> Optional[str]:
+        """Resource URI."""
+        return self._data.get('resource_uri')
     
     @property
     def has_documents(self) -> bool:
@@ -76,7 +149,7 @@ class DocketEntry(BaseModel):
         """
         return self.seal
     
-    def get_documents(self) -> List[Dict[str, Any]]:
+    def get_documents(self) -> List[str]:
         """Get list of document IDs associated with this entry.
         
         Returns:

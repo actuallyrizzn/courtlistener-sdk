@@ -135,6 +135,7 @@ class CourtListenerClient:
         self.clusters = ClustersAPI(self)
         self.opinions = OpinionsAPI(self)
         self.dockets = DocketsAPI(self)
+        self.judges = JudgesAPI(self)
         self.opinion_clusters = self.clusters  # Alias for compatibility
         
         # Available endpoints
@@ -177,6 +178,11 @@ class CourtListenerClient:
         
         # Legacy disabled endpoints - now enabled
         self._disabled_endpoints = {}
+    
+    @property
+    def api_token(self) -> Optional[str]:
+        """Get the API token."""
+        return self.config.api_token
     
     def _make_request(
         self,
@@ -316,6 +322,21 @@ class CourtListenerClient:
             return True
         except Exception as e:
             raise CourtListenerError(f"Connection test failed: {str(e)}")
+    
+    def _handle_error(self, response):
+        """Handle API errors."""
+        if response.status_code == 401:
+            raise AuthenticationError("Invalid API token")
+        elif response.status_code == 403:
+            raise AuthenticationError("Access forbidden")
+        elif response.status_code == 404:
+            raise NotFoundError("Resource not found")
+        elif response.status_code == 429:
+            raise RateLimitError("Rate limit exceeded")
+        elif response.status_code >= 500:
+            raise APIError(f"Server error: {response.status_code}")
+        else:
+            raise APIError(f"API error: {response.status_code}")
     
     def __repr__(self) -> str:
         """String representation of the client."""

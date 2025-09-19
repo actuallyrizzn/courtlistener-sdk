@@ -8,12 +8,13 @@ appointments and roles of judges in courts.
 from typing import Dict, List, Optional, Any, TYPE_CHECKING
 from ..models.position import Position
 from ..utils.filters import build_filters
+from .base import BaseAPI
 
 if TYPE_CHECKING:
     from ..client import CourtListenerClient
 
 
-class PositionsAPI:
+class PositionsAPI(BaseAPI):
     """API client for positions endpoints."""
     
     def __init__(self, client: 'CourtListenerClient'):
@@ -24,6 +25,14 @@ class PositionsAPI:
         """
         self.client = client
         self.base_url = "/api/rest/v4/positions/"
+    
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "positions/"
+    
+    def _get_model_class(self):
+        """Get the model class associated with this API."""
+        return Position
     
     def list_positions(self, page: int = 1, q: str = None, **filters) -> List[Position]:
         """List positions."""

@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional, List
 from ..utils.filters import build_filters
 from ..utils.validators import validate_id
 from ..models.base import BaseModel
+from .base import BaseAPI
 
 
 class Audio(BaseModel):
@@ -11,11 +12,19 @@ class Audio(BaseModel):
     pass
 
 
-class AudioAPI:
+class AudioAPI(BaseAPI):
     """Audio API endpoints."""
     
     def __init__(self, client):
         self.client = client
+    
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "audio/"
+    
+    def _get_model_class(self):
+        """Get the model class associated with this API."""
+        return Audio
     
     def list_audio(self, page: int = 1, q: str = None, **filters) -> List[Audio]:
         """List audio files."""

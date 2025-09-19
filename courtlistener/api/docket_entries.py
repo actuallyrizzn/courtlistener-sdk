@@ -8,12 +8,13 @@ filings or events within a docket.
 from typing import Dict, List, Optional, Any, TYPE_CHECKING
 from ..models.docket_entry import DocketEntry
 from ..utils.filters import build_filters
+from .base import BaseAPI
 
 if TYPE_CHECKING:
     from ..client import CourtListenerClient
 
 
-class DocketEntriesAPI:
+class DocketEntriesAPI(BaseAPI):
     """API client for docket entries endpoints."""
     
     def __init__(self, client: 'CourtListenerClient'):
@@ -24,6 +25,14 @@ class DocketEntriesAPI:
         """
         self.client = client
         self.base_url = "/api/rest/v4/docket-entries/"
+    
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "docket-entries/"
+    
+    def _get_model_class(self):
+        """Get the model class associated with this API."""
+        return DocketEntry
     
     def list_entries(self, docket_id: Optional[int] = None, 
                     filters: Optional[Dict[str, Any]] = None,

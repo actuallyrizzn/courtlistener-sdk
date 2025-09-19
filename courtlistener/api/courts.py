@@ -5,14 +5,15 @@ Courts API client for CourtListener.
 from typing import List, Optional, Dict, Any
 from ..models.court import Court
 from ..exceptions import NotFoundError, APIError
+from .base import BaseAPI
 
 
-class CourtsAPI:
+class CourtsAPI(BaseAPI):
     """API client for courts endpoints."""
     
-    def __init__(self, client):
-        self.client = client
-        self.base_url = f"{client.config.base_url}/courts"
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "courts/"
     
     def list_courts(self, page: int = 1, q: str = None, **filters) -> List[Court]:
         """List courts."""
@@ -21,7 +22,7 @@ class CourtsAPI:
             params["q"] = q
         params.update(filters)
         
-        response = self.client._make_request("GET", "/courts/", params=params)
+        response = self.client.get("courts/", params=params)
         return [Court(item) for item in response.get("results", [])]
     
     def get_court(self, court_id: str) -> Court:
@@ -37,8 +38,7 @@ class CourtsAPI:
         Raises:
             NotFoundError: If court not found
         """
-        url = f"{self.base_url}/{court_id}"
-        response = self.client._make_request("GET", url)
+        response = self.client.get(f"courts/{court_id}/")
         return Court(response)
     
     def search_courts(self, q: str, page: int = 1, **filters) -> List[Court]:

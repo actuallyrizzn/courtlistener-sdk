@@ -6,6 +6,7 @@ from typing import Dict, Any, Optional, List, Iterator
 from ..utils.filters import build_filters, combine_filters
 from ..utils.pagination import PageIterator
 from ..models.base import BaseModel
+from .base import BaseAPI
 
 
 class SearchResult(BaseModel):
@@ -29,11 +30,12 @@ class SearchResult(BaseModel):
                 self.result_type = 'unknown'
 
 
-class SearchAPI:
+class SearchAPI(BaseAPI):
     """Search API endpoints."""
     
-    def __init__(self, client):
-        self.client = client
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "search/"
     
     def search(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
         """Perform a search across all content."""
@@ -41,10 +43,11 @@ class SearchAPI:
             params = {"q": q, "page": page}
             params.update(filters)
             
-            response = self.client._make_request("GET", "/search/", params=params)
+            response = self.client.get("search/", params=params)
             return response
         except Exception as e:
-            self.client.logger.warning(f"Search endpoint error: {e}")
+            if hasattr(self.client, 'logger'):
+                self.client.logger.warning(f"Search endpoint error: {e}")
             return {"results": [], "count": 0}
     
     def search_opinions(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:

@@ -5,14 +5,23 @@ Judges API client for CourtListener.
 from typing import List, Optional, Dict, Any
 from ..models.judge import Judge
 from ..exceptions import NotFoundError, APIError
+from .base import BaseAPI
 
 
-class JudgesAPI:
+class JudgesAPI(BaseAPI):
     """API client for judges/people endpoints."""
     
     def __init__(self, client):
         self.client = client
         self.base_url = f"{client.config.base_url}/people"
+    
+    def _get_endpoint(self) -> str:
+        """Get the API endpoint for this module."""
+        return "people/"
+    
+    def _get_model_class(self):
+        """Get the model class associated with this API."""
+        return Judge
     
     def list_judges(self, page: int = 1, **filters) -> List[Judge]:
         """
