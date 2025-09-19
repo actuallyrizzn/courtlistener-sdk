@@ -194,7 +194,7 @@ class DocketEntry(BaseModel):
         Returns:
             DocketEntry instance
         """
-        return cls(**data)
+        return cls(data)
     
     def __str__(self) -> str:
         """String representation of the docket entry.

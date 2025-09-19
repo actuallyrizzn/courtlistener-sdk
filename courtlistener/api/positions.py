@@ -41,7 +41,7 @@ class PositionsAPI(BaseAPI):
             params["q"] = q
         params.update(filters)
         
-        response = self.client._make_request("GET", "/positions/", params=params)
+        response = self.client.get("/positions/", params=params)
         return [Position(item) for item in response.get("results", [])]
 
     def search_positions(self, q: str, page: int = 1, **filters) -> List[Position]:

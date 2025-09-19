@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import Mock, patch
 from courtlistener.api.opinions import OpinionsAPI
+from courtlistener.models.opinion import Opinion
 from courtlistener.exceptions import CourtListenerError
 
 
@@ -24,7 +25,9 @@ class TestOpinionsAPI:
         result = self.opinions_api.get_opinion(1)
         
         self.client.get.assert_called_once_with('/opinions/1/')
-        assert result == mock_response
+        assert isinstance(result, Opinion)
+        assert result.id == 1
+        assert result.type == '010combined'
     
     def test_list_opinions(self):
         """Test listing opinions."""
@@ -51,7 +54,11 @@ class TestOpinionsAPI:
                 'page': 1
             }
         )
-        assert result == mock_response
+        assert isinstance(result, list)
+        assert len(result) == 2
+        assert isinstance(result[0], Opinion)
+        assert result[0].id == 1
+        assert result[1].id == 2
     
     def test_list_opinions_with_filters(self):
         """Test listing opinions with filters."""
@@ -68,9 +75,10 @@ class TestOpinionsAPI:
         
         self.client.get.assert_called_once_with(
             '/opinions/',
-            params=filters
+            params={'page': 1, 'author': 1, 'joined_by': [2, 3], 'date_filed_min': '2020-01-01'}
         )
-        assert result == mock_response
+        assert isinstance(result, list)
+        assert len(result) == 0
     
     def test_get_opinion_cluster(self):
         """Test getting an opinion cluster."""
@@ -84,8 +92,9 @@ class TestOpinionsAPI:
         
         result = self.opinions_api.get_opinion_cluster(1)
         
-        self.client.get.assert_called_once_with('/opinion-clusters/1/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('/clusters/1/')
+        assert isinstance(result, dict)
+        assert result['id'] == 1
     
     def test_list_opinion_clusters(self):
         """Test listing opinion clusters."""
@@ -104,13 +113,15 @@ class TestOpinionsAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/opinion-clusters/',
+            '/clusters/',
             params={
+                'page': 1,
                 'court': 'scotus',
                 'date_filed_min': '2020-01-01'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 2
     
     def test_get_opinions_in_cluster(self):
         """Test getting opinions in a cluster."""
@@ -125,8 +136,9 @@ class TestOpinionsAPI:
         
         result = self.opinions_api.get_opinions_in_cluster(1)
         
-        self.client.get.assert_called_once_with('/opinion-clusters/1/opinions/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('/opinions/', params={'cluster': 1})
+        assert isinstance(result, list)
+        assert len(result) == 2
     
     def test_get_opinions_in_cluster_with_params(self):
         """Test getting opinions in a cluster with parameters."""
@@ -140,13 +152,15 @@ class TestOpinionsAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/opinion-clusters/1/opinions/',
+            '/opinions/',
             params={
+                'cluster': 1,
                 'type': '010combined',
                 'author': 1
             }
         )
-        assert result == mock_response
+        assert isinstance(result, list)
+        assert len(result) == 0
     
     def test_get_citations(self):
         """Test getting citations for an opinion."""
@@ -158,8 +172,9 @@ class TestOpinionsAPI:
         
         result = self.opinions_api.get_citations(1)
         
-        self.client.get.assert_called_once_with('/opinions/1/citations/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('/opinions-cited/', params={'citing_opinion': 1})
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_get_citations_with_params(self):
         """Test getting citations with parameters."""
@@ -173,13 +188,15 @@ class TestOpinionsAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/opinions/1/citations/',
+            '/opinions-cited/',
             params={
+                'citing_opinion': 1,
                 'type': 'federal',
                 'year': 1973
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 0
     
     def test_get_sub_opinions(self):
         """Test getting sub-opinions for an opinion."""
@@ -191,8 +208,9 @@ class TestOpinionsAPI:
         
         result = self.opinions_api.get_sub_opinions(1)
         
-        self.client.get.assert_called_once_with('/opinions/1/sub-opinions/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('/opinions/', params={'parent_opinion': 1})
+        assert isinstance(result, list)
+        assert len(result) == 1
     
     def test_error_handling(self):
         """Test error handling in opinion methods."""
@@ -217,8 +235,8 @@ class TestOpinionsAPI:
         
         result = self.opinions_api.get_opinions_in_cluster(1)
         
-        assert result['count'] == 0
-        assert result['results'] == []
+        assert isinstance(result, list)
+        assert len(result) == 0
     
     def test_pagination_in_opinions(self):
         """Test pagination in opinions."""
@@ -236,8 +254,10 @@ class TestOpinionsAPI:
             '/opinions/',
             params={'page': 1}
         )
-        assert result['count'] == 100
-        assert result['next'] is not None
+        assert isinstance(result, list)
+        assert len(result) == 1
+        assert isinstance(result[0], Opinion)
+        assert result[0].id == 1
     
     def test_opinion_types(self):
         """Test filtering by opinion types."""
@@ -246,12 +266,12 @@ class TestOpinionsAPI:
         
         # Test majority opinions
         result = self.opinions_api.list_opinions(type='010combined')
-        self.client.get.assert_called_with('/opinions/', params={'type': '010combined'})
+        self.client.get.assert_called_with('/opinions/', params={'page': 1, 'type': '010combined'})
         
         # Test concurring opinions
         result = self.opinions_api.list_opinions(type='020concurring')
-        self.client.get.assert_called_with('/opinions/', params={'type': '020concurring'})
+        self.client.get.assert_called_with('/opinions/', params={'page': 1, 'type': '020concurring'})
         
         # Test dissenting opinions
         result = self.opinions_api.list_opinions(type='030dissenting')
-        self.client.get.assert_called_with('/opinions/', params={'type': '030dissenting'}) 
+        self.client.get.assert_called_with('/opinions/', params={'page': 1, 'type': '030dissenting'}) 

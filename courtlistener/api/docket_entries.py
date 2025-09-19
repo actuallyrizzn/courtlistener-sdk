@@ -61,8 +61,8 @@ class DocketEntriesAPI(BaseAPI):
         if limit:
             params['limit'] = limit
             
-        response = self.client.get(self.base_url, params=params)
-        return [DocketEntry.from_dict(entry) for entry in response.get('results', [])]
+        response = self.client.get("docket-entries/", params=params)
+        return [DocketEntry(entry) for entry in response.get('results', [])]
     
     def get_entry(self, entry_id: int) -> DocketEntry:
         """Get a specific docket entry by ID.
@@ -77,9 +77,8 @@ class DocketEntriesAPI(BaseAPI):
             NotFoundError: If the entry is not found
             CourtListenerError: If the API request fails
         """
-        url = f"{self.base_url}{entry_id}/"
-        response = self.client.get(url)
-        return DocketEntry.from_dict(response)
+        response = self.client.get(f"docket-entries/{entry_id}/")
+        return DocketEntry(response)
     
     def get_entries_by_date_range(self, docket_id: int, 
                                  start_date: str, 

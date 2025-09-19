@@ -75,11 +75,13 @@ class SearchAPI(BaseAPI):
     
     def search_audio(
         self,
-        query: str,
-        filters: Optional[Dict[str, Any]] = None,
+        q: str,
+        page: int = 1,
+        **filters
     ) -> Dict[str, Any]:
         """Search for audio recordings only."""
-        return self.search(query, result_type='oa', filters=filters)
+        filters["type"] = "audio"
+        return self.search(q, page, **filters)
     
     def search_all(
         self,
@@ -145,4 +147,29 @@ class SearchAPI(BaseAPI):
     
     def list_search(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
         """List search results (alias for search method)."""
-        return self.search(q or "", page=page, **filters) 
+        return self.search(q or "", page=page, **filters)
+    
+    def search_documents(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """Search documents specifically."""
+        filters["type"] = "documents"
+        return self.search(q, page, **filters)
+    
+    def search_people(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """Search people (judges, attorneys, parties) specifically."""
+        filters["type"] = "people"
+        return self.search(q, page, **filters)
+    
+    def search_recap(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """Search RECAP documents specifically."""
+        filters["type"] = "recap"
+        return self.search(q, page, **filters)
+    
+    def search_oral_arguments(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """Search oral arguments specifically."""
+        filters["type"] = "oral_arguments"
+        return self.search(q, page, **filters)
+    
+    def search_opinions_clusters(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """Search opinion clusters specifically."""
+        filters["type"] = "clusters"
+        return self.search(q, page, **filters) 

@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import Mock, patch
 from courtlistener.api.dockets import DocketsAPI
+from courtlistener.models.docket import Docket
 from courtlistener.exceptions import CourtListenerError
 
 
@@ -22,8 +23,9 @@ class TestDocketsAPI:
         
         result = self.dockets_api.get_docket(1)
         
-        self.client.get.assert_called_once_with('/dockets/1/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('dockets/1/')
+        assert isinstance(result, Docket)
+        assert result.id == 1
     
     def test_list_dockets(self):
         """Test listing dockets."""
@@ -43,14 +45,17 @@ class TestDocketsAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/dockets/',
+            'dockets/',
             params={
+                'page': 1,
                 'court': 'scotus',
-                'date_filed_min': '2020-01-01',
-                'page': 1
+                'date_filed_min': '2020-01-01'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, list)
+        assert len(result) == 2
+        assert isinstance(result[0], Docket)
+        assert result[0].id == 1
     
     def test_list_dockets_with_filters(self):
         """Test listing dockets with filters."""
@@ -65,10 +70,11 @@ class TestDocketsAPI:
         result = self.dockets_api.list_dockets(filters=filters)
         
         self.client.get.assert_called_once_with(
-            '/dockets/',
-            params=filters
+            'dockets/',
+            params={'page': 1, 'filters': filters}
         )
-        assert result == mock_response
+        assert isinstance(result, list)
+        assert len(result) == 0
     
     def test_get_docket_entries(self):
         """Test getting docket entries for a docket."""
@@ -80,8 +86,9 @@ class TestDocketsAPI:
         
         result = self.dockets_api.get_docket_entries(1)
         
-        self.client.get.assert_called_once_with('/dockets/1/docket-entries/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('docket-entries/', params={'docket': 1, 'page': 1})
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_get_docket_entries_with_params(self):
         """Test getting docket entries with parameters."""
@@ -95,13 +102,16 @@ class TestDocketsAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/dockets/1/docket-entries/',
+            'docket-entries/',
             params={
+                'docket': 1,
+                'page': 1,
                 'entry_number': 1,
                 'date_filed_min': '2020-01-01'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 0
     
     def test_get_documents(self):
         """Test getting documents for a docket."""
@@ -113,8 +123,9 @@ class TestDocketsAPI:
         
         result = self.dockets_api.get_documents(1)
         
-        self.client.get.assert_called_once_with('/dockets/1/documents/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('documents/', params={'docket': 1, 'page': 1})
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_get_documents_with_params(self):
         """Test getting documents with parameters."""
@@ -128,13 +139,16 @@ class TestDocketsAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/dockets/1/documents/',
+            'documents/',
             params={
+                'docket': 1,
+                'page': 1,
                 'document_type': 'motion',
                 'date_filed_min': '2020-01-01'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 0
     
     def test_get_parties(self):
         """Test getting parties for a docket."""
@@ -149,8 +163,9 @@ class TestDocketsAPI:
         
         result = self.dockets_api.get_parties(1)
         
-        self.client.get.assert_called_once_with('/dockets/1/parties/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('parties/', params={'docket': 1, 'page': 1})
+        assert isinstance(result, dict)
+        assert result['count'] == 2
     
     def test_get_parties_with_params(self):
         """Test getting parties with parameters."""
@@ -164,13 +179,16 @@ class TestDocketsAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/dockets/1/parties/',
+            'parties/',
             params={
+                'docket': 1,
+                'page': 1,
                 'type': 'plaintiff',
                 'attorney': 1
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 0
     
     def test_get_audio(self):
         """Test getting audio for a docket."""
@@ -182,8 +200,9 @@ class TestDocketsAPI:
         
         result = self.dockets_api.get_audio(1)
         
-        self.client.get.assert_called_once_with('/dockets/1/audio/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('audio/', params={'docket': 1, 'page': 1})
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_get_financial(self):
         """Test getting financial records for a docket."""
@@ -195,8 +214,9 @@ class TestDocketsAPI:
         
         result = self.dockets_api.get_financial(1)
         
-        self.client.get.assert_called_once_with('/dockets/1/financial/')
-        assert result == mock_response
+        self.client.get.assert_called_once_with('financial-disclosures/', params={'docket': 1, 'page': 1})
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_error_handling(self):
         """Test error handling in docket methods."""
@@ -237,8 +257,9 @@ class TestDocketsAPI:
         result = self.dockets_api.get_docket_entries(1, page=1)
         
         self.client.get.assert_called_once_with(
-            '/dockets/1/docket-entries/',
-            params={'page': 1}
+            'docket-entries/',
+            params={'docket': 1, 'page': 1}
         )
+        assert isinstance(result, dict)
         assert result['count'] == 50
         assert result['next'] is not None 

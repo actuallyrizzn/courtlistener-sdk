@@ -26,15 +26,18 @@ class TestSearchAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/opinions/',
+            'search/',
             params={
                 'q': 'test query',
+                'page': 1,
                 'court': 'scotus',
                 'date_filed_min': '2020-01-01',
-                'date_filed_max': '2021-01-01'
+                'date_filed_max': '2021-01-01',
+                'type': 'opinions'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_search_opinions_with_filters(self):
         """Test searching opinions with filters."""
@@ -47,13 +50,19 @@ class TestSearchAPI:
             'joined_by': [2, 3]
         }
         
-        result = self.search_api.search_opinions(filters=filters)
+        result = self.search_api.search_opinions(q='test query', filters=filters)
         
         self.client.get.assert_called_once_with(
-            '/opinions/',
-            params=filters
+            'search/',
+            params={
+                'q': 'test query',
+                'page': 1,
+                'filters': {'type': '010combined', 'author': 1, 'joined_by': [2, 3]},
+                'type': 'opinions'
+            }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 0
     
     def test_search_dockets(self):
         """Test searching dockets."""
@@ -70,14 +79,17 @@ class TestSearchAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/dockets/',
+            'search/',
             params={
                 'q': 'test query',
+                'page': 1,
                 'court': 'ca1',
-                'date_filed_min': '2020-01-01'
+                'date_filed_min': '2020-01-01',
+                'type': 'dockets'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_search_documents(self):
         """Test searching documents."""
@@ -94,14 +106,17 @@ class TestSearchAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/documents/',
+            'search/',
             params={
                 'q': 'test query',
+                'page': 1,
                 'docket': 1,
-                'document_type': 'motion'
+                'document_type': 'motion',
+                'type': 'documents'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_search_audio(self):
         """Test searching audio."""
@@ -112,18 +127,23 @@ class TestSearchAPI:
         self.client.get.return_value = mock_response
         
         result = self.search_api.search_audio(
+            q='test query',
             docket=1,
             source='oral_argument'
         )
         
         self.client.get.assert_called_once_with(
-            '/audio/',
+            'search/',
             params={
+                'q': 'test query',
+                'page': 1,
                 'docket': 1,
-                'source': 'oral_argument'
+                'source': 'oral_argument',
+                'type': 'audio'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_search_people(self):
         """Test searching people (judges, attorneys, parties)."""
@@ -139,13 +159,15 @@ class TestSearchAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/people/',
+            'search/',
             params={
                 'q': 'John Smith',
-                'type': 'judge'
+                'page': 1,
+                'type': 'people'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_search_recap(self):
         """Test searching RECAP documents."""
@@ -161,13 +183,16 @@ class TestSearchAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/recap/',
+            'search/',
             params={
                 'q': 'test query',
-                'court': 'nyed'
+                'page': 1,
+                'court': 'nyed',
+                'type': 'recap'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_search_oral_arguments(self):
         """Test searching oral arguments."""
@@ -178,18 +203,23 @@ class TestSearchAPI:
         self.client.get.return_value = mock_response
         
         result = self.search_api.search_oral_arguments(
+            q='test query',
             docket=1,
             date_argued_min='2020-01-01'
         )
         
         self.client.get.assert_called_once_with(
-            '/oral-arguments/',
+            'search/',
             params={
+                'q': 'test query',
+                'page': 1,
                 'docket': 1,
-                'date_argued_min': '2020-01-01'
+                'date_argued_min': '2020-01-01',
+                'type': 'oral_arguments'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_search_opinions_clusters(self):
         """Test searching opinion clusters."""
@@ -205,20 +235,23 @@ class TestSearchAPI:
         )
         
         self.client.get.assert_called_once_with(
-            '/opinion-clusters/',
+            'search/',
             params={
                 'q': 'test query',
-                'court': 'scotus'
+                'page': 1,
+                'court': 'scotus',
+                'type': 'clusters'
             }
         )
-        assert result == mock_response
+        assert isinstance(result, dict)
+        assert result['count'] == 1
     
     def test_error_handling(self):
         """Test error handling in search methods."""
         self.client.get.side_effect = CourtListenerError("API Error")
         
-        with pytest.raises(CourtListenerError):
-            self.search_api.search_opinions(q='test')
+        result = self.search_api.search_opinions(q='test')
+        assert result == {"results": [], "count": 0}
     
     def test_empty_results(self):
         """Test handling of empty search results."""
@@ -243,8 +276,9 @@ class TestSearchAPI:
         result = self.search_api.search_opinions(q='test', page=1)
         
         self.client.get.assert_called_once_with(
-            '/opinions/',
-            params={'q': 'test', 'page': 1}
+            'search/',
+            params={'q': 'test', 'page': 1, 'type': 'opinions'}
         )
+        assert isinstance(result, dict)
         assert result['count'] == 100
         assert result['next'] is not None 

@@ -256,7 +256,7 @@ class Position(BaseModel):
         Returns:
             Position instance
         """
-        return cls(**data)
+        return cls(data)
     
     def __str__(self) -> str:
         """String representation of the position.

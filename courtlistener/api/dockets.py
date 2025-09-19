@@ -32,7 +32,7 @@ class DocketsAPI(BaseAPI):
         List dockets with optional filtering and pagination.
         """
         params = {"page": page, **filters}
-        response = self.client._make_request("GET", self.base_url, params=params)
+        response = self.client.get("dockets/", params=params)
         dockets = []
         for docket_data in response.get("results", []):
             dockets.append(Docket(docket_data))
@@ -51,8 +51,7 @@ class DocketsAPI(BaseAPI):
         Raises:
             NotFoundError: If docket not found
         """
-        url = f"{self.base_url}/{docket_id}"
-        response = self.client._make_request("GET", url)
+        response = self.client.get(f"dockets/{docket_id}/")
         return Docket(response)
     
     def get_docket_by_number(
@@ -102,6 +101,36 @@ class DocketsAPI(BaseAPI):
             court_filters.update(filters)
         
         return self.list_dockets(court_filters)
+    
+    def get_docket_entries(self, docket_id: int, page: int = 1, **filters) -> Dict[str, Any]:
+        """Get docket entries for a specific docket."""
+        params = {'docket': docket_id, 'page': page}
+        params.update(filters)
+        return self.client.get('docket-entries/', params=params)
+    
+    def get_documents(self, docket_id: int, page: int = 1, **filters) -> Dict[str, Any]:
+        """Get documents for a specific docket."""
+        params = {'docket': docket_id, 'page': page}
+        params.update(filters)
+        return self.client.get('documents/', params=params)
+    
+    def get_parties(self, docket_id: int, page: int = 1, **filters) -> Dict[str, Any]:
+        """Get parties for a specific docket."""
+        params = {'docket': docket_id, 'page': page}
+        params.update(filters)
+        return self.client.get('parties/', params=params)
+    
+    def get_audio(self, docket_id: int, page: int = 1, **filters) -> Dict[str, Any]:
+        """Get audio for a specific docket."""
+        params = {'docket': docket_id, 'page': page}
+        params.update(filters)
+        return self.client.get('audio/', params=params)
+    
+    def get_financial(self, docket_id: int, page: int = 1, **filters) -> Dict[str, Any]:
+        """Get financial disclosures for a specific docket."""
+        params = {'docket': docket_id, 'page': page}
+        params.update(filters)
+        return self.client.get('financial-disclosures/', params=params)
     
     def get_dockets_by_date_range(
         self,

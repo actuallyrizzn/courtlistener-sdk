@@ -41,7 +41,7 @@ class ClustersAPI(BaseAPI):
             params["q"] = q
         params.update(filters)
         
-        response = self.client._make_request("GET", "/clusters/", params=params)
+        response = self.client.get("/clusters/", params=params)
         return [OpinionCluster(item) for item in response.get("results", [])]
     
     def get_cluster(self, cluster_id: int) -> OpinionCluster:
@@ -57,8 +57,7 @@ class ClustersAPI(BaseAPI):
             NotFoundError: If the cluster is not found
             CourtListenerError: If the API request fails
         """
-        url = f"{self.client.config.base_url}/clusters/{cluster_id}"
-        response = self.client._make_request("GET", url)
+        response = self.client.get(f"/clusters/{cluster_id}/")
         return OpinionCluster(response)
     
     def get_clusters_by_court(self, court_id: int,
