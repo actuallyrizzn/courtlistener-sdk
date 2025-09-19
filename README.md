@@ -5,12 +5,14 @@ An **unofficial**, robust, production-ready Python SDK for the [CourtListener AP
 **⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
 ## Features
-- Full support for all public CourtListener endpoints
-- Pythonic data models for courts, dockets, opinions, clusters, and more
-- Robust error handling, pagination, and filtering
-- 100% test coverage with real API integration
-- Easy authentication via `.env` file or direct token
-- Extensive documentation and examples
+- **100% API Coverage**: Complete support for all 36 CourtListener API endpoints
+- **Comprehensive Data Models**: Pythonic models for all data types including financial disclosures, alerts, people, and more
+- **Robust Error Handling**: Production-ready error handling with retry logic and rate limiting
+- **Advanced Pagination**: Cursor-based pagination support for efficient data retrieval
+- **Full CRUD Support**: Create, read, update, and delete operations for alerts and docket alerts
+- **100% Test Coverage**: Comprehensive test suite with real API integration tests
+- **Easy Authentication**: Simple authentication via `.env` file or direct token
+- **Extensive Documentation**: Complete API reference and usage examples
 
 ## Installation
 ```bash

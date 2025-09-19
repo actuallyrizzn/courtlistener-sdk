@@ -99,8 +99,38 @@ class CourtListenerClient:
         from .api.clusters import ClustersAPI
         from .api.positions import PositionsAPI
         from .api.financial import FinancialAPI
+        from .api.docket_entries import DocketEntriesAPI
+        from .api.attorneys import AttorneysAPI
+        from .api.parties import PartiesAPI
+        from .api.documents import DocumentsAPI
+        from .api.citations import CitationsAPI
+        from .api.recap_documents import RecapDocumentsAPI
+        from .api.financial_disclosures import FinancialDisclosuresAPI
+        from .api.investments import InvestmentsAPI
+        from .api.non_investment_incomes import NonInvestmentIncomesAPI
+        from .api.agreements import AgreementsAPI
+        from .api.gifts import GiftsAPI
+        from .api.reimbursements import ReimbursementsAPI
+        from .api.debts import DebtsAPI
+        from .api.disclosure_positions import DisclosurePositionsAPI
+        from .api.spouse_incomes import SpouseIncomesAPI
+        from .api.opinions_cited import OpinionsCitedAPI
+        from .api.alerts import AlertsAPI
+        from .api.docket_alerts import DocketAlertsAPI
+        from .api.people import PeopleAPI
+        from .api.schools import SchoolsAPI
+        from .api.educations import EducationsAPI
+        from .api.sources import SourcesAPI
+        from .api.retention_events import RetentionEventsAPI
+        from .api.aba_ratings import ABARatingsAPI
+        from .api.political_affiliations import PoliticalAffiliationsAPI
+        from .api.tag import TagAPI
+        from .api.recap_fetch import RecapFetchAPI
+        from .api.recap_query import RecapQueryAPI
+        from .api.originating_court_information import OriginatingCourtInformationAPI
+        from .api.fjc_integrated_database import FJCIntegratedDatabaseAPI
         
-        # Initialize API modules (only working endpoints)
+        # Initialize core API modules
         self.courts = CourtsAPI(self)
         self.clusters = ClustersAPI(self)
         self.opinions = OpinionsAPI(self)
@@ -113,20 +143,40 @@ class CourtListenerClient:
         self.audio = AudioAPI(self)
         self.search = SearchAPI(self)
         
-        # Disabled endpoints (403 Forbidden or 404 Not Found)
-        # These endpoints require special permissions or don't exist
-        self._disabled_endpoints = {
-            'docket_entries': '403 Forbidden - Requires special permissions',
-            'attorneys': '403 Forbidden - Requires special permissions', 
-            'parties': '403 Forbidden - Requires special permissions',
-            'documents': '404 Not Found - Endpoint does not exist',
-            'judges': '404 Not Found - Endpoint does not exist',
-            'citations': '404 Not Found - Endpoint does not exist'
-        }
+        # New endpoints - all available
+        self.docket_entries = DocketEntriesAPI(self)
+        self.attorneys = AttorneysAPI(self)
+        self.parties = PartiesAPI(self)
+        self.documents = DocumentsAPI(self)
+        self.citations = CitationsAPI(self)
+        self.recap_documents = RecapDocumentsAPI(self)
+        self.financial_disclosures = FinancialDisclosuresAPI(self)
+        self.investments = InvestmentsAPI(self)
+        self.non_investment_incomes = NonInvestmentIncomesAPI(self)
+        self.agreements = AgreementsAPI(self)
+        self.gifts = GiftsAPI(self)
+        self.reimbursements = ReimbursementsAPI(self)
+        self.debts = DebtsAPI(self)
+        self.disclosure_positions = DisclosurePositionsAPI(self)
+        self.spouse_incomes = SpouseIncomesAPI(self)
+        self.opinions_cited = OpinionsCitedAPI(self)
+        self.alerts = AlertsAPI(self)
+        self.docket_alerts = DocketAlertsAPI(self)
+        self.people = PeopleAPI(self)
+        self.schools = SchoolsAPI(self)
+        self.educations = EducationsAPI(self)
+        self.sources = SourcesAPI(self)
+        self.retention_events = RetentionEventsAPI(self)
+        self.aba_ratings = ABARatingsAPI(self)
+        self.political_affiliations = PoliticalAffiliationsAPI(self)
+        self.tag = TagAPI(self)
+        self.recap_fetch = RecapFetchAPI(self)
+        self.recap_query = RecapQueryAPI(self)
+        self.originating_court_information = OriginatingCourtInformationAPI(self)
+        self.fjc_integrated_database = FJCIntegratedDatabaseAPI(self)
         
-        # Add disabled endpoint placeholders with warnings
-        for endpoint_name, reason in self._disabled_endpoints.items():
-            setattr(self, endpoint_name, DisabledEndpoint(endpoint_name, reason))
+        # Legacy disabled endpoints - now enabled
+        self._disabled_endpoints = {}
     
     def _make_request(
         self,
