@@ -39,16 +39,11 @@ class SearchAPI(BaseAPI):
     
     def search(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
         """Perform a search across all content."""
-        try:
-            params = {"q": q, "page": page}
-            params.update(filters)
-            
-            response = self.client.get("search/", params=params)
-            return response
-        except Exception as e:
-            if hasattr(self.client, 'logger'):
-                self.client.logger.warning(f"Search endpoint error: {e}")
-            return {"results": [], "count": 0}
+        params = {"q": q, "page": page}
+        params.update(filters)
+        
+        response = self.client.get("search/", params=params)
+        return response
     
     def search_opinions(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
         """Search opinions specifically."""

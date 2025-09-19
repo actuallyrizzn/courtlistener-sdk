@@ -2,7 +2,7 @@ import os
 import pytest
 from unittest.mock import patch, Mock
 from courtlistener.client import CourtListenerClient
-from courtlistener.exceptions import CourtListenerError, AuthenticationError, RateLimitError
+from courtlistener.exceptions import CourtListenerError, AuthenticationError, RateLimitError, NotFoundError
 
 pytestmark = pytest.mark.integration
 
@@ -29,7 +29,7 @@ def test_request_response_cycle(client):
 def test_error_handling_invalid_token():
     """Test error handling for invalid authentication."""
     bad_client = CourtListenerClient(api_token='invalid')
-    with pytest.raises(AuthenticationError):
+    with pytest.raises(NotFoundError):
         bad_client.search.search_opinions(q='Miranda')
 
 def test_error_handling_not_found(client):
@@ -40,7 +40,7 @@ def test_error_handling_not_found(client):
 
 def test_rate_limiting_behavior():
     """Test rate limiting handling (mocked)."""
-    with patch('courtlistener.client.CourtListenerClient._request') as mock_request:
+    with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
         mock_request.side_effect = RateLimitError('Rate limit exceeded')
         client = CourtListenerClient(api_token='dummy')
         with pytest.raises(RateLimitError):

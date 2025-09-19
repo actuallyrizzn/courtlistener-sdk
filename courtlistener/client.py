@@ -232,17 +232,22 @@ class CourtListenerClient:
             
             except requests.exceptions.Timeout:
                 if attempt == self.config.max_retries:
-                    raise TimeoutError("Request timed out")
+                    raise CourtListenerError("Request timed out")
                 time.sleep(self.config.retry_delay)
             
             except requests.exceptions.ConnectionError:
                 if attempt == self.config.max_retries:
-                    raise ConnectionError("Failed to connect to API")
+                    raise CourtListenerError("Failed to connect to API")
                 time.sleep(self.config.retry_delay)
             
             except requests.exceptions.RequestException as e:
                 if attempt == self.config.max_retries:
                     raise CourtListenerError(f"Request failed: {str(e)}")
+                time.sleep(self.config.retry_delay)
+            
+            except APIError as e:
+                if attempt == self.config.max_retries:
+                    raise e
                 time.sleep(self.config.retry_delay)
     
     def _handle_response(self, response: requests.Response) -> Dict[str, Any]:
