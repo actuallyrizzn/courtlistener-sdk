@@ -15,6 +15,7 @@ from courtlistener.exceptions import (
     APIError,
     ConnectionError,
     TimeoutError,
+    ValidationError,
 )
 
 
@@ -80,9 +81,8 @@ class TestCourtListenerClient:
 
     def test_init_with_none_params(self):
         """Test client initialization with None parameters."""
-        client = CourtListenerClient()
-        assert client.api_token is None
-        assert client.config.api_token is None
+        with pytest.raises(ValidationError, match="API token is required"):
+            CourtListenerClient()
 
     def test_api_token_property(self):
         """Test api_token property."""
@@ -386,7 +386,7 @@ class TestCourtListenerClient:
             result = self.client.post('search/', data={"q": "test"})
             
             assert result == {"success": True}
-            mock_make_request.assert_called_once_with('POST', 'search/', data={"q": "test"})
+            mock_make_request.assert_called_once_with('POST', 'search/', data={"q": "test"}, json_data=None)
 
     def test_post_method_with_json(self):
         """Test post method with JSON data."""
@@ -396,7 +396,7 @@ class TestCourtListenerClient:
             result = self.client.post('search/', json_data={"q": "test"})
             
             assert result == {"success": True}
-            mock_make_request.assert_called_once_with('POST', 'search/', json_data={"q": "test"})
+            mock_make_request.assert_called_once_with('POST', 'search/', data=None, json_data={"q": "test"})
 
     def test_paginate_method(self):
         """Test paginate method."""
