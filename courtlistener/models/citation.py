@@ -31,21 +31,63 @@ class Citation(BaseModel):
         
         if parts:
             return ' '.join(parts)
-        elif self.citation:
-            return self.citation
+        elif self._data.get('citation'):
+            return self._data.get('citation')
         else:
             return ''
     
     @property
     def reporter(self) -> str:
         """Get reporter name."""
-        return getattr(self, '_reporter', None)
+        return self._data.get('reporter', None)
+    
+    @property
+    def volume(self) -> int:
+        """Get volume number."""
+        return self._data.get('volume', None)
+    
+    @property
+    def page(self) -> int:
+        """Get page number."""
+        return self._data.get('page', None)
+    
+    @property
+    def type(self) -> str:
+        """Get citation type."""
+        return self._data.get('type', None)
+    
+    @property
+    def year(self) -> int:
+        """Get year."""
+        return self._data.get('year', None)
+    
+    @property
+    def absolute_url(self) -> str:
+        """Get absolute URL."""
+        return self._data.get('absolute_url', None)
+    
+    @property
+    def resource_uri(self) -> str:
+        """Get resource URI."""
+        return self._data.get('resource_uri', None)
+    
+    @property
+    def citation(self) -> str:
+        """Get citation string."""
+        return self.citation_string
     
     @property
     def is_federal(self) -> bool:
         """Check if this is a federal citation."""
+        if self.type == 'federal':
+            return True
         reporter = (self.reporter or '').lower()
         return 'u.s.' in reporter or 'f.' in reporter or 'f.2d' in reporter or 'f.3d' in reporter
+    
+    @property
+    def is_state(self) -> bool:
+        """Check if this is a state citation."""
+        return self.type == 'state'
     
     def __repr__(self) -> str:
         """String representation of the citation."""
@@ -54,4 +96,9 @@ class Citation(BaseModel):
             citation = getattr(self, 'citation', 'Unknown')
             year = getattr(self, 'year', 'Unknown')
             return f"{class_name}(id={self.id}, citation='{citation}', year={year})"
-        return f"{class_name}()" 
+        return f"{class_name}()"
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> 'Citation':
+        """Create Citation instance from dictionary."""
+        return cls(data) 

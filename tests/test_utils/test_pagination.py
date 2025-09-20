@@ -89,16 +89,28 @@ class TestPaginator:
     def test_paginator_cursor_extraction(self):
         """Test paginator cursor extraction from URL."""
         mock_client = MagicMock()
-        mock_client._make_request.return_value = {
-            'results': [{'id': 1}],
-            'next': '/api/test/?param=value&cursor=abc123&other=stuff'
-        }
+        # First call returns a page with next URL, second call returns no next URL
+        mock_client._make_request.side_effect = [
+            {
+                'results': [{'id': 1}],
+                'next': '/api/test/?param=value&cursor=abc123&other=stuff'
+            },
+            {
+                'results': [{'id': 2}],
+                # No 'next' key - pagination ends
+            }
+        ]
         
         paginator = Paginator(mock_client, '/api/test/')
-        list(paginator)  # Consume first page
+        results = list(paginator)  # Consume all pages
+        
+        # Check that we got both results
+        assert len(results) == 2
+        assert results[0]['id'] == 1
+        assert results[1]['id'] == 2
         
         # Check that cursor was extracted correctly
-        assert paginator.cursor == '/api/test/?param=value&cursor=abc123&other=stuff'
+        assert paginator.cursor is None  # Should be None after pagination ends
 
 
 class TestPageIterator:

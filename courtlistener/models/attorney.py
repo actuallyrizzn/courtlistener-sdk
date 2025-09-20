@@ -1,5 +1,6 @@
 """Attorney model for CourtListener SDK."""
 
+from typing import Dict, Any
 from .base import BaseModel
 
 
@@ -80,7 +81,52 @@ class Attorney(BaseModel):
     @property
     def contact(self) -> str:
         """Get contact information."""
-        return getattr(self, '_contact', None)
+        return self._data.get('contact', None)
+    
+    @property
+    def phone(self) -> str:
+        """Get phone number."""
+        return self._data.get('phone', None)
+    
+    @property
+    def fax(self) -> str:
+        """Get fax number."""
+        return self._data.get('fax', None)
+    
+    @property
+    def address1(self) -> str:
+        """Get address line 1."""
+        return self._data.get('address1', None)
+    
+    @property
+    def address2(self) -> str:
+        """Get address line 2."""
+        return self._data.get('address2', None)
+    
+    @property
+    def city(self) -> str:
+        """Get city."""
+        return self._data.get('city', None)
+    
+    @property
+    def state(self) -> str:
+        """Get state."""
+        return self._data.get('state', None)
+    
+    @property
+    def zip_code(self) -> str:
+        """Get zip code."""
+        return self._data.get('zip_code', None)
+    
+    @property
+    def firm(self) -> str:
+        """Get firm name."""
+        return self._data.get('firm', None)
+    
+    @property
+    def resource_uri(self) -> str:
+        """Get resource URI."""
+        return self._data.get('resource_uri', None)
     
     def __repr__(self) -> str:
         """String representation of the attorney."""
@@ -88,7 +134,8 @@ class Attorney(BaseModel):
         if hasattr(self, 'id'):
             name = getattr(self, 'name', 'Unknown')
             firm = getattr(self, 'firm', None)
-            return f"<Attorney(id={self.id}, name='{name}', firm={firm})>"
+            city = getattr(self, 'city', None)
+            return f"<Attorney(id={self.id}, name='{name}', firm='{firm}', city={city})>"
         return f"<Attorney()>"
     
     def __str__(self) -> str:
@@ -97,4 +144,9 @@ class Attorney(BaseModel):
             name = getattr(self, 'name', 'Unknown')
             firm = getattr(self, 'firm', 'Unknown')
             return f"{class_name}(id={self.id}, name='{name}', firm='{firm}')"
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'Attorney':
+        """Create Attorney instance from dictionary."""
+        return cls(data)
         return f"{class_name}()" 

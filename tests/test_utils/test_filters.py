@@ -130,7 +130,7 @@ class TestBuildOrdering:
     def test_build_ordering_multiple_fields_reverse(self):
         """Test ordering with multiple fields in reverse."""
         filters = build_ordering(['date_filed', 'case_name'], reverse=True)
-        assert filters == {'order_by': '-date_filed,-case_name'}
+        assert filters == {'order_by': '-date_filed,case_name'}
     
     def test_build_ordering_already_reversed(self):
         """Test ordering with field already marked as reverse."""

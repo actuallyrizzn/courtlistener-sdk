@@ -32,12 +32,58 @@ class Audio(BaseModel):
     
     @property
     def has_ia_file(self) -> bool:
-        return self.has_local_file
+        """Check if audio has an Internet Archive file."""
+        return bool(self.filepath_ia or self.filepath_ia_json)
+    
+    @property
+    def is_oral_argument(self) -> bool:
+        """Check if audio is an oral argument."""
+        return self.source == 'oral_argument'
+    
+    @property
+    def docket(self) -> int:
+        """Get docket ID."""
+        return self._data.get('docket', None)
     
     @property
     def docket_entry(self) -> int:
         """Get docket entry ID."""
-        return getattr(self, '_docket_entry', None)
+        return self._data.get('docket_entry', None)
+    
+    @property
+    def source(self) -> str:
+        """Get source."""
+        return self._data.get('source', None)
+    
+    @property
+    def filepath_local(self) -> str:
+        """Get local file path."""
+        return self._data.get('filepath_local', None)
+    
+    @property
+    def filepath_ia(self) -> str:
+        """Get Internet Archive file path."""
+        return self._data.get('filepath_ia', None)
+    
+    @property
+    def filepath_ia_json(self) -> str:
+        """Get Internet Archive JSON file path."""
+        return self._data.get('filepath_ia_json', None)
+    
+    @property
+    def duration(self) -> int:
+        """Get duration in seconds."""
+        return self._data.get('duration', None)
+    
+    @property
+    def absolute_url(self) -> str:
+        """Get absolute URL."""
+        return self._data.get('absolute_url', None)
+    
+    @property
+    def resource_uri(self) -> str:
+        """Get resource URI."""
+        return self._data.get('resource_uri', None)
     
     @property
     def duration_formatted(self) -> str:
@@ -64,4 +110,9 @@ class Audio(BaseModel):
             source = getattr(self, 'source', 'None')
             duration = getattr(self, 'duration', None)
             return f"{class_name}(id={self.id}, source='{source}', duration={duration})"
-        return f"{class_name}()" 
+        return f"{class_name}()"
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> 'Audio':
+        """Create Audio instance from dictionary."""
+        return cls(data) 
