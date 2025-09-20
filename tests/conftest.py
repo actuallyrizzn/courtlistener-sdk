@@ -9,7 +9,7 @@ from courtlistener import CourtListenerClient
 @pytest.fixture
 def client():
     """Create a test client instance."""
-    return CourtListenerClient(api_token="test_token")
+    return CourtListenerClient(api_token="7c2ad11c595dcb088f23d7a757190c47e8f397a2")
 
 
 @pytest.fixture
