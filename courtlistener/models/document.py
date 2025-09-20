@@ -11,9 +11,9 @@ class Document(BaseModel):
         super()._parse_data()
         for field in [
             'id', 'docket', 'docket_entry', 'document_number', 'document_type', 'type', 'description',
-            'local_path', 'file_path', 'file_url', 'filepath_local', 'date_filed', 'absolute_url', 'resource_uri']:
+            'local_path', 'file_path', 'file_url', 'filepath_local', 'date_filed', 'date_created', 'date_modified', 'absolute_url', 'resource_uri']:
             if not hasattr(self, field):
-                setattr(self, field, None)
+                setattr(self, field, self._data.get(field, None))
         
         # Map API fields to expected properties
         if hasattr(self, 'docket_entry') and not hasattr(self, 'docket'):
@@ -37,7 +37,7 @@ class Document(BaseModel):
     @property
     def docket_entry(self) -> int:
         """Get docket entry ID."""
-        return getattr(self, '_docket_entry', None)
+        return self._data.get('docket_entry', None)
     
     @property
     def has_ia_file(self) -> bool:
@@ -47,7 +47,7 @@ class Document(BaseModel):
     def __repr__(self) -> str:
         """String representation of the document."""
         class_name = self.__class__.__name__
-        if hasattr(self, 'id'):
+        if hasattr(self, 'id') and self.id is not None:
             docket = getattr(self, 'docket', None)
             document_number = getattr(self, 'document_number', 'None')
             document_type = getattr(self, 'document_type', getattr(self, 'type', 'None'))
@@ -57,9 +57,9 @@ class Document(BaseModel):
     def __str__(self) -> str:
         """String representation of the document."""
         class_name = self.__class__.__name__
-        if hasattr(self, 'id'):
+        if hasattr(self, 'id') and self.id is not None:
             document_number = getattr(self, 'document_number', 'None')
-            document_type = getattr(self, 'document_type', getattr(self, 'type', 'None'))
+            document_type = getattr(self, 'document_type', None) or getattr(self, 'type', 'None')
             description = getattr(self, 'description', 'None')
             return f"Document(id={self.id}, document_number='{document_number}', document_type='{document_type}', description='{description}')"
         return f"{class_name}()" 

@@ -254,6 +254,29 @@ class Docket(BaseModel):
         """Resource URI for the docket."""
         return self._data.get('resource_uri', None)
     
+    @property
+    def is_terminated(self) -> bool:
+        """Check if docket is terminated."""
+        return bool(self._data.get('date_terminated') or self._data.get('terminated'))
+    
+    @property
+    def has_audio(self) -> bool:
+        """Check if docket has audio."""
+        audio_count = self._data.get('audio_count', 0)
+        return bool(audio_count and audio_count > 0)
+    
+    @property
+    def has_opinions(self) -> bool:
+        """Check if docket has opinions."""
+        opinion_count = self._data.get('opinion_count', 0)
+        return bool(opinion_count and opinion_count > 0)
+    
+    @property
+    def has_recap(self) -> bool:
+        """Check if docket has RECAP documents."""
+        recap_count = self._data.get('recap_documents_count', 0)
+        return bool(recap_count and recap_count > 0)
+    
     def __repr__(self) -> str:
         """String representation of the docket."""
         return f"Docket(id={self.docket_id}, case_name='{self.case_name}')"

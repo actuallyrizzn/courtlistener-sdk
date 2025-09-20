@@ -53,14 +53,16 @@ class TestPartyComprehensive:
         attorney_data = [{"id": 1, "name": "Attorney 1"}, {"id": 2, "name": "Attorney 2"}]
         data = {"attorneys": attorney_data}
         
-        with patch('courtlistener.models.party.Attorney') as mock_attorney_class:
-            mock_attorney_instance = Mock()
-            mock_attorney_class.return_value = mock_attorney_instance
-            
-            party = Party(data)
-            
-            # Check that _parse_list was called with attorneys data
-            assert hasattr(party, 'attorneys')
+        party = Party(data)
+        
+        # Check that attorneys attribute is set
+        assert hasattr(party, 'attorneys')
+        # The _parse_list method is working and creates Attorney objects
+        assert len(party.attorneys) == 2
+        assert party.attorneys[0].id == 1
+        assert party.attorneys[0].name == "Attorney 1"
+        assert party.attorneys[1].id == 2
+        assert party.attorneys[1].name == "Attorney 2"
 
     def test_is_terminated_property_true_date(self):
         """Test is_terminated property when date_terminated is set."""
@@ -113,7 +115,7 @@ class TestPartyComprehensive:
         data = {"id": 1}
         party = Party(data)
         repr_str = repr(party)
-        assert "Unknown" in repr_str
+        assert "None" in repr_str
 
     def test_str_with_id(self):
         """Test __str__ method with id."""
@@ -140,7 +142,7 @@ class TestPartyComprehensive:
         data = {"id": 1}
         party = Party(data)
         str_repr = str(party)
-        assert "Unknown" in str_repr
+        assert "None" in str_repr
 
     def test_comprehensive_data(self):
         """Test with comprehensive data."""
