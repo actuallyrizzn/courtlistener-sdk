@@ -47,41 +47,111 @@ for docket in dockets:
 
 ## API Endpoints
 
-The SDK provides access to all public CourtListener endpoints:
-- `client.courts` — Court information
-- `client.dockets` — Docket records
-- `client.opinions` — Judicial opinions
-- `client.clusters` — Opinion clusters
-- `client.positions` — Judicial positions
-- `client.financial` — Financial disclosures
-- `client.audio` — Oral argument audio
-- `client.search` — Cross-resource search
+The SDK provides access to all 36+ CourtListener API endpoints, organized by category:
 
-Each endpoint provides methods like `list_*`, `get_*`, and `search_*` for flexible access.
+### Core Endpoints
+- `client.courts` — Court information and hierarchy
+- `client.dockets` — Docket records and case information
+- `client.opinions` — Judicial opinions and decisions
+- `client.clusters` — Opinion clusters and related cases
+- `client.judges` — Judicial biographical data
+- `client.positions` — Judicial positions and appointments
+- `client.audio` — Oral argument audio recordings
+- `client.search` — Cross-resource search functionality
+
+### Financial & Disclosure Endpoints
+- `client.financial` — Financial disclosure records
+- `client.financial_disclosures` — Detailed financial disclosures
+- `client.investments` — Investment holdings
+- `client.non_investment_incomes` — Non-investment income sources
+- `client.gifts` — Gift disclosures
+- `client.reimbursements` — Reimbursement records
+- `client.debts` — Debt disclosures
+- `client.spouse_incomes` — Spouse income information
+- `client.agreements` — Financial agreements
+
+### Case & Legal Endpoints
+- `client.docket_entries` — Individual docket entries
+- `client.parties` — Case participants and parties
+- `client.attorneys` — Legal representation
+- `client.documents` — RECAP document management
+- `client.recap_documents` — RECAP document access
+- `client.citations` — Citation graph and verification
+- `client.opinions_cited` — Opinion citation relationships
+
+### People & Education Endpoints
+- `client.people` — People and biographical data
+- `client.schools` — Educational institutions
+- `client.educations` — Educational background
+- `client.aba_ratings` — ABA judicial ratings
+- `client.political_affiliations` — Political affiliations
+
+### Alert & Notification Endpoints
+- `client.alerts` — Search alerts and notifications
+- `client.docket_alerts` — Docket-specific alerts
+
+### Administrative Endpoints
+- `client.sources` — Data sources
+- `client.retention_events` — Data retention events
+- `client.tag` — Tagging system
+- `client.recap_fetch` — RECAP fetch operations
+- `client.recap_query` — RECAP query operations
+- `client.originating_court_information` — Court origin data
+- `client.fjc_integrated_database` — FJC database integration
+- `client.disclosure_positions` — Disclosure position data
+
+Each endpoint provides methods like `list()`, `get()`, and `search()` for flexible access.
 
 ### Example: List Opinions
 ```python
-opinions = client.opinions.list_opinions(page=1, court="scotus")
-for opinion in opinions:
-    print(opinion.id, opinion.case_name)
+opinions = client.opinions.list(page=1, court="scotus")
+for opinion in opinions['results']:
+    print(opinion['id'], opinion['case_name'])
 ```
 
 ### Example: Search
 ```python
-results = client.search.search("first amendment", page=1)
-for result in results.get('results', []):
-    print(result)
+results = client.search.list(q="first amendment", page=1)
+for result in results['results']:
+    print(result['case_name'])
+```
+
+### Example: Financial Disclosures
+```python
+disclosures = client.financial_disclosures.list(page=1)
+for disclosure in disclosures['results']:
+    print(disclosure['id'], disclosure['date_received'])
+```
+
+### Example: Docket Entries
+```python
+entries = client.docket_entries.list(docket=12345, page=1)
+for entry in entries['results']:
+    print(entry['entry_number'], entry['description'])
 ```
 
 ## Pagination & Filtering
 
-All `list_*` and `search_*` methods support pagination and filtering:
+All `list()` and `search()` methods support pagination and filtering:
 ```python
 # Get the second page of dockets for a specific court
-page2 = client.dockets.list_dockets(page=2, court="scotus")
+page2 = client.dockets.list(page=2, court="scotus")
 
 # Filter opinions by date
-opinions = client.opinions.list_opinions(date_filed__gte="2020-01-01")
+opinions = client.opinions.list(date_filed__gte="2020-01-01")
+
+# Filter financial disclosures by date range
+disclosures = client.financial_disclosures.list(
+    date_received__gte="2023-01-01",
+    date_received__lte="2023-12-31"
+)
+
+# Search with multiple filters
+results = client.search.list(
+    q="constitutional law",
+    court="scotus",
+    date_filed__gte="2020-01-01"
+)
 ```
 
 ## Error Handling
@@ -96,9 +166,14 @@ The SDK raises custom exceptions for API errors:
 Use try/except blocks to handle errors gracefully:
 ```python
 try:
-    dockets = client.dockets.list_dockets(page=1)
+    dockets = client.dockets.list(page=1)
 except CourtListenerError as e:
     print("API error:", e)
+except RateLimitError as e:
+    print("Rate limited, waiting...")
+    time.sleep(5)  # Wait before retrying
+except NotFoundError as e:
+    print("Resource not found:", e)
 ```
 
 ## Best Practices
