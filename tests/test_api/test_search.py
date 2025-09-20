@@ -57,8 +57,9 @@ class TestSearchAPI:
             params={
                 'q': 'test query',
                 'page': 1,
-                'filters': {'type': '010combined', 'author': 1, 'joined_by': [2, 3]},
-                'type': 'opinions'
+                'type': 'opinions',
+                'author': 1,
+                'joined_by': [2, 3]
             }
         )
         assert isinstance(result, dict)

@@ -36,8 +36,14 @@ class Paginator:
                 yield item
             
             # Update pagination state
-            self.cursor = response.get('next')
-            self.has_more = bool(self.cursor)
+            next_cursor = response.get('next')
+            # Only update cursor if it's different to prevent infinite loops
+            if next_cursor != self.cursor:
+                self.cursor = next_cursor
+                self.has_more = bool(self.cursor)
+            else:
+                # If cursor hasn't changed, we're stuck in a loop
+                self.has_more = False
     
     def _fetch_page(self) -> Optional[Dict[str, Any]]:
         """Fetch a single page of results."""
@@ -110,8 +116,14 @@ class PageIterator:
             response = self.client._make_request('GET', self.endpoint, params=params)
             self.current_page = response
             self.current_index = 0
-            self.cursor = response.get('next')
-            self.has_more = bool(self.cursor)
+            next_cursor = response.get('next')
+            # Only update cursor if it's different to prevent infinite loops
+            if next_cursor != self.cursor:
+                self.cursor = next_cursor
+                self.has_more = bool(self.cursor)
+            else:
+                # If cursor hasn't changed, we're stuck in a loop
+                self.has_more = False
         except Exception as e:
             raise CourtListenerError(f"Failed to load page: {str(e)}")
 

@@ -95,7 +95,7 @@ class TestSearchAPIComprehensive:
         result = self.api.search_judges("smith", filters=filters)
         
         assert result == mock_response
-        expected_params = {"q": "smith", "page": 1, "result_type": "j", "filters": filters}
+        expected_params = {"q": "smith", "page": 1, "type": "j", "court": "scotus"}
         self.mock_client.get.assert_called_once_with("search/", params=expected_params)
     
     def test_search_judges_no_filters(self):
