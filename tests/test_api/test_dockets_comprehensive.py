@@ -107,21 +107,26 @@ class TestDocketsAPIComprehensive:
         mock_response = {"results": [{"id": 1, "docket_number": "1:23-cv-12345"}]}
         self.mock_client.get.return_value = mock_response
         
-        result = self.api.get_docket_by_number("1:23-cv-12345")
-        
-        assert isinstance(result, Docket)
-        self.mock_client.get.assert_called_once_with("dockets/", params={"page": 1, "docket_number": "1:23-cv-12345"})
+        with patch.object(self.api, 'list_dockets') as mock_list_dockets:
+            mock_list_dockets.return_value = [Docket({"id": 1, "docket_number": "1:23-cv-12345"})]
+            
+            result = self.api.get_docket_by_number("1:23-cv-12345")
+            
+            assert isinstance(result, Docket)
+            mock_list_dockets.assert_called_once_with({"docket_number": "1:23-cv-12345"})
     
     def test_get_docket_by_number_with_court(self):
         """Test get_docket_by_number with court filter."""
         mock_response = {"results": [{"id": 1, "docket_number": "1:23-cv-12345"}]}
         self.mock_client.get.return_value = mock_response
         
-        result = self.api.get_docket_by_number("1:23-cv-12345", court="scotus")
-        
-        assert isinstance(result, Docket)
-        expected_params = {"page": 1, "docket_number": "1:23-cv-12345", "court": "scotus"}
-        self.mock_client.get.assert_called_once_with("dockets/", params=expected_params)
+        with patch.object(self.api, 'list_dockets') as mock_list_dockets:
+            mock_list_dockets.return_value = [Docket({"id": 1, "docket_number": "1:23-cv-12345"})]
+            
+            result = self.api.get_docket_by_number("1:23-cv-12345", court="scotus")
+            
+            assert isinstance(result, Docket)
+            mock_list_dockets.assert_called_once_with({"docket_number": "1:23-cv-12345", "court": "scotus"})
     
     def test_get_docket_by_number_not_found(self):
         """Test get_docket_by_number when docket not found."""
@@ -142,21 +147,27 @@ class TestDocketsAPIComprehensive:
         mock_response = {"results": [{"id": 1, "case_name": "Test Case"}]}
         self.mock_client.get.return_value = mock_response
         
-        result = self.api.get_dockets_by_court("scotus")
-        
-        assert len(result) == 1
-        self.mock_client.get.assert_called_once_with("dockets/", params={"page": 1, "court": "scotus"})
+        with patch.object(self.api, 'list_dockets') as mock_list_dockets:
+            mock_list_dockets.return_value = [Docket({"id": 1, "case_name": "Test Case"})]
+            
+            result = self.api.get_dockets_by_court("scotus")
+            
+            assert len(result) == 1
+            mock_list_dockets.assert_called_once_with({"court": "scotus"})
     
     def test_get_dockets_by_court_with_filters(self):
         """Test get_dockets_by_court with additional filters."""
         mock_response = {"results": []}
         self.mock_client.get.return_value = mock_response
         
-        filters = {"date_filed": "2023-01-01"}
-        self.api.get_dockets_by_court("scotus", filters)
-        
-        expected_params = {"page": 1, "court": "scotus", "date_filed": "2023-01-01"}
-        self.mock_client.get.assert_called_once_with("dockets/", params=expected_params)
+        with patch.object(self.api, 'list_dockets') as mock_list_dockets:
+            mock_list_dockets.return_value = []
+            
+            filters = {"date_filed": "2023-01-01"}
+            result = self.api.get_dockets_by_court("scotus", filters)
+            
+            assert result == []
+            mock_list_dockets.assert_called_once_with({"court": "scotus", "date_filed": "2023-01-01"})
     
     def test_get_docket_entries(self):
         """Test get_docket_entries method."""
