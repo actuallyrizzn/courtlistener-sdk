@@ -208,7 +208,11 @@ class CourtListenerClient:
         Raises:
             Various CourtListenerError subclasses for different error conditions
         """
-        url = urljoin(self.config.base_url, endpoint)
+        # Ensure proper URL construction - urljoin can remove path components
+        if endpoint.startswith('/'):
+            url = self.config.base_url.rstrip('/') + endpoint
+        else:
+            url = urljoin(self.config.base_url, endpoint)
         
         # Prepare request parameters
         request_kwargs = {

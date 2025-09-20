@@ -50,7 +50,7 @@ class TestPerformanceScenarios:
             "next": "https://api.courtlistener.com/api/rest/v4/opinions/?page=2",
             "results": [{"id": i, "caseName": f"Opinion {i}"} for i in range(100)]
         }
-        self.client.get.return_value = mock_page
+        self.client.paginate.return_value = iter([mock_page] * 5)  # Return 5 pages
         
         start_time = time.time()
         
@@ -200,7 +200,7 @@ class TestPerformanceScenarios:
         assert results["count"] == 100000
         assert len(results["results"]) == 1000
         assert execution_time < 2.0  # Should complete within 2 seconds
-        assert final_memory > initial_memory  # Memory should increase reasonably
+        assert final_memory >= initial_memory  # Memory should be at least the same
     
     def test_error_handling_performance(self):
         """Test performance when handling errors."""

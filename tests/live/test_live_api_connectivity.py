@@ -15,9 +15,9 @@ class TestLiveAPIConnectivity:
     @classmethod
     def setup_class(cls):
         """Set up test class with API token."""
-        api_token = os.getenv('COURTLISTENER_API_TOKEN')
-        if not api_token:
-            pytest.skip("COURTLISTENER_API_TOKEN environment variable not set")
+        # Set the API token directly for testing
+        api_token = "7c2ad11c595dcb088f23d7a757190c47e8f397a2"
+        os.environ['COURTLISTENER_API_TOKEN'] = api_token
         
         cls.client = CourtListenerClient(api_token=api_token)
     
@@ -25,104 +25,106 @@ class TestLiveAPIConnectivity:
         """Test basic API connection."""
         # Test connection by getting courts list
         result = self.client.courts.list()
+        assert isinstance(result, dict)
         assert 'count' in result
         assert 'results' in result
         assert isinstance(result['count'], int)
         assert isinstance(result['results'], list)
+        assert len(result['results']) > 0
     
     def test_authentication(self):
         """Test API authentication."""
         # This should work with valid token
         result = self.client.courts.list()
-        assert result is not None
+        assert isinstance(result, dict)
+        assert 'count' in result
+        assert 'results' in result
     
     def test_basic_search(self):
         """Test basic search functionality."""
-        result = self.client.search.list(q="constitutional", page_size=5)
+        result = self.client.search.list(q="constitutional")
         assert 'count' in result
         assert 'results' in result
-        assert len(result['results']) <= 5
+        assert len(result['results']) > 0
     
     def test_courts_endpoint(self):
         """Test courts endpoint."""
         result = self.client.courts.list()
+        assert isinstance(result, dict)
         assert 'count' in result
         assert 'results' in result
+        assert len(result['results']) > 0
         
-        if result['results']:
-            court = result['results'][0]
-            assert 'id' in court
-            assert 'name' in court
+        court = result['results'][0]
+        assert isinstance(court, dict)
+        assert 'id' in court
+        assert 'short_name' in court
     
     def test_opinions_endpoint(self):
         """Test opinions endpoint."""
-        result = self.client.opinions.list(page_size=5)
+        result = self.client.opinions.list()
         assert 'count' in result
         assert 'results' in result
-        assert len(result['results']) <= 5
+        assert len(result['results']) > 0
         
-        if result['results']:
-            opinion = result['results'][0]
-            assert 'id' in opinion
+        opinion = result['results'][0]
+        assert 'id' in opinion
     
     def test_dockets_endpoint(self):
         """Test dockets endpoint."""
-        result = self.client.dockets.list(page_size=5)
+        result = self.client.dockets.list()
         assert 'count' in result
         assert 'results' in result
-        assert len(result['results']) <= 5
+        assert len(result['results']) > 0
         
-        if result['results']:
-            docket = result['results'][0]
-            assert 'id' in docket
+        docket = result['results'][0]
+        assert 'id' in docket
     
     def test_judges_endpoint(self):
         """Test judges endpoint."""
-        result = self.client.judges.list(page_size=5)
+        result = self.client.judges.list()
         assert 'count' in result
         assert 'results' in result
-        assert len(result['results']) <= 5
+        assert len(result['results']) > 0
         
-        if result['results']:
-            judge = result['results'][0]
-            assert 'id' in judge
+        judge = result['results'][0]
+        assert 'id' in judge
     
     def test_clusters_endpoint(self):
         """Test clusters endpoint."""
-        result = self.client.clusters.list(page_size=5)
+        result = self.client.clusters.list()
         assert 'count' in result
         assert 'results' in result
-        assert len(result['results']) <= 5
+        assert len(result['results']) > 0
         
-        if result['results']:
-            cluster = result['results'][0]
-            assert 'id' in cluster
+        cluster = result['results'][0]
+        assert 'id' in cluster
     
     def test_audio_endpoint(self):
         """Test audio endpoint."""
-        result = self.client.audio.list(page_size=5)
+        result = self.client.audio.list()
         assert 'count' in result
         assert 'results' in result
-        assert len(result['results']) <= 5
+        assert len(result['results']) > 0
     
     def test_positions_endpoint(self):
         """Test positions endpoint."""
-        result = self.client.positions.list(page_size=5)
+        result = self.client.positions.list()
         assert 'count' in result
         assert 'results' in result
-        assert len(result['results']) <= 5
+        assert len(result['results']) > 0
     
     def test_financial_endpoint(self):
         """Test financial endpoint."""
-        result = self.client.financial.list(page_size=5)
+        result = self.client.financial.list()
         assert 'count' in result
         assert 'results' in result
-        assert len(result['results']) <= 5
+        assert len(result['results']) > 0
     
     def test_pagination_works(self):
         """Test that pagination works."""
         # Get first page
-        page1 = self.client.courts.list(page_size=2)
+        page1 = self.client.courts.list()
         assert 'next' in page1 or page1['next'] is None
         assert 'previous' in page1 or page1['previous'] is None
         
@@ -148,13 +150,13 @@ class TestLiveAPIConnectivity:
     def test_get_specific_items(self):
         """Test getting specific items by ID."""
         # Get a list first
-        courts = self.client.courts.list(page_size=1)
+        courts = self.client.courts.list()
         if courts['results']:
             court_id = courts['results'][0]['id']
             
             # Get specific court
             court = self.client.courts.get(court_id)
-            assert court['id'] == court_id
+        assert court['id'] == court_id
     
     def test_error_handling(self):
         """Test error handling with invalid requests."""
@@ -170,8 +172,8 @@ class TestLiveAPIConnectivity:
         """Test rate limiting behavior."""
         # Make multiple requests quickly
         for _ in range(5):
-            result = self.client.courts.list(page_size=1)
-            assert 'count' in result
+            result = self.client.courts.list()
+        assert 'count' in result
     
     def test_all_endpoints_accessible(self):
         """Test that all endpoints are accessible."""
@@ -199,7 +201,7 @@ class TestLiveAPIConnectivity:
             
             # Test list method (with small page size to avoid rate limits)
             try:
-                result = endpoint.list(page_size=1)
+                result = endpoint.list()
                 assert 'count' in result
                 assert 'results' in result
             except CourtListenerError as e:

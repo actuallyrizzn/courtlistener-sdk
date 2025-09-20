@@ -24,7 +24,7 @@ class TestCourtsAPI:
         
         result = self.courts_api.get_court(1)
         
-        self.client.get.assert_called_once_with('/courts/1/')
+        self.client.get.assert_called_once_with('courts/1/')
         assert isinstance(result, Court)
         assert result.id == 1
         assert result.name == 'SCOTUS'
@@ -42,7 +42,7 @@ class TestCourtsAPI:
         
         result = self.courts_api.get_court_by_url('scotus')
         
-        self.client.get.assert_called_once_with('/courts/scotus/')
+        self.client.get.assert_called_once_with('courts/scotus/')
         assert isinstance(result, Court)
         assert result.id == 1
         assert result.name == 'SCOTUS'
@@ -63,8 +63,7 @@ class TestCourtsAPI:
             page=1
         )
         
-        self.client.get.assert_called_once_with(
-            '/courts/',
+        self.client.get.assert_called_once_with('courts/',
             params={
                 'jurisdiction': 'F',
                 'page': 1
@@ -88,8 +87,7 @@ class TestCourtsAPI:
         
         result = self.courts_api.list_courts(filters=filters)
         
-        self.client.get.assert_called_once_with(
-            '/courts/',
+        self.client.get.assert_called_once_with('courts/',
             params={'page': 1, 'jurisdiction': 'S', 'start_date_min': '1900-01-01'}
         )
         assert isinstance(result, list)
@@ -105,8 +103,7 @@ class TestCourtsAPI:
         
         result = self.courts_api.get_federal_courts()
         
-        self.client.get.assert_called_once_with(
-            '/courts/',
+        self.client.get.assert_called_once_with('courts/',
             params={'page': 1, 'jurisdiction': 'F'}
         )
         assert isinstance(result, list)
@@ -124,8 +121,7 @@ class TestCourtsAPI:
         
         result = self.courts_api.get_state_courts()
         
-        self.client.get.assert_called_once_with(
-            '/courts/',
+        self.client.get.assert_called_once_with('courts/',
             params={'page': 1, 'jurisdiction': 'S'}
         )
         assert isinstance(result, list)
@@ -143,8 +139,7 @@ class TestCourtsAPI:
         
         result = self.courts_api.get_territorial_courts()
         
-        self.client.get.assert_called_once_with(
-            '/courts/',
+        self.client.get.assert_called_once_with('courts/',
             params={'page': 1, 'jurisdiction': 'T'}
         )
         assert isinstance(result, list)
@@ -162,8 +157,7 @@ class TestCourtsAPI:
         
         result = self.courts_api.get_active_courts()
         
-        self.client.get.assert_called_once_with(
-            '/courts/',
+        self.client.get.assert_called_once_with('courts/',
             params={'page': 1, 'is_active': True}
         )
         assert isinstance(result, list)
@@ -181,8 +175,7 @@ class TestCourtsAPI:
         
         result = self.courts_api.get_defunct_courts()
         
-        self.client.get.assert_called_once_with(
-            '/courts/',
+        self.client.get.assert_called_once_with('courts/',
             params={'page': 1, 'is_active': False}
         )
         assert isinstance(result, list)
@@ -279,8 +272,7 @@ class TestCourtsAPI:
         
         result = self.courts_api.list_courts(page=1)
         
-        self.client.get.assert_called_once_with(
-            '/courts/',
+        self.client.get.assert_called_once_with('courts/',
             params={'page': 1}
         )
         assert isinstance(result, list)
@@ -295,12 +287,12 @@ class TestCourtsAPI:
         
         # Test federal jurisdiction
         result = self.courts_api.list_courts(jurisdiction='F')
-        self.client.get.assert_called_with('/courts/', params={'page': 1, 'jurisdiction': 'F'})
+        self.client.get.assert_called_with('courts/', params={'page': 1, 'jurisdiction': 'F'})
         
         # Test state jurisdiction
         result = self.courts_api.list_courts(jurisdiction='S')
-        self.client.get.assert_called_with('/courts/', params={'page': 1, 'jurisdiction': 'S'})
+        self.client.get.assert_called_with('courts/', params={'page': 1, 'jurisdiction': 'S'})
         
         # Test territorial jurisdiction
         result = self.courts_api.list_courts(jurisdiction='T')
-        self.client.get.assert_called_with('/courts/', params={'page': 1, 'jurisdiction': 'T'}) 
+        self.client.get.assert_called_with('courts/', params={'page': 1, 'jurisdiction': 'T'}) 

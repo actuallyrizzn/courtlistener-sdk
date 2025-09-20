@@ -250,8 +250,8 @@ class TestSearchAPI:
         """Test error handling in search methods."""
         self.client.get.side_effect = CourtListenerError("API Error")
         
-        result = self.search_api.search_opinions(q='test')
-        assert result == {"results": [], "count": 0}
+        with pytest.raises(CourtListenerError, match="API Error"):
+            self.search_api.search_opinions(q='test')
     
     def test_empty_results(self):
         """Test handling of empty search results."""

@@ -24,7 +24,7 @@ class CourtsAPI(BaseAPI):
             params.update(filters)
         params.update(kwargs)
         
-        response = self.client.get("/courts/", params=params)
+        response = self.client.get("courts/", params=params)
         return [Court(item) for item in response.get("results", [])]
     
     def get_court(self, court_id: str) -> Court:
@@ -40,7 +40,7 @@ class CourtsAPI(BaseAPI):
         Raises:
             NotFoundError: If court not found
         """
-        response = self.client.get(f"/courts/{court_id}/")
+        response = self.client.get(f"courts/{court_id}/")
         return Court(response)
     
     def search_courts(self, q: str, page: int = 1, **filters) -> List[Court]:
