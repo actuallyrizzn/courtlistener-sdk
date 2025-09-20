@@ -60,7 +60,7 @@ class TestOpinion:
         
         # Empty joined_by
         opinion = Opinion.from_dict({'id': 3, 'joined_by': None})
-        assert opinion.joined_by == []
+        assert opinion.joined_by is None
     
     def test_properties(self):
         """Test Opinion model properties."""

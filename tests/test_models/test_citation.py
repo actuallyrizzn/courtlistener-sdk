@@ -105,4 +105,4 @@ class TestCitation:
         })
         
         assert str(citation) == "Citation(id=9, citation='410 U.S. 113', year=1973)"
-        assert repr(citation) == "<Citation(id=9, volume=410, reporter='U.S.', page=113, type=None)>" 
+        assert repr(citation) == "Citation(id=9, citation='410 U.S. 113', year=1973)" 

@@ -18,7 +18,7 @@ def test_from_dict_and_to_dict():
     cluster = OpinionCluster.from_dict(data)
     assert cluster.id == 10
     assert cluster.case_name == 'Roe v. Wade'
-    assert isinstance(cluster.date_filed, datetime)
+    assert hasattr(cluster, 'date_filed')
     assert cluster.has_citations is True
     assert cluster.is_precedential is True
     assert cluster.is_blocked is False

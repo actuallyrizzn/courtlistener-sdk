@@ -25,17 +25,9 @@ class BaseModel:
         # Store all data in _data for access via getattr
         for key, value in self._data.items():
             if not key.startswith('_'):
-                # Only set attributes that are explicitly defined as properties
-                # or are basic types that we expect
-                if hasattr(self.__class__, key) and isinstance(getattr(self.__class__, key), property):
-                    # This is a property, so we don't set it as an attribute
-                    pass
-                elif key in ['id', 'name', 'title', 'description', 'url', 'absolute_url']:
-                    # These are common fields we expect
+                # Only set attributes that are not already defined as properties
+                if not (hasattr(self.__class__, key) and isinstance(getattr(self.__class__, key), property)):
                     setattr(self, key, value)
-                else:
-                    # Store in _data but don't set as attribute to avoid conflicts
-                    pass
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""

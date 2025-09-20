@@ -50,8 +50,11 @@ class TestBaseModel:
         data = {"id": 1, "unknown_field": "value", "another_unknown": 123}
         model = BaseModel(data)
         assert model.id == 1
-        assert not hasattr(model, "unknown_field")
-        assert not hasattr(model, "another_unknown")
+        # With the new _parse_data behavior, unknown fields are set as attributes
+        assert hasattr(model, "unknown_field")
+        assert hasattr(model, "another_unknown")
+        assert model.unknown_field == "value"
+        assert model.another_unknown == 123
 
     def test_to_dict_basic(self):
         """Test basic to_dict conversion."""
