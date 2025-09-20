@@ -16,8 +16,12 @@ class SearchResult(BaseModel):
         """Parse search result data."""
         super()._parse_data()
         
+        # Set resource_uri from data
+        if 'resource_uri' in self._data:
+            self.resource_uri = self._data['resource_uri']
+        
         # Add result type detection
-        if hasattr(self, 'resource_uri'):
+        if hasattr(self, 'resource_uri') and self.resource_uri:
             if 'opinions' in self.resource_uri:
                 self.result_type = 'opinion'
             elif 'dockets' in self.resource_uri:
@@ -37,10 +41,17 @@ class SearchAPI(BaseAPI):
         """Get the API endpoint for this module."""
         return "search/"
     
-    def search(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+    def search(self, q: str, page: int = 1, result_type: Optional[str] = None, filters: Optional[Dict[str, Any]] = None, **kwargs) -> Dict[str, Any]:
         """Perform a search across all content."""
         params = {"q": q, "page": page}
-        params.update(filters)
+        
+        if result_type:
+            params["type"] = result_type
+        
+        if filters:
+            params.update(filters)
+        
+        params.update(kwargs)
         
         response = self.client.get("search/", params=params)
         return response
