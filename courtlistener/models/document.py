@@ -31,7 +31,8 @@ class Document(BaseModel):
     @property
     def has_local_file(self) -> bool:
         """Check if document has a local file."""
-        return bool(self.local_path or self.file_path or self.file_url or self.filepath_local)
+        return bool(self._data.get('local_path') or self._data.get('file_path') or 
+                   self._data.get('file_url') or self._data.get('filepath_local'))
     
     @property
     def docket_entry(self) -> int:
@@ -41,7 +42,7 @@ class Document(BaseModel):
     @property
     def has_ia_file(self) -> bool:
         """Check if document has IA file."""
-        return bool(getattr(self, 'ia_upload_date', None))
+        return bool(self._data.get('ia_upload_date'))
     
     def __repr__(self) -> str:
         """String representation of the document."""

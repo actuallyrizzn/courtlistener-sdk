@@ -158,12 +158,12 @@ class Court(BaseModel):
     @property
     def is_defunct(self) -> bool:
         """Check if court is defunct."""
-        return bool(self.end_date or self.defunct)
+        return bool(self.end_date or self._data.get('defunct', False))
     
     @property
     def short_name(self) -> str:
         """Get short name of the court."""
-        return getattr(self, '_short_name', None) or getattr(self, 'name_abbreviation', None)
+        return self._data.get('short_name', None) or self._data.get('name_abbreviation', None)
     
     def __str__(self) -> str:
         """String representation of the court."""

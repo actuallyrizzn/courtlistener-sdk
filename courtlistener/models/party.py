@@ -28,7 +28,7 @@ class Party(BaseModel):
     @property
     def is_terminated(self) -> bool:
         """Check if party is terminated."""
-        return bool(self.date_terminated or self.terminated)
+        return bool(self._data.get('date_terminated') or self._data.get('terminated'))
     
     def __repr__(self) -> str:
         """String representation of the party."""

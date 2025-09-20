@@ -11,7 +11,14 @@ class Person(BaseModel):
     
     def __init__(self, data: Dict[str, Any]):
         super().__init__(data)
-        self.id: Optional[int] = data.get('id')
+        id_value = data.get('id')
+        if id_value is not None:
+            try:
+                self.id: Optional[int] = int(id_value)
+            except (ValueError, TypeError):
+                self.id: Optional[int] = None
+        else:
+            self.id: Optional[int] = None
         self.name: Optional[str] = data.get('name')
         self.court: Optional[str] = data.get('court')
         self.position: Optional[str] = data.get('position')
