@@ -1,0 +1,11 @@
+parameters:
+    level: 6
+    paths:
+        - src
+    excludePaths:
+        - src/CourtListener/Exceptions
+    ignoreErrors:
+        # Ignore some common issues that are acceptable for this SDK
+        - '#Call to an undefined method#'
+        - '#Access to an undefined property#'
+    reportUnmatchedIgnoredErrors: false

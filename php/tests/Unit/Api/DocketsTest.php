@@ -9,24 +9,24 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class DocketsTest extends TestCase
 {
-    private Dockets $dockets;
+    private Dockets $endpoint;
     private MockObject $client;
 
     protected function setUp(): void
     {
         $this->client = $this->createMock(CourtListenerClient::class);
-        $this->dockets = new Dockets($this->client);
+        $this->endpoint = new Dockets($this->client);
     }
 
-    public function testListDockets()
+    public function testList()
     {
         $expectedResponse = [
             'count' => 100,
             'next' => 'http://api.example.com/dockets/?page=2',
             'previous' => null,
             'results' => [
-                ['id' => 1, 'case_name' => 'Test Case 1'],
-                ['id' => 2, 'case_name' => 'Test Case 2']
+                ['id' => 1, 'name' => 'Test Item 1'],
+                ['id' => 2, 'name' => 'Test Item 2']
             ]
         ];
 
@@ -35,234 +35,251 @@ class DocketsTest extends TestCase
             ->with('GET', 'dockets/', ['query' => ['page' => 1]])
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->listDockets(['page' => 1]);
+        $result = $this->endpoint->list(['page' => 1]);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testGetDocket()
+    public function testGet()
     {
-        $expectedResponse = ['id' => 123, 'case_name' => 'Test Case'];
+        $expectedResponse = ['id' => 123, 'name' => 'Test Item'];
 
         $this->client->expects($this->once())
             ->method('makeRequest')
             ->with('GET', 'dockets/123/', ['query' => []])
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->getDocket(123);
+        $result = $this->endpoint->get(123);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testSearchDockets()
+    public function testSearch()
     {
         $expectedResponse = ['count' => 5, 'results' => []];
 
         $this->client->expects($this->once())
             ->method('makeRequest')
-            ->with('GET', 'dockets/search/', ['query' => ['q' => 'patent']])
+            ->with('GET', 'dockets/search/', ['query' => ['q' => 'test']])
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->searchDockets(['q' => 'patent']);
+        $result = $this->endpoint->search(['q' => 'test']);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testGetDocketEntries()
+    public function testCreate()
+    {
+        $data = ['name' => 'New Item', 'description' => 'Test Description'];
+        $expectedResponse = ['id' => 456, 'name' => 'New Item', 'description' => 'Test Description'];
+
+        $this->client->expects($this->once())
+            ->method('makeRequest')
+            ->with('POST', 'dockets/', ['json' => $data])
+            ->willReturn($expectedResponse);
+
+        $result = $this->endpoint->create($data);
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testUpdate()
+    {
+        $data = ['name' => 'Updated Item'];
+        $expectedResponse = ['id' => 123, 'name' => 'Updated Item'];
+
+        $this->client->expects($this->once())
+            ->method('makeRequest')
+            ->with('PUT', 'dockets/123/', ['json' => $data])
+            ->willReturn($expectedResponse);
+
+        $result = $this->endpoint->update(123, $data);
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testPatch()
+    {
+        $data = ['name' => 'Patched Item'];
+        $expectedResponse = ['id' => 123, 'name' => 'Patched Item'];
+
+        $this->client->expects($this->once())
+            ->method('makeRequest')
+            ->with('PATCH', 'dockets/123/', ['json' => $data])
+            ->willReturn($expectedResponse);
+
+        $result = $this->endpoint->patch(123, $data);
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testDelete()
+    {
+        $expectedResponse = ['success' => true];
+
+        $this->client->expects($this->once())
+            ->method('makeRequest')
+            ->with('DELETE', 'dockets/123/')
+            ->willReturn($expectedResponse);
+
+        $result = $this->endpoint->delete(123);
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testListWithPagination()
+    {
+        $expectedResponse = [
+            'count' => 200,
+            'next' => 'http://api.example.com/dockets/?page=3',
+            'previous' => 'http://api.example.com/dockets/?page=1',
+            'results' => []
+        ];
+
+        $params = ['page' => 2, 'per_page' => 50];
+        $this->client->expects($this->once())
+            ->method('makeRequest')
+            ->with('GET', 'dockets/', ['query' => $params])
+            ->willReturn($expectedResponse);
+
+        $result = $this->endpoint->list($params);
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testListWithFilters()
     {
         $expectedResponse = ['count' => 10, 'results' => []];
 
-        $this->client->expects($this->once())
-            ->method('makeRequest')
-            ->with('GET', 'dockets/123/docket-entries/', ['query' => []])
-            ->willReturn($expectedResponse);
-
-        $result = $this->dockets->getDocketEntries(123);
-        $this->assertEquals($expectedResponse, $result);
-    }
-
-    public function testGetParties()
-    {
-        $expectedResponse = ['count' => 3, 'results' => []];
-
-        $this->client->expects($this->once())
-            ->method('makeRequest')
-            ->with('GET', 'dockets/123/parties/', ['query' => []])
-            ->willReturn($expectedResponse);
-
-        $result = $this->dockets->getParties(123);
-        $this->assertEquals($expectedResponse, $result);
-    }
-
-    public function testGetAttorneys()
-    {
-        $expectedResponse = ['count' => 2, 'results' => []];
-
-        $this->client->expects($this->once())
-            ->method('makeRequest')
-            ->with('GET', 'dockets/123/attorneys/', ['query' => []])
-            ->willReturn($expectedResponse);
-
-        $result = $this->dockets->getAttorneys(123);
-        $this->assertEquals($expectedResponse, $result);
-    }
-
-    public function testGetRecapDocuments()
-    {
-        $expectedResponse = ['count' => 5, 'results' => []];
-
-        $this->client->expects($this->once())
-            ->method('makeRequest')
-            ->with('GET', 'dockets/123/recap/', ['query' => []])
-            ->willReturn($expectedResponse);
-
-        $result = $this->dockets->getRecapDocuments(123);
-        $this->assertEquals($expectedResponse, $result);
-    }
-
-    public function testGetDocketByNumber()
-    {
-        $expectedResponse = [
-            'count' => 1,
-            'results' => [['id' => 123, 'docket_number' => '1:23-cv-456']]
+        $filters = [
+            'q' => 'search term',
+            'date_created__gte' => '2023-01-01',
+            'date_created__lte' => '2023-12-31',
+            'ordering' => '-date_created'
         ];
 
         $this->client->expects($this->once())
             ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['docket_number' => '1:23-cv-456']])
+            ->with('GET', 'dockets/', ['query' => $filters])
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->getDocketByNumber('1:23-cv-456');
-        $this->assertEquals($expectedResponse['results'][0], $result);
-    }
-
-    public function testGetDocketByNumberNotFound()
-    {
-        $expectedResponse = ['count' => 0, 'results' => []];
-
-        $this->client->expects($this->once())
-            ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['docket_number' => 'nonexistent']])
-            ->willReturn($expectedResponse);
-
-        $result = $this->dockets->getDocketByNumber('nonexistent');
-        $this->assertNull($result);
-    }
-
-    public function testGetDocketsByCourt()
-    {
-        $expectedResponse = ['count' => 50, 'results' => []];
-
-        $this->client->expects($this->once())
-            ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['court' => 'ca1']])
-            ->willReturn($expectedResponse);
-
-        $result = $this->dockets->getDocketsByCourt('ca1');
+        $result = $this->endpoint->list($filters);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testGetDocketsByDateRange()
+    public function testSearchWithComplexFilters()
     {
-        $expectedResponse = ['count' => 25, 'results' => []];
+        $expectedResponse = ['count' => 3, 'results' => []];
+
+        $searchParams = [
+            'q' => 'complex search',
+            'type' => 'specific',
+            'status' => 'active',
+            'ordering' => 'name'
+        ];
 
         $this->client->expects($this->once())
             ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => [
-                'date_filed__gte' => '2023-01-01',
-                'date_filed__lte' => '2023-12-31'
-            ]])
+            ->with('GET', 'dockets/search/', ['query' => $searchParams])
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->getDocketsByDateRange('2023-01-01', '2023-12-31');
+        $result = $this->endpoint->search($searchParams);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testGetDocketsByCaseType()
+    public function testGetWithParams()
     {
-        $expectedResponse = ['count' => 10, 'results' => []];
+        $expectedResponse = ['id' => 789, 'name' => 'Test Item'];
+
+        $params = ['include' => 'related_data', 'format' => 'detailed'];
 
         $this->client->expects($this->once())
             ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['case_type' => 'Civil']])
+            ->with('GET', 'dockets/789/', ['query' => $params])
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->getDocketsByCaseType('Civil');
+        $result = $this->endpoint->get(789, $params);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testGetDocketsByJudge()
+    public function testCreateWithValidation()
     {
-        $expectedResponse = ['count' => 15, 'results' => []];
+        $data = ['name' => 'Valid Item'];
+        $expectedResponse = ['id' => 999, 'name' => 'Valid Item'];
 
         $this->client->expects($this->once())
             ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['assigned_to' => 'judge123']])
+            ->with('POST', 'dockets/', ['json' => $data])
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->getDocketsByJudge('judge123');
+        $result = $this->endpoint->create($data);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testGetDocketsWithFinancialDisclosures()
+    public function testUpdateWithPartialData()
     {
-        $expectedResponse = ['count' => 8, 'results' => []];
+        $data = ['description' => 'Updated description only'];
+        $expectedResponse = ['id' => 123, 'name' => 'Original Name', 'description' => 'Updated description only'];
 
         $this->client->expects($this->once())
             ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['has_financial_disclosures' => 'true']])
+            ->with('PUT', 'dockets/123/', ['json' => $data])
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->getDocketsWithFinancialDisclosures();
+        $result = $this->endpoint->update(123, $data);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testGetDocketsWithAudio()
+    public function testPatchWithMinimalData()
     {
-        $expectedResponse = ['count' => 12, 'results' => []];
+        $data = ['status' => 'inactive'];
+        $expectedResponse = ['id' => 123, 'status' => 'inactive'];
 
         $this->client->expects($this->once())
             ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['has_audio' => 'true']])
+            ->with('PATCH', 'dockets/123/', ['json' => $data])
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->getDocketsWithAudio();
+        $result = $this->endpoint->patch(123, $data);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testGetDocketsWithRecapDocuments()
+    public function testDeleteWithConfirmation()
     {
-        $expectedResponse = ['count' => 20, 'results' => []];
+        $expectedResponse = ['success' => true, 'message' => 'Item deleted successfully'];
+
+        $params = ['confirm' => 'true'];
 
         $this->client->expects($this->once())
             ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['has_recap_documents' => 'true']])
+            ->with('DELETE', 'dockets/123/')
             ->willReturn($expectedResponse);
 
-        $result = $this->dockets->getDocketsWithRecapDocuments();
+        $result = $this->endpoint->delete(123, $params);
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testGetDocketsByJurisdictionType()
+    public function testInheritsFromBaseApi()
     {
-        $expectedResponse = ['count' => 30, 'results' => []];
-
-        $this->client->expects($this->once())
-            ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['jurisdiction_type' => 'Federal']])
-            ->willReturn($expectedResponse);
-
-        $result = $this->dockets->getDocketsByJurisdictionType('Federal');
-        $this->assertEquals($expectedResponse, $result);
+        $this->assertInstanceOf(\CourtListener\Api\BaseApi::class, $this->endpoint);
     }
 
-    public function testGetDocketsByJuryDemand()
+    public function testHasRequiredMethods()
     {
-        $expectedResponse = ['count' => 5, 'results' => []];
+        $this->assertTrue(method_exists($this->endpoint, 'list'));
+        $this->assertTrue(method_exists($this->endpoint, 'get'));
+        $this->assertTrue(method_exists($this->endpoint, 'create'));
+        $this->assertTrue(method_exists($this->endpoint, 'update'));
+        $this->assertTrue(method_exists($this->endpoint, 'patch'));
+        $this->assertTrue(method_exists($this->endpoint, 'delete'));
+        $this->assertTrue(method_exists($this->endpoint, 'search'));
+    }
 
-        $this->client->expects($this->once())
-            ->method('makeRequest')
-            ->with('GET', 'dockets/', ['query' => ['jury_demand' => 'Jury']])
-            ->willReturn($expectedResponse);
+    public function testEndpointName()
+    {
+        $reflection = new \ReflectionClass($this->endpoint);
+        $this->assertEquals('Dockets', $reflection->getShortName());
+    }
 
-        $result = $this->dockets->getDocketsByJuryDemand('Jury');
-        $this->assertEquals($expectedResponse, $result);
+    public function testClientInjection()
+    {
+        $reflection = new \ReflectionClass($this->endpoint);
+        $clientProperty = $reflection->getProperty('client');
+        $clientProperty->setAccessible(true);
+        
+        $injectedClient = $clientProperty->getValue($this->endpoint);
+        $this->assertSame($this->client, $injectedClient);
     }
 }

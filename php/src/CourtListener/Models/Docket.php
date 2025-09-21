@@ -347,23 +347,4 @@ class Docket extends BaseModel
         return $this->get('recap_documents_count');
     }
 
-    /**
-     * Get the absolute URL
-     *
-     * @return string|null
-     */
-    public function getAbsoluteUrl(): ?string
-    {
-        return $this->get('absolute_url');
-    }
-
-    /**
-     * Get the resource URI
-     *
-     * @return string|null
-     */
-    public function getResourceUri(): ?string
-    {
-        return $this->get('resource_uri');
-    }
 }

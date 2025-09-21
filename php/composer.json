@@ -26,6 +26,7 @@
         "vlucas/phpdotenv": "*"
     },
     "require-dev": {
+        "phpstan/phpstan": "*",
         "phpunit/phpunit": "^10.0"
     },
     "autoload": {
@@ -49,16 +50,13 @@
         "test-coverage": "phpunit --coverage-html coverage",
         "test-coverage-unit": "phpunit --testsuite Unit --coverage-html coverage/unit",
         "test-coverage-all": "phpunit --testsuite All --coverage-html coverage/all",
-        "cs-check": "phpcs",
-        "cs-fix": "phpcbf",
-        "stan": "phpstan analyse",
+        "stan": "php phpstan.phar analyse",
+        "stan-baseline": "php phpstan.phar analyse --generate-baseline",
         "quality": [
-            "@cs-check",
             "@stan",
             "@test-unit"
         ],
         "quality-full": [
-            "@cs-check",
             "@stan",
             "@test-all"
         ]
