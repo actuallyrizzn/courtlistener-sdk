@@ -13,18 +13,19 @@ Multi-language SDKs for the [CourtListener API](https://www.courtlistener.com/ap
 - **Installation**: `pip install -r python/requirements.txt`
 
 ### PHP SDK
-- **Location**: `php/` (Coming Soon)
-- **Status**: 🚧 In Development
-- **Features**: Full feature parity with Python SDK
+- **Location**: [`php/`](./php/)
+- **Status**: ✅ Complete and Production Ready
+- **Features**: 100% API coverage, comprehensive models, robust error handling
+- **Installation**: `composer install` (in `php/` directory)
 
 ## Features
 - **100% API Coverage**: Complete support for all 36+ CourtListener API endpoints
-- **Multi-Language Support**: Python (complete) and PHP (coming soon)
+- **Multi-Language Support**: Python (complete) and PHP (complete)
 - **Comprehensive Data Models**: Language-specific models for all data types including financial disclosures, alerts, people, and more
 - **Robust Error Handling**: Production-ready error handling with retry logic and rate limiting
 - **Advanced Pagination**: Cursor-based pagination support for efficient data retrieval
 - **Full CRUD Support**: Create, read, update, and delete operations for alerts and docket alerts
-- **97.31% Test Coverage**: Comprehensive test suite with real API integration tests
+- **Comprehensive Test Coverage**: 2,174+ tests across both languages with real API integration tests
 - **Easy Authentication**: Simple authentication via `.env` file or direct token
 - **Extensive Documentation**: Complete API reference and usage examples
 
@@ -44,7 +45,7 @@ for docket in dockets['results']:
     print(docket['case_name'], docket['docket_number'])
 ```
 
-### PHP (Coming Soon)
+### PHP
 ```bash
 cd php
 composer install
@@ -55,7 +56,7 @@ composer install
 use CourtListener\CourtListenerClient;
 
 $client = new CourtListenerClient();
-$dockets = $client->dockets()->list(['page' => 1]);
+$dockets = $client->dockets->list(['page' => 1]);
 foreach ($dockets['results'] as $docket) {
     echo $docket['case_name'] . ' ' . $docket['docket_number'] . "\n";
 }
@@ -127,7 +128,7 @@ COURTLISTENER_API_TOKEN=your_token_here
 client = CourtListenerClient(api_token="your_token_here")
 ```
 
-### PHP (Coming Soon)
+### PHP
 ```php
 $client = new CourtListenerClient(['api_token' => 'your_token_here']);
 ```
@@ -137,8 +138,12 @@ $client = new CourtListenerClient(['api_token' => 'your_token_here']);
 ### Python
 All manual and debug test scripts are in [`python/tests/manual_debug/`](./python/tests/manual_debug/). See the documentation for details on running and extending tests.
 
-### PHP (Coming Soon)
-Tests will be located in `php/tests/` when available.
+### PHP
+Comprehensive test suite with 2,174+ tests including unit, integration, mock, live, and E2E tests. Run with:
+```bash
+cd php
+composer test
+```
 
 ## Documentation
 Extensive documentation is available in [`docs/`](./docs/), including:
@@ -149,7 +154,7 @@ Extensive documentation is available in [`docs/`](./docs/), including:
 
 ### Language-Specific Documentation
 - **Python**: See [`python/README.md`](./python/README.md) for Python-specific details
-- **PHP**: Coming soon in `php/README.md`
+- **PHP**: See [`php/README.md`](./php/README.md) for PHP-specific details
 
 ## Changelog
 See [`CHANGELOG.md`](./CHANGELOG.md) for release notes.

@@ -7,7 +7,7 @@ Welcome to the **unofficial** CourtListener SDK! This guide covers both Python a
 ## Language Support
 
 - **Python SDK**: ✅ Complete and Production Ready (see [`python/`](../python/))
-- **PHP SDK**: 🚧 Coming Soon (see `php/` when available)
+- **PHP SDK**: ✅ Complete and Production Ready (see [`php/`](../php/))
 
 ## Table of Contents
 - [Installation](#installation)
@@ -29,7 +29,7 @@ cd python
 pip install -r requirements.txt
 ```
 
-### PHP SDK (Coming Soon)
+### PHP SDK
 ```bash
 cd php
 composer install
@@ -48,7 +48,7 @@ from courtlistener import CourtListenerClient
 client = CourtListenerClient(api_token="your_token_here")
 ```
 
-### PHP (Coming Soon)
+### PHP
 ```php
 <?php
 use CourtListener\CourtListenerClient;
@@ -66,21 +66,21 @@ for docket in dockets:
     print(docket.case_name, docket.docket_number)
 ```
 
-### PHP (Coming Soon)
+### PHP
 ```php
 <?php
 use CourtListener\CourtListenerClient;
 
 $client = new CourtListenerClient();
-$dockets = $client->dockets()->listDockets(['page' => 1]);
-foreach ($dockets as $docket) {
-    echo $docket->case_name . ' ' . $docket->docket_number . "\n";
+$dockets = $client->dockets->listDockets(['page' => 1]);
+foreach ($dockets['results'] as $docket) {
+    echo $docket['case_name'] . ' ' . $docket['docket_number'] . "\n";
 }
 ```
 
 ## API Endpoints
 
-The SDK provides access to all 36+ CourtListener API endpoints, organized by category:
+The SDK provides access to all 39 CourtListener API endpoints, organized by category:
 
 ### Core Endpoints
 - `client.courts` — Court information and hierarchy
@@ -136,36 +136,78 @@ The SDK provides access to all 36+ CourtListener API endpoints, organized by cat
 Each endpoint provides methods like `list()`, `get()`, and `search()` for flexible access.
 
 ### Example: List Opinions
+
+**Python:**
 ```python
 opinions = client.opinions.list(page=1, court="scotus")
 for opinion in opinions['results']:
     print(opinion['id'], opinion['case_name'])
 ```
 
+**PHP:**
+```php
+$opinions = $client->opinions->listOpinions(['page' => 1, 'court' => 'scotus']);
+foreach ($opinions['results'] as $opinion) {
+    echo $opinion['id'] . ' ' . $opinion['case_name'] . "\n";
+}
+```
+
 ### Example: Search
+
+**Python:**
 ```python
 results = client.search.list(q="first amendment", page=1)
 for result in results['results']:
     print(result['case_name'])
 ```
 
+**PHP:**
+```php
+$results = $client->search->search(['q' => 'first amendment', 'page' => 1]);
+foreach ($results['results'] as $result) {
+    echo $result['case_name'] . "\n";
+}
+```
+
 ### Example: Financial Disclosures
+
+**Python:**
 ```python
 disclosures = client.financial_disclosures.list(page=1)
 for disclosure in disclosures['results']:
     print(disclosure['id'], disclosure['date_received'])
 ```
 
+**PHP:**
+```php
+$disclosures = $client->financialDisclosures->listFinancialDisclosures(['page' => 1]);
+foreach ($disclosures['results'] as $disclosure) {
+    echo $disclosure['id'] . ' ' . $disclosure['date_received'] . "\n";
+}
+```
+
 ### Example: Docket Entries
+
+**Python:**
 ```python
 entries = client.docket_entries.list(docket=12345, page=1)
 for entry in entries['results']:
     print(entry['entry_number'], entry['description'])
 ```
 
+**PHP:**
+```php
+$entries = $client->docketEntries->listDocketEntries(['docket' => 12345, 'page' => 1]);
+foreach ($entries['results'] as $entry) {
+    echo $entry['entry_number'] . ' ' . $entry['description'] . "\n";
+}
+```
+
 ## Pagination & Filtering
 
 All `list()` and `search()` methods support pagination and filtering:
+
+**Python:**
 ```python
 # Get the second page of dockets for a specific court
 page2 = client.dockets.list(page=2, court="scotus")
@@ -187,16 +229,52 @@ results = client.search.list(
 )
 ```
 
+**PHP:**
+```php
+use CourtListener\Utils\Pagination;
+use CourtListener\Utils\Filters;
+
+// Get the second page of dockets for a specific court
+$page2 = $client->dockets->listDockets(['page' => 2, 'court' => 'scotus']);
+
+// Filter opinions by date
+$opinions = $client->opinions->listOpinions(['date_filed__gte' => '2020-01-01']);
+
+// Filter financial disclosures by date range
+$disclosures = $client->financialDisclosures->listFinancialDisclosures([
+    'date_received__gte' => '2023-01-01',
+    'date_received__lte' => '2023-12-31'
+]);
+
+// Search with multiple filters
+$results = $client->search->search([
+    'q' => 'constitutional law',
+    'court' => 'scotus',
+    'date_filed__gte' => '2020-01-01'
+]);
+```
+
 ## Error Handling
 
 The SDK raises custom exceptions for API errors:
+
+**Python:**
 - `CourtListenerError` — Base error
 - `AuthenticationError` — Invalid/missing token
 - `NotFoundError` — Resource not found
 - `RateLimitError` — Too many requests
 - `APIError` — Other API errors
 
-Use try/except blocks to handle errors gracefully:
+**PHP:**
+- `CourtListenerException` — Base error
+- `AuthenticationException` — Invalid/missing token
+- `NotFoundException` — Resource not found
+- `RateLimitException` — Too many requests
+- `ServerException` — Other API errors
+
+Use try/catch blocks to handle errors gracefully:
+
+**Python:**
 ```python
 try:
     dockets = client.dockets.list(page=1)
@@ -207,6 +285,25 @@ except RateLimitError as e:
     time.sleep(5)  # Wait before retrying
 except NotFoundError as e:
     print("Resource not found:", e)
+```
+
+**PHP:**
+```php
+use CourtListener\Exceptions\CourtListenerException;
+use CourtListener\Exceptions\AuthenticationException;
+use CourtListener\Exceptions\RateLimitException;
+use CourtListener\Exceptions\NotFoundException;
+
+try {
+    $dockets = $client->dockets->listDockets(['page' => 1]);
+} catch (CourtListenerException $e) {
+    echo "API error: " . $e->getMessage();
+} catch (RateLimitException $e) {
+    echo "Rate limited, waiting...";
+    sleep(5);  // Wait before retrying
+} catch (NotFoundException $e) {
+    echo "Resource not found: " . $e->getMessage();
+}
 ```
 
 ## Best Practices

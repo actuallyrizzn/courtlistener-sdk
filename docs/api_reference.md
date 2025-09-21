@@ -1,21 +1,29 @@
-# CourtListener Python SDK — API Reference (Unofficial)
+# CourtListener SDK — API Reference (Unofficial)
 
-This reference documents all major classes, methods, and data models in the **unofficial** CourtListener Python SDK.
+This reference documents all major classes, methods, and data models in the **unofficial** CourtListener SDK for both Python and PHP.
 
 **⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
 ## Table of Contents
-- [CourtListenerClient](#courtlistenerclient)
-- [API Modules](#api-modules)
-- [Data Models](#data-models)
-- [Error Classes](#error-classes)
+- [Python SDK](#python-sdk)
+  - [CourtListenerClient](#courtlistenerclient-python)
+  - [API Modules](#api-modules-python)
+  - [Data Models](#data-models-python)
+  - [Error Classes](#error-classes-python)
+- [PHP SDK](#php-sdk)
+  - [CourtListenerClient](#courtlistenerclient-php)
+  - [API Modules](#api-modules-php)
+  - [Data Models](#data-models-php)
+  - [Error Classes](#error-classes-php)
 - [See Also](#see-also)
 
 ---
 
-## CourtListenerClient
+## Python SDK
 
-The main entry point for the SDK.
+### CourtListenerClient (Python)
+
+The main entry point for the Python SDK.
 
 ```python
 from courtlistener import CourtListenerClient
@@ -152,13 +160,185 @@ docket = Docket(docket_data)
 print(docket.case_name, docket.docket_number)
 ```
 
-## Error Classes
+### Error Classes (Python)
 
 - `CourtListenerError`: Base error
 - `AuthenticationError`: Invalid/missing token
 - `NotFoundError`: Resource not found
 - `RateLimitError`: Too many requests
 - `APIError`: Other API errors
+
+---
+
+## PHP SDK
+
+### CourtListenerClient (PHP)
+
+The main entry point for the PHP SDK.
+
+```php
+use CourtListener\CourtListenerClient;
+
+$client = new CourtListenerClient(['api_token' => 'your_token']);
+```
+
+#### Arguments
+- `api_token` (string): Your API token
+- `base_url` (string, optional): Override the API base URL
+- `timeout`, `max_retries`, etc.: Advanced options
+
+#### Attributes
+All API modules are available as client properties:
+
+**Core Endpoints:**
+- `courts`, `dockets`, `opinions`, `clusters`, `judges`, `positions`, `audio`, `search`
+
+**Financial & Disclosure Endpoints:**
+- `financial`, `financialDisclosures`, `investments`, `nonInvestmentIncomes`, `gifts`, `reimbursements`, `debts`, `spouseIncomes`, `agreements`
+
+**Case & Legal Endpoints:**
+- `docketEntries`, `parties`, `attorneys`, `documents`, `recapDocuments`, `citations`, `opinionsCited`
+
+**People & Education Endpoints:**
+- `people`, `schools`, `educations`, `abaRatings`, `politicalAffiliations`
+
+**Alert & Notification Endpoints:**
+- `alerts`, `docketAlerts`
+
+**Administrative Endpoints:**
+- `sources`, `retentionEvents`, `tag`, `recapFetch`, `recapQuery`, `originatingCourtInformation`, `fjcIntegratedDatabase`, `disclosurePositions`
+
+### API Modules (PHP)
+
+Each module provides methods for a specific resource:
+
+#### Core Modules
+- `Courts`: `listCourts()`, `getCourt()`, `searchCourts()`
+- `Dockets`: `listDockets()`, `getDocket()`, `searchDockets()`
+- `Opinions`: `listOpinions()`, `getOpinion()`, `searchOpinions()`
+- `Clusters`: `listClusters()`, `getCluster()`, `searchClusters()`
+- `Judges`: `listJudges()`, `getJudge()`, `searchJudges()`
+- `Positions`: `listPositions()`, `getPosition()`, `searchPositions()`
+- `Audio`: `listAudio()`, `getAudio()`, `searchAudio()`
+- `Search`: `search()`, `searchOpinions()`, `searchDockets()`, etc.
+
+#### Financial & Disclosure Modules
+- `Financial`: `listFinancial()`, `getFinancial()`, `searchFinancial()`
+- `FinancialDisclosures`: `listFinancialDisclosures()`, `getFinancialDisclosure()`, `searchFinancialDisclosures()`
+- `Investments`: `listInvestments()`, `getInvestment()`, `searchInvestments()`
+- `NonInvestmentIncomes`: `listNonInvestmentIncomes()`, `getNonInvestmentIncome()`, `searchNonInvestmentIncomes()`
+- `Gifts`: `listGifts()`, `getGift()`, `searchGifts()`
+- `Reimbursements`: `listReimbursements()`, `getReimbursement()`, `searchReimbursements()`
+- `Debts`: `listDebts()`, `getDebt()`, `searchDebts()`
+- `SpouseIncomes`: `listSpouseIncomes()`, `getSpouseIncome()`, `searchSpouseIncomes()`
+- `Agreements`: `listAgreements()`, `getAgreement()`, `searchAgreements()`
+
+#### Case & Legal Modules
+- `DocketEntries`: `listDocketEntries()`, `getDocketEntry()`, `searchDocketEntries()`
+- `Parties`: `listParties()`, `getParty()`, `searchParties()`
+- `Attorneys`: `listAttorneys()`, `getAttorney()`, `searchAttorneys()`
+- `Documents`: `listDocuments()`, `getDocument()`, `searchDocuments()`
+- `RecapDocuments`: `listRecapDocuments()`, `getRecapDocument()`, `searchRecapDocuments()`
+- `Citations`: `listCitations()`, `getCitation()`, `searchCitations()`
+- `OpinionsCited`: `listOpinionsCited()`, `getOpinionCited()`, `searchOpinionsCited()`
+
+#### People & Education Modules
+- `People`: `listPeople()`, `getPerson()`, `searchPeople()`
+- `Schools`: `listSchools()`, `getSchool()`, `searchSchools()`
+- `Educations`: `listEducations()`, `getEducation()`, `searchEducations()`
+- `AbaRatings`: `listAbaRatings()`, `getAbaRating()`, `searchAbaRatings()`
+- `PoliticalAffiliations`: `listPoliticalAffiliations()`, `getPoliticalAffiliation()`, `searchPoliticalAffiliations()`
+
+#### Alert & Notification Modules
+- `Alerts`: `listAlerts()`, `getAlert()`, `searchAlerts()`, `createAlert()`, `updateAlert()`, `deleteAlert()`
+- `DocketAlerts`: `listDocketAlerts()`, `getDocketAlert()`, `searchDocketAlerts()`, `createDocketAlert()`, `updateDocketAlert()`, `deleteDocketAlert()`
+
+#### Administrative Modules
+- `Sources`: `listSources()`, `getSource()`, `searchSources()`
+- `RetentionEvents`: `listRetentionEvents()`, `getRetentionEvent()`, `searchRetentionEvents()`
+- `Tag`: `listTags()`, `getTag()`, `searchTags()`
+- `RecapFetch`: `listRecapFetches()`, `getRecapFetch()`, `searchRecapFetches()`
+- `RecapQuery`: `listRecapQueries()`, `getRecapQuery()`, `searchRecapQueries()`
+- `OriginatingCourtInformation`: `listOriginatingCourtInformation()`, `getOriginatingCourtInformation()`, `searchOriginatingCourtInformation()`
+- `FjcIntegratedDatabase`: `listFjcIntegratedDatabase()`, `getFjcIntegratedDatabase()`, `searchFjcIntegratedDatabase()`
+- `DisclosurePositions`: `listDisclosurePositions()`, `getDisclosurePosition()`, `searchDisclosurePositions()`
+
+### Data Models (PHP)
+
+PHP models provide type safety and convenience methods:
+
+#### Core Models
+- `Court`: Court information and hierarchy
+- `Docket`: Docket records and case information
+- `Opinion`: Judicial opinions and decisions
+- `Cluster`: Opinion clusters and related cases
+- `Judge`: Judicial biographical data
+- `Position`: Judicial positions and appointments
+- `Audio`: Oral argument audio recordings
+
+#### Financial & Disclosure Models
+- `Financial`: Financial disclosure records
+- `FinancialDisclosure`: Detailed financial disclosures
+- `Investment`: Investment holdings
+- `NonInvestmentIncome`: Non-investment income sources
+- `Gift`: Gift disclosures
+- `Reimbursement`: Reimbursement records
+- `Debt`: Debt disclosures
+- `SpouseIncome`: Spouse income information
+- `Agreement`: Financial agreements
+
+#### Case & Legal Models
+- `DocketEntry`: Individual docket entries
+- `Party`: Case participants and parties
+- `Attorney`: Legal representation
+- `Document`: RECAP document management
+- `RecapDocument`: RECAP document access
+- `Citation`: Citation graph and verification
+- `OpinionCited`: Opinion citation relationships
+
+#### People & Education Models
+- `Person`: People and biographical data
+- `School`: Educational institutions
+- `Education`: Educational background
+- `AbaRating`: ABA judicial ratings
+- `PoliticalAffiliation`: Political affiliations
+
+#### Alert & Notification Models
+- `Alert`: Search alerts and notifications
+- `DocketAlert`: Docket-specific alerts
+
+#### Administrative Models
+- `Source`: Data sources
+- `RetentionEvent`: Data retention events
+- `Tag`: Tagging system
+- `RecapFetch`: RECAP fetch operations
+- `RecapQuery`: RECAP query operations
+- `OriginatingCourtInformation`: Court origin data
+- `FjcIntegratedDatabase`: FJC database integration
+- `DisclosurePosition`: Disclosure position data
+
+#### Example: Using Models (PHP)
+```php
+use CourtListener\Models\Docket;
+use CourtListener\Models\Opinion;
+use CourtListener\Models\FinancialDisclosure;
+
+// API returns arrays
+$docketData = $client->dockets->getDocket(12345);
+echo $docketData['case_name'];
+
+// Convert to model for type safety
+$docket = new Docket($docketData);
+echo $docket['case_name'] . ' ' . $docket['docket_number'];
+```
+
+### Error Classes (PHP)
+
+- `CourtListenerException`: Base error
+- `AuthenticationException`: Invalid/missing token
+- `NotFoundException`: Resource not found
+- `RateLimitException`: Too many requests
+- `ServerException`: Other API errors
 
 ## See Also
 - [User Guide](./user_guide.md)

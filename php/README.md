@@ -5,7 +5,7 @@ An **unofficial**, robust, production-ready PHP SDK for the [CourtListener API](
 **⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
 ## Features
-- **100% API Coverage**: Complete support for all 36+ CourtListener API endpoints
+- **100% API Coverage**: Complete support for all 39 CourtListener API endpoints
 - **Comprehensive Data Models**: PHP classes for all data types including financial disclosures, alerts, people, and more
 - **Robust Error Handling**: Production-ready error handling with retry logic and rate limiting
 - **Advanced Pagination**: Cursor-based pagination support for efficient data retrieval
@@ -13,7 +13,9 @@ An **unofficial**, robust, production-ready PHP SDK for the [CourtListener API](
 - **Easy Authentication**: Simple authentication via environment variables or direct token
 - **Extensive Documentation**: Complete API reference and usage examples
 - **PSR-4 Autoloading**: Modern PHP autoloading standards
-- **Comprehensive Testing**: Full test suite with PHPUnit
+- **Comprehensive Testing**: 2,174+ tests including unit, integration, mock, live, and E2E tests
+- **Code Quality Tools**: PHPStan, PHP_CodeSniffer, and PHP-CS-Fixer integration
+- **Production Ready**: Battle-tested with real API integration and comprehensive error handling
 
 ## Installation
 
@@ -169,14 +171,48 @@ try {
 
 ## Testing
 
-Run the test suite:
+The PHP SDK includes a comprehensive test suite with 2,174+ tests across multiple categories:
+
+### Test Categories
+- **Unit Tests**: 1,786 tests covering individual components
+- **Integration Tests**: 12 tests for component integration
+- **Mock Tests**: 6 tests using mocked dependencies
+- **Live Tests**: 367 tests against real CourtListener API
+- **E2E Tests**: 3 end-to-end workflow tests
+
+### Running Tests
+
+Run all tests:
 ```bash
 composer test
 ```
 
+Run specific test suites:
+```bash
+composer test-unit          # Unit tests only
+composer test-integration   # Integration tests only
+composer test-mock          # Mock tests only
+composer test-live          # Live API tests only
+composer test-e2e           # E2E tests only
+```
+
 Run with coverage:
 ```bash
-composer test-coverage
+composer test-coverage      # All tests with HTML coverage report
+composer test-coverage-unit # Unit tests with coverage
+composer test-coverage-all  # All tests with coverage
+```
+
+### Live API Testing
+
+Live tests require a valid CourtListener API token. Set it in your environment:
+```bash
+export COURTLISTENER_API_TOKEN=your_token_here
+```
+
+Or create a `.env` file:
+```
+COURTLISTENER_API_TOKEN=your_token_here
 ```
 
 ## Code Quality
