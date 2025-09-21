@@ -45,6 +45,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+coverage.ini
 *.cover
 *.py,cover
 .hypothesis/
@@ -283,6 +284,11 @@ site/
 htmlcov/
 .tox/
 .mypy_cache/
+
+# Coverage analysis reports (temporary)
+*_coverage_analysis.md
+*_coverage_progress_report.md
+coverage_analysis_report.md
 
 # IDE and editor files
 .vscode/
