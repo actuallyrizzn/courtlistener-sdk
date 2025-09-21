@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Enhanced Data Models**: Improved model parsing and attribute handling
 - **Comprehensive Documentation**: Updated all documentation with complete endpoint coverage
 - **Production-Ready Features**: Rate limiting, retry logic, and error recovery
+- **Dual License Structure**: AGPL-3.0 for code, CC BY-SA 4.0 for documentation
 
 ### Core Infrastructure
 - Complete API endpoint structure for all 36+ CourtListener APIs
@@ -56,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated README with complete feature list
 
 ### Changed
-- Switched license from MIT to Creative Commons Attribution-ShareAlike 4.0 International
+- **License Structure**: Implemented dual license - AGPL-3.0 for code, CC BY-SA 4.0 for documentation
 - Updated all method names to use consistent `list()`, `get()`, `search()` pattern
 - Improved error handling for API permission limitations
 - Enhanced pagination logic to prevent infinite loops

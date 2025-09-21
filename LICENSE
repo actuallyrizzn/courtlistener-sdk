@@ -1,4 +1,46 @@
-Creative Commons Attribution-ShareAlike 4.0 International License
+DUAL LICENSE
+
+This project is licensed under two different licenses depending on the content:
+
+===============================================================================
+CODE LICENSE: GNU AFFERO GENERAL PUBLIC LICENSE v3.0 (AGPL-3.0)
+===============================================================================
+
+All source code, including but not limited to:
+- Python modules and packages (courtlistener/ directory)
+- Test files (tests/ directory)
+- Example scripts (examples/ directory)
+- Configuration files (setup.py, requirements.txt, etc.)
+
+is licensed under the GNU Affero General Public License v3.0.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+For the full text of the AGPL-3.0 license, visit:
+https://www.gnu.org/licenses/agpl-3.0.txt
+
+===============================================================================
+DOCUMENTATION LICENSE: CREATIVE COMMONS ATTRIBUTION-SHAREALIKE 4.0 (CC BY-SA 4.0)
+===============================================================================
+
+All documentation, including but not limited to:
+- README files (README.md, docs/README.md)
+- User guides and API references (docs/ directory)
+- Changelog (CHANGELOG.md)
+- Project documentation and guides
+
+is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License.
 
 This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit:
 
@@ -27,4 +69,16 @@ Notices:
 
 You do not have to comply with the license for elements of the material in the public domain or where your use is permitted by an applicable exception or limitation.
 
-No warranties are given. The license may not give you all of the permissions necessary for your intended use. For example, other rights such as publicity, privacy, or moral rights may limit how you use the material. 
+No warranties are given. The license may not give you all of the permissions necessary for your intended use. For example, other rights such as publicity, privacy, or moral rights may limit how you use the material.
+
+===============================================================================
+SUMMARY
+===============================================================================
+
+- CODE: AGPL-3.0 (copyleft, requires source code disclosure for derivative works)
+- DOCUMENTATION: CC BY-SA 4.0 (permissive, allows commercial use with attribution)
+
+This dual licensing approach allows for:
+- Strong copyleft protection for the code (AGPL-3.0)
+- Flexible use of documentation (CC BY-SA 4.0)
+- Clear separation between code and documentation licensing terms 
