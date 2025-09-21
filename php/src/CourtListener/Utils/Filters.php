@@ -37,7 +37,7 @@ class Filters
      * @param string $field Field name
      * @return array
      */
-    public static function textSearch(string $query, string = 'q'): array
+    public static function textSearch(string $query, string $field = 'q'): array
     {
         return [$field => $query];
     }
