@@ -43,14 +43,27 @@
     },
     "scripts": {
         "test": "phpunit",
+        "test-unit": "phpunit --testsuite Unit",
+        "test-integration": "phpunit --testsuite Integration",
+        "test-mock": "phpunit --testsuite Mock",
+        "test-live": "phpunit --testsuite Live --group live",
+        "test-e2e": "phpunit --testsuite E2E --group e2e",
+        "test-all": "phpunit --testsuite All",
         "test-coverage": "phpunit --coverage-html coverage",
+        "test-coverage-unit": "phpunit --testsuite Unit --coverage-html coverage/unit",
+        "test-coverage-all": "phpunit --testsuite All --coverage-html coverage/all",
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "stan": "phpstan analyse",
         "quality": [
             "@cs-check",
             "@stan",
-            "@test"
+            "@test-unit"
+        ],
+        "quality-full": [
+            "@cs-check",
+            "@stan",
+            "@test-all"
         ]
     },
     "config": {

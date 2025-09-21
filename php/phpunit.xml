@@ -9,6 +9,25 @@
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
         </testsuite>
+        <testsuite name="Integration">
+            <directory>tests/Integration</directory>
+        </testsuite>
+        <testsuite name="Mock">
+            <directory>tests/Mock</directory>
+        </testsuite>
+        <testsuite name="Live">
+            <directory>tests/Live</directory>
+        </testsuite>
+        <testsuite name="E2E">
+            <directory>tests/E2E</directory>
+        </testsuite>
+        <testsuite name="All">
+            <directory>tests/Unit</directory>
+            <directory>tests/Integration</directory>
+            <directory>tests/Mock</directory>
+            <directory>tests/Live</directory>
+            <directory>tests/E2E</directory>
+        </testsuite>
     </testsuites>
     <coverage>
         <include>
@@ -22,4 +41,11 @@
         <env name="COURTLISTENER_API_TOKEN" value="test-token"/>
         <env name="COURTLISTENER_BASE_URL" value="https://www.courtlistener.com/api/"/>
     </php>
+    <groups>
+        <exclude>
+            <group>live</group>
+            <group>network</group>
+            <group>slow</group>
+        </exclude>
+    </groups>
 </phpunit>
