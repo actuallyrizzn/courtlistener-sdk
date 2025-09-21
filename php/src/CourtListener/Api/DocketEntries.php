@@ -29,8 +29,7 @@ class DocketEntries extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listDocketEntries(array $params = []): array
-    {
+    public function listDocketEntries(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class DocketEntries extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketEntries($id, array $params = []): array
-    {
+    public function getDocketEntries(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class DocketEntries extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchDocketEntries(array $params = []): array
-    {
+    public function searchDocketEntries(array $params = []) {
         return $this->search($params);
     }
 }

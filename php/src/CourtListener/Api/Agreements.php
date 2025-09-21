@@ -29,8 +29,7 @@ class Agreements extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listAgreements(array $params = []): array
-    {
+    public function listAgreements(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Agreements extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getAgreements($id, array $params = []): array
-    {
+    public function getAgreements(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Agreements extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchAgreements(array $params = []): array
-    {
+    public function searchAgreements(array $params = []) {
         return $this->search($params);
     }
 }

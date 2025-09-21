@@ -29,8 +29,7 @@ class People extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listPeople(array $params = []): array
-    {
+    public function listPeople(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class People extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getPeople($id, array $params = []): array
-    {
+    public function getPeople(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class People extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchPeople(array $params = []): array
-    {
+    public function searchPeople(array $params = []) {
         return $this->search($params);
     }
 }

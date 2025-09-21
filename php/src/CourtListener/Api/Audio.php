@@ -29,8 +29,7 @@ class Audio extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listAudio(array $params = []): array
-    {
+    public function listAudio(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Audio extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getAudio($id, array $params = []): array
-    {
+    public function getAudio(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Audio extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchAudio(array $params = []): array
-    {
+    public function searchAudio(array $params = []) {
         return $this->search($params);
     }
 }

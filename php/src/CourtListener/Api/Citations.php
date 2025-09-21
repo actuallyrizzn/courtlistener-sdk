@@ -29,8 +29,7 @@ class Citations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listCitations(array $params = []): array
-    {
+    public function listCitations(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Citations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getCitations($id, array $params = []): array
-    {
+    public function getCitations(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Citations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchCitations(array $params = []): array
-    {
+    public function searchCitations(array $params = []) {
         return $this->search($params);
     }
 }

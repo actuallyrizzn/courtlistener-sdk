@@ -29,8 +29,7 @@ class DisclosurePositions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listDisclosurePositions(array $params = []): array
-    {
+    public function listDisclosurePositions(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class DisclosurePositions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDisclosurePositions($id, array $params = []): array
-    {
+    public function getDisclosurePositions(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class DisclosurePositions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchDisclosurePositions(array $params = []): array
-    {
+    public function searchDisclosurePositions(array $params = []) {
         return $this->search($params);
     }
 }

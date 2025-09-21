@@ -29,8 +29,7 @@ class OpinionsCited extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listOpinionsCited(array $params = []): array
-    {
+    public function listOpinionsCited(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class OpinionsCited extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsCited($id, array $params = []): array
-    {
+    public function getOpinionsCited(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class OpinionsCited extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchOpinionsCited(array $params = []): array
-    {
+    public function searchOpinionsCited(array $params = []) {
         return $this->search($params);
     }
 }

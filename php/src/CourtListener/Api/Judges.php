@@ -29,8 +29,7 @@ class Judges extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listJudges(array $params = []): array
-    {
+    public function listJudges(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Judges extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getJudges($id, array $params = []): array
-    {
+    public function getJudges(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Judges extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchJudges(array $params = []): array
-    {
+    public function searchJudges(array $params = []) {
         return $this->search($params);
     }
 }

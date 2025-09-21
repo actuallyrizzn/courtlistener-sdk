@@ -29,8 +29,7 @@ class Alerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listAlerts(array $params = []): array
-    {
+    public function listAlerts(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Alerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getAlert($id, array $params = []): array
-    {
+    public function getAlert(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Alerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function createAlert(array $data): array
-    {
+    public function createAlert(array $params = []) {
         return $this->create($data);
     }
 
@@ -67,8 +64,7 @@ class Alerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function updateAlert($id, array $data): array
-    {
+    public function updateAlert(array $params = []) {
         return $this->update($id, $data);
     }
 
@@ -79,8 +75,7 @@ class Alerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function deleteAlert($id): array
-    {
+    public function deleteAlert(array $params = []) {
         return $this->delete($id);
     }
 
@@ -91,8 +86,7 @@ class Alerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchAlerts(array $params = []): array
-    {
+    public function searchAlerts(array $params = []) {
         return $this->search($params);
     }
 }

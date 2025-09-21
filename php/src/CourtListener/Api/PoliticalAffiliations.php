@@ -29,8 +29,7 @@ class PoliticalAffiliations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listPoliticalAffiliations(array $params = []): array
-    {
+    public function listPoliticalAffiliations(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class PoliticalAffiliations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getPoliticalAffiliations($id, array $params = []): array
-    {
+    public function getPoliticalAffiliations(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class PoliticalAffiliations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchPoliticalAffiliations(array $params = []): array
-    {
+    public function searchPoliticalAffiliations(array $params = []) {
         return $this->search($params);
     }
 }

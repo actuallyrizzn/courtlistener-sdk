@@ -29,8 +29,7 @@ class RecapQuery extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listRecapQuery(array $params = []): array
-    {
+    public function listRecapQuery(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class RecapQuery extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getRecapQuery($id, array $params = []): array
-    {
+    public function getRecapQuery(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class RecapQuery extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchRecapQuery(array $params = []): array
-    {
+    public function searchRecapQuery(array $params = []) {
         return $this->search($params);
     }
 }

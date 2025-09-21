@@ -29,8 +29,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listDockets(array $params = []): array
-    {
+    public function listDockets(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocket($id, array $params = []): array
-    {
+    public function getDocket($id, array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchDockets(array $params = []): array
-    {
+    public function searchDockets(array $params = []) {
         return $this->search($params);
     }
 
@@ -67,8 +64,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketEntries($docketId, array $params = []): array
-    {
+    public function getDocketEntries(array $params = []) {
         return $this->client->makeRequest('GET', "dockets/{$docketId}/docket-entries/", [
             'query' => $params
         ]);
@@ -82,8 +78,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getParties($docketId, array $params = []): array
-    {
+    public function getParties(array $params = []) {
         return $this->client->makeRequest('GET', "dockets/{$docketId}/parties/", [
             'query' => $params
         ]);
@@ -97,8 +92,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getAttorneys($docketId, array $params = []): array
-    {
+    public function getAttorneys(array $params = []) {
         return $this->client->makeRequest('GET', "dockets/{$docketId}/attorneys/", [
             'query' => $params
         ]);
@@ -112,8 +106,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getRecapDocuments($docketId, array $params = []): array
-    {
+    public function getRecapDocuments(array $params = []) {
         return $this->client->makeRequest('GET', "dockets/{$docketId}/recap/", [
             'query' => $params
         ]);
@@ -151,8 +144,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByCourt(string $courtId, array $filters = []): array
-    {
+    public function getDocketsByCourt(array $params = []) {
         $courtFilters = array_merge(['court' => $courtId], $filters);
         return $this->listDockets($courtFilters);
     }
@@ -167,12 +159,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByDateRange(
-        ?string $startDate = null,
-        ?string $endDate = null,
-        ?string $court = null,
-        array $filters = []
-    ): array {
+    public function getDocketsByDateRange($startDate, $endDate, $courtId = null, array $params = []) {
         $dateFilters = [];
         
         if ($startDate) {
@@ -187,7 +174,7 @@ class Dockets extends BaseApi
             $dateFilters['court'] = $court;
         }
         
-        $allFilters = array_merge($dateFilters, $filters);
+        $allFilters = array_merge($dateFilters, $filters ?? []);
         return $this->listDockets($allFilters);
     }
 
@@ -199,8 +186,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByCaseType(string $caseType, array $filters = []): array
-    {
+    public function getDocketsByCaseType(array $params = []) {
         $typeFilters = array_merge(['case_type' => $caseType], $filters);
         return $this->listDockets($typeFilters);
     }
@@ -213,8 +199,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByNatureOfSuit(string $natureOfSuit, array $filters = []): array
-    {
+    public function getDocketsByNatureOfSuit(array $params = []) {
         $suitFilters = array_merge(['nature_of_suit' => $natureOfSuit], $filters);
         return $this->listDockets($suitFilters);
     }
@@ -227,8 +212,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByJudge(string $judgeId, array $filters = []): array
-    {
+    public function getDocketsByJudge(array $params = []) {
         $judgeFilters = array_merge(['assigned_to' => $judgeId], $filters);
         return $this->listDockets($judgeFilters);
     }
@@ -241,8 +225,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByStatus(string $status, array $filters = []): array
-    {
+    public function getDocketsByStatus(array $params = []) {
         $statusFilters = array_merge(['status' => $status], $filters);
         return $this->listDockets($statusFilters);
     }
@@ -254,8 +237,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsWithFinancialDisclosures(array $filters = []): array
-    {
+    public function getDocketsWithFinancialDisclosures(array $params = []) {
         $financialFilters = array_merge(['has_financial_disclosures' => 'true'], $filters);
         return $this->listDockets($financialFilters);
     }
@@ -267,8 +249,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsWithAudio(array $filters = []): array
-    {
+    public function getDocketsWithAudio(array $params = []) {
         $audioFilters = array_merge(['has_audio' => 'true'], $filters);
         return $this->listDockets($audioFilters);
     }
@@ -280,8 +261,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsWithRecapDocuments(array $filters = []): array
-    {
+    public function getDocketsWithRecapDocuments(array $params = []) {
         $recapFilters = array_merge(['has_recap_documents' => 'true'], $filters);
         return $this->listDockets($recapFilters);
     }
@@ -294,8 +274,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByJurisdictionType(string $jurisdictionType, array $filters = []): array
-    {
+    public function getDocketsByJurisdictionType(array $params = []) {
         $jurisdictionFilters = array_merge(['jurisdiction_type' => $jurisdictionType], $filters);
         return $this->listDockets($jurisdictionFilters);
     }
@@ -308,8 +287,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByJuryDemand(string $juryDemand, array $filters = []): array
-    {
+    public function getDocketsByJuryDemand(array $params = []) {
         $juryFilters = array_merge(['jury_demand' => $juryDemand], $filters);
         return $this->listDockets($juryFilters);
     }

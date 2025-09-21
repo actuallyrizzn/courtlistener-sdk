@@ -29,8 +29,7 @@ class RecapDocuments extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listRecapDocuments(array $params = []): array
-    {
+    public function listRecapDocuments(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class RecapDocuments extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getRecapDocuments($id, array $params = []): array
-    {
+    public function getRecapDocuments(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class RecapDocuments extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchRecapDocuments(array $params = []): array
-    {
+    public function searchRecapDocuments(array $params = []) {
         return $this->search($params);
     }
 }

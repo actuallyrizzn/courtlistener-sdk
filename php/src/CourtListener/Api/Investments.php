@@ -29,8 +29,7 @@ class Investments extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listInvestments(array $params = []): array
-    {
+    public function listInvestments(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Investments extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getInvestments($id, array $params = []): array
-    {
+    public function getInvestments(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Investments extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchInvestments(array $params = []): array
-    {
+    public function searchInvestments(array $params = []) {
         return $this->search($params);
     }
 }

@@ -29,8 +29,7 @@ class Attorneys extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listAttorneys(array $params = []): array
-    {
+    public function listAttorneys(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Attorneys extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getAttorneys($id, array $params = []): array
-    {
+    public function getAttorneys(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Attorneys extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchAttorneys(array $params = []): array
-    {
+    public function searchAttorneys(array $params = []) {
         return $this->search($params);
     }
 }

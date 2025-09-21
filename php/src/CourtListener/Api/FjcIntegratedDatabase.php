@@ -29,8 +29,7 @@ class FjcIntegratedDatabase extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listFjcIntegratedDatabase(array $params = []): array
-    {
+    public function listFjcIntegratedDatabase(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class FjcIntegratedDatabase extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getFjcIntegratedDatabase($id, array $params = []): array
-    {
+    public function getFjcIntegratedDatabase(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class FjcIntegratedDatabase extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchFjcIntegratedDatabase(array $params = []): array
-    {
+    public function searchFjcIntegratedDatabase(array $params = []) {
         return $this->search($params);
     }
 }

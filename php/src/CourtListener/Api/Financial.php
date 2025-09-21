@@ -29,8 +29,7 @@ class Financial extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listFinancial(array $params = []): array
-    {
+    public function listFinancial(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Financial extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getFinancial($id, array $params = []): array
-    {
+    public function getFinancial(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Financial extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchFinancial(array $params = []): array
-    {
+    public function searchFinancial(array $params = []) {
         return $this->search($params);
     }
 }

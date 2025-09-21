@@ -29,8 +29,7 @@ class Clusters extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listClusters(array $params = []): array
-    {
+    public function listClusters(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Clusters extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getClusters($id, array $params = []): array
-    {
+    public function getClusters(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Clusters extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchClusters(array $params = []): array
-    {
+    public function searchClusters(array $params = []) {
         return $this->search($params);
     }
 }

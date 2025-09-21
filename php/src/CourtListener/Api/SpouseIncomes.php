@@ -29,8 +29,7 @@ class SpouseIncomes extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listSpouseIncomes(array $params = []): array
-    {
+    public function listSpouseIncomes(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class SpouseIncomes extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getSpouseIncomes($id, array $params = []): array
-    {
+    public function getSpouseIncomes(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class SpouseIncomes extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchSpouseIncomes(array $params = []): array
-    {
+    public function searchSpouseIncomes(array $params = []) {
         return $this->search($params);
     }
 }

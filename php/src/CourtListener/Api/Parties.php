@@ -29,8 +29,7 @@ class Parties extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listParties(array $params = []): array
-    {
+    public function listParties(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Parties extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getParties($id, array $params = []): array
-    {
+    public function getParties(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Parties extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchParties(array $params = []): array
-    {
+    public function searchParties(array $params = []) {
         return $this->search($params);
     }
 }

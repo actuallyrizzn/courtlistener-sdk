@@ -29,8 +29,7 @@ class Schools extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listSchools(array $params = []): array
-    {
+    public function listSchools(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Schools extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getSchools($id, array $params = []): array
-    {
+    public function getSchools(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Schools extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchSchools(array $params = []): array
-    {
+    public function searchSchools(array $params = []) {
         return $this->search($params);
     }
 }

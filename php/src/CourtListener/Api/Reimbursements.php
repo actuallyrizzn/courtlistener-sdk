@@ -29,8 +29,7 @@ class Reimbursements extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listReimbursements(array $params = []): array
-    {
+    public function listReimbursements(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Reimbursements extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getReimbursements($id, array $params = []): array
-    {
+    public function getReimbursements(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Reimbursements extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchReimbursements(array $params = []): array
-    {
+    public function searchReimbursements(array $params = []) {
         return $this->search($params);
     }
 }

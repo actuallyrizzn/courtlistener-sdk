@@ -29,8 +29,7 @@ class Courts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listCourts(array $params = []): array
-    {
+    public function listCourts(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Courts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getCourt($id, array $params = []): array
-    {
+    public function getCourt(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Courts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchCourts(array $params = []): array
-    {
+    public function searchCourts(array $params = []) {
         return $this->search($params);
     }
 
@@ -66,8 +63,7 @@ class Courts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getHierarchy(array $params = []): array
-    {
+    public function getHierarchy(array $params = []) {
         return $this->client->makeRequest('GET', 'courts/hierarchy/', [
             'query' => $params
         ]);
@@ -80,8 +76,7 @@ class Courts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getTypes(array $params = []): array
-    {
+    public function getTypes(array $params = []) {
         return $this->client->makeRequest('GET', 'courts/types/', [
             'query' => $params
         ]);

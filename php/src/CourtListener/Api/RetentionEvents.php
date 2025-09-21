@@ -29,8 +29,7 @@ class RetentionEvents extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listRetentionEvents(array $params = []): array
-    {
+    public function listRetentionEvents(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class RetentionEvents extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getRetentionEvents($id, array $params = []): array
-    {
+    public function getRetentionEvents(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class RetentionEvents extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchRetentionEvents(array $params = []): array
-    {
+    public function searchRetentionEvents(array $params = []) {
         return $this->search($params);
     }
 }

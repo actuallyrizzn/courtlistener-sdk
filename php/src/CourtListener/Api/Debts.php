@@ -29,8 +29,7 @@ class Debts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listDebts(array $params = []): array
-    {
+    public function listDebts(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Debts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDebts($id, array $params = []): array
-    {
+    public function getDebts(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Debts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchDebts(array $params = []): array
-    {
+    public function searchDebts(array $params = []) {
         return $this->search($params);
     }
 }

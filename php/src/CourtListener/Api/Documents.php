@@ -29,8 +29,7 @@ class Documents extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listDocuments(array $params = []): array
-    {
+    public function listDocuments(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Documents extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocuments($id, array $params = []): array
-    {
+    public function getDocuments(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Documents extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchDocuments(array $params = []): array
-    {
+    public function searchDocuments(array $params = []) {
         return $this->search($params);
     }
 }

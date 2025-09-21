@@ -29,8 +29,7 @@ class Educations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listEducations(array $params = []): array
-    {
+    public function listEducations(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Educations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getEducations($id, array $params = []): array
-    {
+    public function getEducations(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Educations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchEducations(array $params = []): array
-    {
+    public function searchEducations(array $params = []) {
         return $this->search($params);
     }
 }

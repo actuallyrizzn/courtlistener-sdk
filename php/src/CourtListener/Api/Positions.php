@@ -29,8 +29,7 @@ class Positions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listPositions(array $params = []): array
-    {
+    public function listPositions(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Positions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getPositions($id, array $params = []): array
-    {
+    public function getPositions(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Positions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchPositions(array $params = []): array
-    {
+    public function searchPositions(array $params = []) {
         return $this->search($params);
     }
 }

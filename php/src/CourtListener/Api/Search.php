@@ -29,8 +29,7 @@ class Search extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listSearch(array $params = []): array
-    {
+    public function listSearch(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Search extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getSearch($id, array $params = []): array
-    {
+    public function getSearch(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Search extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchSearch(array $params = []): array
-    {
+    public function searchSearch(array $params = []) {
         return $this->search($params);
     }
 }

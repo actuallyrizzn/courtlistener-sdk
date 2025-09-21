@@ -29,8 +29,7 @@ class AbaRatings extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listAbaRatings(array $params = []): array
-    {
+    public function listAbaRatings(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class AbaRatings extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getAbaRatings($id, array $params = []): array
-    {
+    public function getAbaRatings(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class AbaRatings extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchAbaRatings(array $params = []): array
-    {
+    public function searchAbaRatings(array $params = []) {
         return $this->search($params);
     }
 }

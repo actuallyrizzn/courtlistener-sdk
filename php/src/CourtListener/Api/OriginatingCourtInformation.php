@@ -29,8 +29,7 @@ class OriginatingCourtInformation extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listOriginatingCourtInformation(array $params = []): array
-    {
+    public function listOriginatingCourtInformation(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class OriginatingCourtInformation extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getOriginatingCourtInformation($id, array $params = []): array
-    {
+    public function getOriginatingCourtInformation(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class OriginatingCourtInformation extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchOriginatingCourtInformation(array $params = []): array
-    {
+    public function searchOriginatingCourtInformation(array $params = []) {
         return $this->search($params);
     }
 }

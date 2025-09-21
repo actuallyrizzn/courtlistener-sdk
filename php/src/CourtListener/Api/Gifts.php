@@ -29,8 +29,7 @@ class Gifts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listGifts(array $params = []): array
-    {
+    public function listGifts(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Gifts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getGifts($id, array $params = []): array
-    {
+    public function getGifts(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Gifts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchGifts(array $params = []): array
-    {
+    public function searchGifts(array $params = []) {
         return $this->search($params);
     }
 }

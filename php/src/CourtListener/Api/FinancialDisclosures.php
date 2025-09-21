@@ -29,8 +29,7 @@ class FinancialDisclosures extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listFinancialDisclosures(array $params = []): array
-    {
+    public function listFinancialDisclosures(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class FinancialDisclosures extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getFinancialDisclosures($id, array $params = []): array
-    {
+    public function getFinancialDisclosures(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class FinancialDisclosures extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchFinancialDisclosures(array $params = []): array
-    {
+    public function searchFinancialDisclosures(array $params = []) {
         return $this->search($params);
     }
 }

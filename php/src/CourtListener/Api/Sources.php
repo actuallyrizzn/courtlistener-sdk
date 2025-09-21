@@ -29,8 +29,7 @@ class Sources extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listSources(array $params = []): array
-    {
+    public function listSources(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Sources extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getSources($id, array $params = []): array
-    {
+    public function getSources(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Sources extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchSources(array $params = []): array
-    {
+    public function searchSources(array $params = []) {
         return $this->search($params);
     }
 }

@@ -29,8 +29,7 @@ class DocketAlerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listDocketAlerts(array $params = []): array
-    {
+    public function listDocketAlerts(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class DocketAlerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketAlerts($id, array $params = []): array
-    {
+    public function getDocketAlerts(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class DocketAlerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchDocketAlerts(array $params = []): array
-    {
+    public function searchDocketAlerts(array $params = []) {
         return $this->search($params);
     }
 }

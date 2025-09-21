@@ -29,8 +29,7 @@ class Tag extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listTag(array $params = []): array
-    {
+    public function listTag(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class Tag extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getTag($id, array $params = []): array
-    {
+    public function getTag(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class Tag extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchTag(array $params = []): array
-    {
+    public function searchTag(array $params = []) {
         return $this->search($params);
     }
 }

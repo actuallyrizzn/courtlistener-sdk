@@ -29,8 +29,7 @@ class NonInvestmentIncomes extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function listNonInvestmentIncomes(array $params = []): array
-    {
+    public function listNonInvestmentIncomes(array $params = []) {
         return $this->list($params);
     }
 
@@ -42,8 +41,7 @@ class NonInvestmentIncomes extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getNonInvestmentIncomes($id, array $params = []): array
-    {
+    public function getNonInvestmentIncomes(array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -54,8 +52,7 @@ class NonInvestmentIncomes extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function searchNonInvestmentIncomes(array $params = []): array
-    {
+    public function searchNonInvestmentIncomes(array $params = []) {
         return $this->search($params);
     }
 }
