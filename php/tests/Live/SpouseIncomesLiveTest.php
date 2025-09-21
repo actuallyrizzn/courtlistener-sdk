@@ -23,14 +23,14 @@ class SpouseIncomesLiveTest extends TestCase
 
     protected function setUp(): void
     {
-        $apiToken = $_ENV['COURTLISTENER_API_TOKEN'] ?? null;
+        $apiToken = getenv('COURTLISTENER_API_TOKEN') ?: null;
         
         if (!$apiToken) {
             $this->markTestSkipped('COURTLISTENER_API_TOKEN environment variable not set');
         }
 
         try {
-            $this->client = new CourtListenerClient(['api_token' => $apiToken]);
+            $this->client = new CourtListenerClient(['api_token' => $apiToken, 'verify_ssl' => false]);
         } catch (AuthenticationException $e) {
             $this->markTestSkipped('Invalid API token: ' . $e->getMessage());
         }
@@ -40,7 +40,7 @@ class SpouseIncomesLiveTest extends TestCase
     {
         $this->assertNotNull($this->client);
         
-        $results = $this->client->SpouseIncomes->list(Pagination::getParams(1, 5));
+        $results = $this->client->spouseIncomes->list(Pagination::getParams(1, 5));
         
         $this->assertIsArray($results);
         $this->assertArrayHasKey('count', $results);
@@ -59,7 +59,7 @@ class SpouseIncomesLiveTest extends TestCase
     {
         $this->assertNotNull($this->client);
         
-        $searchResults = $this->client->SpouseIncomes->search([
+        $searchResults = $this->client->spouseIncomes->search([
             'q' => 'test',
             'per_page' => 3
         ]);
@@ -76,12 +76,12 @@ class SpouseIncomesLiveTest extends TestCase
         $this->assertNotNull($this->client);
         
         // First get a list to find a valid ID
-        $results = $this->client->SpouseIncomes->list(Pagination::getParams(1, 1));
+        $results = $this->client->spouseIncomes->list(Pagination::getParams(1, 1));
         
         if (!empty($results['results'])) {
             $itemId = $results['results'][0]['id'];
             
-            $item = $this->client->SpouseIncomes->get($itemId);
+            $item = $this->client->spouseIncomes->get($itemId);
             
             $this->assertIsArray($item);
             $this->assertArrayHasKey('id', $item);
@@ -95,8 +95,8 @@ class SpouseIncomesLiveTest extends TestCase
     {
         $this->assertNotNull($this->client);
         
-        $page1 = $this->client->SpouseIncomes->list(Pagination::getParams(1, 2));
-        $page2 = $this->client->SpouseIncomes->list(Pagination::getParams(2, 2));
+        $page1 = $this->client->spouseIncomes->list(Pagination::getParams(1, 2));
+        $page2 = $this->client->spouseIncomes->list(Pagination::getParams(2, 2));
         
         $this->assertIsArray($page1);
         $this->assertIsArray($page2);
@@ -118,7 +118,7 @@ class SpouseIncomesLiveTest extends TestCase
             Pagination::getParams(1, 3)
         );
         
-        $results = $this->client->SpouseIncomes->list($filters);
+        $results = $this->client->spouseIncomes->list($filters);
         
         $this->assertIsArray($results);
         $this->assertArrayHasKey('count', $results);
@@ -133,7 +133,7 @@ class SpouseIncomesLiveTest extends TestCase
         
         // Test with invalid ID
         try {
-            $this->client->SpouseIncomes->get(999999999);
+            $this->client->spouseIncomes->get(999999999);
             $this->fail('Expected NotFoundException was not thrown');
         } catch (NotFoundException $e) {
             $this->assertStringContainsString('not found', strtolower($e->getMessage()));
@@ -153,7 +153,7 @@ class SpouseIncomesLiveTest extends TestCase
             'per_page' => 2
         ];
         
-        $results = $this->client->SpouseIncomes->search($searchParams);
+        $results = $this->client->spouseIncomes->search($searchParams);
         
         $this->assertIsArray($results);
         $this->assertArrayHasKey('count', $results);
@@ -166,7 +166,7 @@ class SpouseIncomesLiveTest extends TestCase
     {
         $this->assertNotNull($this->client);
         
-        $results = $this->client->SpouseIncomes->list(Pagination::getParams(1, 1));
+        $results = $this->client->spouseIncomes->list(Pagination::getParams(1, 1));
         
         if (!empty($results['results'])) {
             $item = $results['results'][0];
@@ -205,7 +205,7 @@ class SpouseIncomesLiveTest extends TestCase
         
         try {
             for ($i = 0; $i < $maxRequests; $i++) {
-                $this->client->SpouseIncomes->list(Pagination::getParams(1, 1));
+                $this->client->spouseIncomes->list(Pagination::getParams(1, 1));
                 $requests++;
                 
                 // Small delay to be respectful

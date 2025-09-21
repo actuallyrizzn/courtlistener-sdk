@@ -152,6 +152,7 @@ class CourtListenerClient
             'base_uri' => $this->baseUrl,
             'timeout' => $this->timeout,
             'headers' => $this->defaultHeaders,
+            'verify' => $config['verify_ssl'] ?? true, // Allow SSL verification to be disabled for testing
         ]);
 
         // Initialize API endpoints

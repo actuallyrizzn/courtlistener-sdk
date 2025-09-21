@@ -40,11 +40,10 @@
     <php>
         <env name="COURTLISTENER_API_TOKEN" value="test-token"/>
         <env name="COURTLISTENER_BASE_URL" value="https://www.courtlistener.com/api/"/>
+        <env name="COURTLISTENER_VERIFY_SSL" value="false"/>
     </php>
     <groups>
         <exclude>
-            <group>live</group>
-            <group>network</group>
             <group>slow</group>
         </exclude>
     </groups>

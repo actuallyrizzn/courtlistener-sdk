@@ -22,7 +22,7 @@ class LiveApiTest extends TestCase
 
     protected function setUp(): void
     {
-        $apiToken = $_ENV['COURTLISTENER_API_TOKEN'] ?? null;
+        $apiToken = getenv('COURTLISTENER_API_TOKEN') ?: null;
         
         if (!$apiToken) {
             $this->markTestSkipped('COURTLISTENER_API_TOKEN environment variable not set');

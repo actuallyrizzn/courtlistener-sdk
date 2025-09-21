@@ -30,7 +30,7 @@ abstract class BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function list(array $params = []): array
+    public function list(array $params = [])
     {
         return $this->client->makeRequest('GET', $this->endpoint, [
             'query' => $params
@@ -45,7 +45,7 @@ abstract class BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function get($id, array $params = []): array
+    public function get($id, array $params = [])
     {
         return $this->client->makeRequest('GET', $this->endpoint . $id . '/', [
             'query' => $params
@@ -59,7 +59,7 @@ abstract class BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function create(array $data): array
+    public function create(array $data)
     {
         return $this->client->makeRequest('POST', $this->endpoint, [
             'json' => $data
@@ -74,7 +74,7 @@ abstract class BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function update($id, array $data): array
+    public function update($id, array $data)
     {
         return $this->client->makeRequest('PUT', $this->endpoint . $id . '/', [
             'json' => $data
@@ -89,7 +89,7 @@ abstract class BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function patch($id, array $data): array
+    public function patch($id, array $data)
     {
         return $this->client->makeRequest('PATCH', $this->endpoint . $id . '/', [
             'json' => $data
@@ -103,7 +103,7 @@ abstract class BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function delete($id): array
+    public function delete($id)
     {
         return $this->client->makeRequest('DELETE', $this->endpoint . $id . '/');
     }
@@ -115,7 +115,7 @@ abstract class BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function search(array $params = []): array
+    public function search(array $params = [])
     {
         return $this->client->makeRequest('GET', $this->endpoint . 'search/', [
             'query' => $params
