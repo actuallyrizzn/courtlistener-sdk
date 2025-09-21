@@ -43,7 +43,7 @@ class Validators
             '/^\d+\s+U\.S\.\s+\d+$/',  // SCOTUS: "123 U.S. 456"
             '/^\d+\s+F\.\s*\d+$/',     // Federal Reporter: "123 F. 456"
             '/^\d+\s+F\.\s*Supp\.\s*\d+$/', // Federal Supplement: "123 F. Supp. 456"
-            '/^\d+\s+[A-Za-z]+\s+\d+$/',   // State citations: "123 Cal. 456"
+            '/^\d+\s+[A-Za-z]+\.?\s*[A-Za-z]*\.?\s*\d+$/',   // State citations: "123 Cal. 456" or "123 N.Y. 456"
         ];
 
         foreach ($patterns as $pattern) {
@@ -69,7 +69,7 @@ class Validators
 
         // Common docket number patterns
         $patterns = [
-            '/^\d+-\d+-\d+$/',           // 1-23-cv-456
+            '/^\d+-\d+-\w+-\d+$/',       // 1-23-cv-456
             '/^\d+:\d+-\w+-\d+$/',       // 1:23-cv-456
             '/^\d+-\w+-\d+$/',           // 1-cv-456
             '/^\d+$/',                   // Simple number
@@ -148,7 +148,13 @@ class Validators
             return false;
         }
 
-        return filter_var($url, FILTER_VALIDATE_URL) !== false;
+        // Only allow HTTP and HTTPS URLs
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
+        $parsed = parse_url($url);
+        return isset($parsed['scheme']) && in_array($parsed['scheme'], ['http', 'https']);
     }
 
     /**

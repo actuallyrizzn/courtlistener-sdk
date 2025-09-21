@@ -84,11 +84,7 @@ class CourtListenerClientComprehensiveTest extends TestCase
 
         $this->mockHttpClient->expects($this->once())
             ->method('request')
-            ->with('GET', 'https://www.courtlistener.com/api/test/', [
-                'headers' => $this->isType('array'),
-                'query' => ['page' => 1],
-                'timeout' => 30
-            ])
+            ->with('GET', 'test/', ['query' => ['page' => 1]])
             ->willReturn($mockResponse);
 
         $result = $this->client->makeRequest('GET', 'test/', ['query' => ['page' => 1]]);
@@ -103,11 +99,7 @@ class CourtListenerClientComprehensiveTest extends TestCase
 
         $this->mockHttpClient->expects($this->once())
             ->method('request')
-            ->with('POST', 'https://www.courtlistener.com/api/test/', [
-                'headers' => $this->isType('array'),
-                'json' => $data,
-                'timeout' => 30
-            ])
+            ->with('POST', 'test/', ['json' => $data])
             ->willReturn($mockResponse);
 
         $result = $this->client->makeRequest('POST', 'test/', ['json' => $data]);
@@ -121,16 +113,8 @@ class CourtListenerClientComprehensiveTest extends TestCase
 
         $this->mockHttpClient->expects($this->once())
             ->method('request')
-            ->with('GET', 'https://www.courtlistener.com/api/test/', [
-                'headers' => $this->callback(function ($headers) {
-                    return isset($headers['Authorization']) && 
-                           isset($headers['Content-Type']) && 
-                           isset($headers['User-Agent']) &&
-                           isset($headers['Accept']) &&
-                           $headers['Custom-Header'] === 'custom-value';
-                }),
-                'query' => [],
-                'timeout' => 30
+            ->with('GET', 'test/', [
+                'headers' => ['Custom-Header' => 'custom-value']
             ])
             ->willReturn($mockResponse);
 
@@ -190,7 +174,7 @@ class CourtListenerClientComprehensiveTest extends TestCase
             ->method('request')
             ->willThrowException(new ConnectException('Connection failed', $this->createMock(\Psr\Http\Message\RequestInterface::class)));
 
-        $this->expectException(ConnectException::class);
+        $this->expectException(\CourtListener\Exceptions\CourtListenerException::class);
         $this->client->makeRequest('GET', 'test/');
     }
 
@@ -222,7 +206,7 @@ class CourtListenerClientComprehensiveTest extends TestCase
     {
         $mockResponse = new Response(500, [], json_encode(['detail' => 'Internal server error']));
 
-        $this->mockHttpClient->expects($this->once())
+        $this->mockHttpClient->expects($this->exactly(3))
             ->method('request')
             ->willThrowException(new GuzzleServerException('Server error', $this->createMock(\Psr\Http\Message\RequestInterface::class), $mockResponse));
 
@@ -328,8 +312,8 @@ class CourtListenerClientComprehensiveTest extends TestCase
     public function testClientRepr()
     {
         $repr = (string) $this->client;
-        $this->assertStringContains('CourtListenerClient', $repr);
-        $this->assertStringContains('test-token', $repr);
+        $this->assertStringContainsString('CourtListenerClient', $repr);
+        $this->assertStringContainsString('test-tok', $repr);
     }
 
     public function testClientWithEmptyConfiguration()

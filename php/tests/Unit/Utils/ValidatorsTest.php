@@ -11,7 +11,7 @@ class ValidatorsTest extends TestCase
     {
         $this->assertTrue(Validators::validateDate('2023-01-01'));
         $this->assertTrue(Validators::validateDate('2023-12-31'));
-        $this->assertTrue(Validators::validateDate('2023-02-29')); // Leap year
+        $this->assertTrue(Validators::validateDate('2024-02-29')); // Leap year
         $this->assertFalse(Validators::validateDate('2023-13-01')); // Invalid month
         $this->assertFalse(Validators::validateDate('2023-01-32')); // Invalid day
         $this->assertFalse(Validators::validateDate('invalid-date'));

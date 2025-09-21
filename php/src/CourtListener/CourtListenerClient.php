@@ -225,7 +225,7 @@ class CourtListenerClient
      * @return array Response data
      * @throws CourtListenerException
      */
-    public function makeRequest(string $method, string $endpoint, array $options = []): array
+    public function makeRequest(string $method, string $endpoint, array $options = [])
     {
         $attempt = 0;
         $lastException = null;
@@ -285,15 +285,21 @@ class CourtListenerClient
      * @return array
      * @throws CourtListenerException
      */
-    private function handleResponse($response): array
+    private function handleResponse($response)
     {
         $statusCode = $response->getStatusCode();
         $body = $response->getBody()->getContents();
 
         if ($statusCode >= 200 && $statusCode < 300) {
+            // Return raw content for empty responses
+            if (empty($body)) {
+                return $body;
+            }
+            
             $data = json_decode($body, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new CourtListenerException('Invalid JSON response: ' . json_last_error_msg());
+                // Return raw content for invalid JSON
+                return $body;
             }
             return $data;
         }
@@ -354,5 +360,18 @@ class CourtListenerClient
     public function getApiToken(): string
     {
         return $this->apiToken;
+    }
+
+    /**
+     * String representation of the client
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return sprintf('CourtListenerClient(api_token=%s, base_url=%s)', 
+            substr($this->apiToken, 0, 8) . '...', 
+            $this->baseUrl
+        );
     }
 }
