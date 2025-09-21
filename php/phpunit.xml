@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <coverage>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+        <exclude>
+            <directory>src/CourtListener/Exceptions</directory>
+        </exclude>
+    </coverage>
+    <php>
+        <env name="COURTLISTENER_API_TOKEN" value="test-token"/>
+        <env name="COURTLISTENER_BASE_URL" value="https://www.courtlistener.com/api/"/>
+    </php>
+</phpunit>

@@ -327,3 +327,16 @@ docker-compose.override.yml
 # Local development
 local_settings.py
 local_config.py
+php/vendor/autoload.php
+php/vendor/composer/autoload_classmap.php
+php/vendor/composer/autoload_files.php
+php/vendor/composer/autoload_namespaces.php
+php/vendor/composer/autoload_psr4.php
+php/vendor/composer/autoload_real.php
+php/vendor/composer/autoload_static.php
+php/vendor/composer/ClassLoader.php
+php/vendor/composer/installed.json
+php/vendor/composer/installed.php
+php/vendor/composer/InstalledVersions.php
+php/vendor/composer/LICENSE
+php/vendor/composer/platform_check.php

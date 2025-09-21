@@ -7,7 +7,7 @@ import os
 
 # Read the README file
 def read_readme():
-    readme_path = os.path.join(os.path.dirname(__file__), 'README.md')
+    readme_path = os.path.join(os.path.dirname(__file__), '..', 'README.md')
     if os.path.exists(readme_path):
         with open(readme_path, 'r', encoding='utf-8') as f:
             return f.read()
@@ -22,7 +22,7 @@ def read_requirements():
     return []
 
 setup(
-    name="courtlistener-sdk",
+    name="courtlistener-sdk-python",
     version="0.1.0",
     author="CourtListener SDK Community",
     author_email="actuallyrizzn@gmail.com",

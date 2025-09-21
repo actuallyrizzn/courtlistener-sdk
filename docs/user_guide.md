@@ -1,8 +1,13 @@
-# CourtListener Python SDK — User Guide (Unofficial)
+# CourtListener SDK — User Guide (Unofficial)
 
-Welcome to the **unofficial** CourtListener Python SDK! This guide will help you get started, use all major features, and follow best practices for working with the CourtListener API.
+Welcome to the **unofficial** CourtListener SDK! This guide covers both Python and PHP implementations and will help you get started, use all major features, and follow best practices for working with the CourtListener API.
 
 **⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
+
+## Language Support
+
+- **Python SDK**: ✅ Complete and Production Ready (see [`python/`](../python/))
+- **PHP SDK**: 🚧 Coming Soon (see `php/` when available)
 
 ## Table of Contents
 - [Installation](#installation)
@@ -18,9 +23,16 @@ Welcome to the **unofficial** CourtListener Python SDK! This guide will help you
 
 ## Installation
 
-Install dependencies:
+### Python SDK
 ```bash
+cd python
 pip install -r requirements.txt
+```
+
+### PHP SDK (Coming Soon)
+```bash
+cd php
+composer install
 ```
 
 ## Authentication
@@ -29,20 +41,41 @@ Set your API token in a `.env` file:
 ```
 COURTLISTENER_API_TOKEN=your_token_here
 ```
-Or pass it directly:
+
+### Python
 ```python
 from courtlistener import CourtListenerClient
 client = CourtListenerClient(api_token="your_token_here")
 ```
 
+### PHP (Coming Soon)
+```php
+<?php
+use CourtListener\CourtListenerClient;
+$client = new CourtListenerClient(['api_token' => 'your_token_here']);
+```
+
 ## Quick Start
 
+### Python
 ```python
 from courtlistener import CourtListenerClient
 client = CourtListenerClient()
 dockets = client.dockets.list_dockets(page=1)
 for docket in dockets:
     print(docket.case_name, docket.docket_number)
+```
+
+### PHP (Coming Soon)
+```php
+<?php
+use CourtListener\CourtListenerClient;
+
+$client = new CourtListenerClient();
+$dockets = $client->dockets()->listDockets(['page' => 1]);
+foreach ($dockets as $docket) {
+    echo $docket->case_name . ' ' . $docket->docket_number . "\n";
+}
 ```
 
 ## API Endpoints

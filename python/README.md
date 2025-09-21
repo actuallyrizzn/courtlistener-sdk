@@ -1,26 +1,12 @@
-# CourtListener SDK (Unofficial)
+# CourtListener Python SDK (Unofficial)
 
-Multi-language SDKs for the [CourtListener API](https://www.courtlistener.com/api/).
+An **unofficial**, robust, production-ready Python SDK for the [CourtListener API](https://www.courtlistener.com/api/).
 
 **⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
-## Available Languages
-
-### Python SDK
-- **Location**: [`python/`](./python/)
-- **Status**: ✅ Complete and Production Ready
-- **Features**: 100% API coverage, comprehensive models, robust error handling
-- **Installation**: `pip install -r python/requirements.txt`
-
-### PHP SDK
-- **Location**: `php/` (Coming Soon)
-- **Status**: 🚧 In Development
-- **Features**: Full feature parity with Python SDK
-
 ## Features
 - **100% API Coverage**: Complete support for all 36+ CourtListener API endpoints
-- **Multi-Language Support**: Python (complete) and PHP (coming soon)
-- **Comprehensive Data Models**: Language-specific models for all data types including financial disclosures, alerts, people, and more
+- **Comprehensive Data Models**: Pythonic models for all data types including financial disclosures, alerts, people, and more
 - **Robust Error Handling**: Production-ready error handling with retry logic and rate limiting
 - **Advanced Pagination**: Cursor-based pagination support for efficient data retrieval
 - **Full CRUD Support**: Create, read, update, and delete operations for alerts and docket alerts
@@ -28,14 +14,12 @@ Multi-language SDKs for the [CourtListener API](https://www.courtlistener.com/ap
 - **Easy Authentication**: Simple authentication via `.env` file or direct token
 - **Extensive Documentation**: Complete API reference and usage examples
 
-## Quick Start
-
-### Python
+## Installation
 ```bash
-cd python
 pip install -r requirements.txt
 ```
 
+## Quick Start
 ```python
 from courtlistener import CourtListenerClient
 client = CourtListenerClient()
@@ -44,26 +28,9 @@ for docket in dockets['results']:
     print(docket['case_name'], docket['docket_number'])
 ```
 
-### PHP (Coming Soon)
-```bash
-cd php
-composer install
-```
-
-```php
-<?php
-use CourtListener\CourtListenerClient;
-
-$client = new CourtListenerClient();
-$dockets = $client->dockets()->list(['page' => 1]);
-foreach ($dockets['results'] as $docket) {
-    echo $docket['case_name'] . ' ' . $docket['docket_number'] . "\n";
-}
-```
-
 ## Available Endpoints
 
-Both Python and PHP SDKs provide access to all CourtListener API endpoints:
+The SDK provides access to all CourtListener API endpoints:
 
 ### Core Endpoints
 - `client.courts` — Court information and hierarchy
@@ -121,41 +88,27 @@ Set your API token in a `.env` file:
 ```
 COURTLISTENER_API_TOKEN=your_token_here
 ```
-
-### Python
+Or pass it directly:
 ```python
 client = CourtListenerClient(api_token="your_token_here")
 ```
 
-### PHP (Coming Soon)
-```php
-$client = new CourtListenerClient(['api_token' => 'your_token_here']);
-```
-
 ## Tests & Debugging
-
-### Python
-All manual and debug test scripts are in [`python/tests/manual_debug/`](./python/tests/manual_debug/). See the documentation for details on running and extending tests.
-
-### PHP (Coming Soon)
-Tests will be located in `php/tests/` when available.
+All manual and debug test scripts are in [`tests/manual_debug/`](./tests/manual_debug/). See the documentation for details on running and extending tests.
 
 ## Documentation
-Extensive documentation is available in [`docs/`](./docs/), including:
-- [User Guide](./docs/user_guide.md)
-- [API Reference](./docs/api_reference.md)
-- [Advanced Usage](./docs/advanced_usage.md)
-- [Troubleshooting](./docs/troubleshooting.md)
-
-### Language-Specific Documentation
-- **Python**: See [`python/README.md`](./python/README.md) for Python-specific details
-- **PHP**: Coming soon in `php/README.md`
+Extensive documentation is available in [`../docs/`](../docs/), including:
+- [User Guide](../docs/user_guide.md)
+- [API Reference](../docs/api_reference.md)
+- [Advanced Usage](../docs/advanced_usage.md)
+- [Troubleshooting](../docs/troubleshooting.md)
 
 ## Changelog
-See [`CHANGELOG.md`](./CHANGELOG.md) for release notes.
+See [`../CHANGELOG.md`](../CHANGELOG.md) for release notes.
 
 ## License
-See [`LICENSE`](./LICENSE).
+See [`../LICENSE`](../LICENSE).
 
 ---
-For more, see the [full documentation](./docs/user_guide.md). 
+
+For more, see the [full documentation](../docs/user_guide.md).
