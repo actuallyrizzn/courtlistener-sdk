@@ -51,7 +51,7 @@ class PaginationTest extends TestCase
         $info = Pagination::extractInfo($response);
         
         $this->assertEquals(100, $info['count']);
-        $this->assertStringContains('page=2', $info['next']);
+        $this->assertStringContainsString('page=2', $info['next']);
         $this->assertNull($info['previous']);
         $this->assertEquals(1, $info['current_page']);
         $this->assertEquals(5, $info['total_pages']);
@@ -71,7 +71,7 @@ class PaginationTest extends TestCase
         
         $this->assertEquals(15, $info['count']);
         $this->assertNull($info['next']);
-        $this->assertStringContains('page=1', $info['previous']);
+        $this->assertStringContainsString('page=1', $info['previous']);
         $this->assertEquals(1, $info['current_page']);
         $this->assertEquals(1, $info['total_pages']);
         $this->assertEquals(20, $info['per_page']);

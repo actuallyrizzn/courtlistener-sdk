@@ -18,18 +18,36 @@ class CourtListenerClientTest extends TestCase
 
     public function testClientInitializationWithoutToken()
     {
+        // Temporarily unset the environment variable for this test
+        $originalToken = $_ENV['COURTLISTENER_API_TOKEN'] ?? null;
+        unset($_ENV['COURTLISTENER_API_TOKEN']);
+        
         $this->expectException(AuthenticationException::class);
         $this->expectExceptionMessage('API token is required');
         
         new CourtListenerClient();
+        
+        // Restore the original token
+        if ($originalToken !== null) {
+            $_ENV['COURTLISTENER_API_TOKEN'] = $originalToken;
+        }
     }
 
     public function testClientInitializationWithEmptyToken()
     {
+        // Temporarily unset the environment variable for this test
+        $originalToken = $_ENV['COURTLISTENER_API_TOKEN'] ?? null;
+        unset($_ENV['COURTLISTENER_API_TOKEN']);
+        
         $this->expectException(AuthenticationException::class);
         $this->expectExceptionMessage('API token is required');
         
         new CourtListenerClient(['api_token' => '']);
+        
+        // Restore the original token
+        if ($originalToken !== null) {
+            $_ENV['COURTLISTENER_API_TOKEN'] = $originalToken;
+        }
     }
 
     public function testClientGetters()

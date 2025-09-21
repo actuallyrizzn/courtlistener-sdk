@@ -8,7 +8,7 @@ use JsonSerializable;
 /**
  * Base model class providing common functionality for all data models
  */
-abstract class BaseModel implements ArrayAccess, JsonSerializable
+class BaseModel implements ArrayAccess, JsonSerializable
 {
     protected array $data = [];
     protected array $original = [];

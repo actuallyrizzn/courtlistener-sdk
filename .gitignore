@@ -340,3 +340,15 @@ php/vendor/composer/installed.php
 php/vendor/composer/InstalledVersions.php
 php/vendor/composer/LICENSE
 php/vendor/composer/platform_check.php
+php/vendor/bin/php-cs-fixer
+php/vendor/bin/php-cs-fixer.bat
+php/vendor/bin/php-parse
+php/vendor/bin/php-parse.bat
+php/vendor/bin/phpcbf
+php/vendor/bin/phpcbf.bat
+php/vendor/bin/phpcs
+php/vendor/bin/phpcs.bat
+php/vendor/bin/phpunit
+php/vendor/bin/phpunit.bat
+php/composer.lock
+php/composer.lock
