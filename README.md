@@ -62,6 +62,22 @@ foreach ($dockets['results'] as $docket) {
 }
 ```
 
+## Development Tooling
+
+Run these repo-root targets to keep both SDKs in sync:
+
+| Command | Purpose |
+|---------|---------|
+| `make bootstrap` | Install Python dev extras (`pip install -e ".[dev]"`) and PHP Composer deps. |
+| `make lint` | Run `black`, `flake8`, `mypy`, and `phpstan` in one go. Use `python-lint`/`php-lint` for individual SDKs. |
+| `make test` | Execute `pytest` and `composer test`. |
+| `make build` | Produce Python sdists/wheels (`python -m build`) and optimize Composer autoloaders. |
+| `make docs` | Validate Markdown links across `docs/` plus each language README via `tools/check_docs.py`. |
+| `make release` | Sanity-check Python artifacts with `twine check` and package the PHP SDK as a zip via `composer archive`. |
+| `make clean` | Remove virtualenv caches, build artifacts, and Composer vendor installs. |
+
+All targets accept the usual overrides (e.g., `PYTHON=python3.12 make python-test`). Use `make help` to list every available command.
+
 ## Available Endpoints
 
 Both Python and PHP SDKs provide access to all CourtListener API endpoints:
