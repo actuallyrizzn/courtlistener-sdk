@@ -341,7 +341,7 @@ class TestCourtListenerClient:
         """Test behavior when max retries are exceeded."""
         mock_request.side_effect = requests.exceptions.Timeout("Timeout")
 
-        with pytest.raises(CourtListenerError, match="Request timed out"):
+        with pytest.raises(TimeoutError, match="Request timed out"):
             self.client._make_request('GET', 'courts/')
 
     @patch('requests.Session.request')
@@ -349,7 +349,7 @@ class TestCourtListenerClient:
         """Test connection error when max retries exceeded."""
         mock_request.side_effect = requests.exceptions.ConnectionError("Connection failed")
 
-        with pytest.raises(CourtListenerError, match="Failed to connect to API"):
+        with pytest.raises(ConnectionError, match="Failed to connect to API"):
             self.client._make_request('GET', 'courts/')
 
     @patch('requests.Session.request')

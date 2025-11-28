@@ -5,8 +5,8 @@ Main client class for the CourtListener SDK.
 import time
 import requests
 import logging
-from typing import Dict, Any, Optional, Union
-from urllib.parse import urljoin, urlencode
+from typing import Dict, Any, Optional
+from urllib.parse import urljoin
 
 from .config import Config
 from .exceptions import (
@@ -234,14 +234,22 @@ class CourtListenerClient:
                 response = self.session.request(method, url, **request_kwargs)
                 return self._handle_response(response)
             
-            except requests.exceptions.Timeout:
+            except requests.exceptions.Timeout as exc:
                 if attempt == self.config.max_retries:
-                    raise CourtListenerError("Request timed out")
+                    detail = str(exc).strip()
+                    message = "Request timed out"
+                    if detail:
+                        message = f"{message}: {detail}"
+                    raise TimeoutError(message)
                 time.sleep(self.config.retry_delay)
             
-            except requests.exceptions.ConnectionError:
+            except requests.exceptions.ConnectionError as exc:
                 if attempt == self.config.max_retries:
-                    raise CourtListenerError("Failed to connect to API")
+                    detail = str(exc).strip()
+                    message = "Failed to connect to API"
+                    if detail:
+                        message = f"{message}: {detail}"
+                    raise ConnectionError(message)
                 time.sleep(self.config.retry_delay)
             
             except requests.exceptions.RequestException as e:
