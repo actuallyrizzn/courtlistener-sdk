@@ -55,6 +55,8 @@ setup(
             "flake8>=5.0.0",
             "mypy>=1.0.0",
             "isort>=5.0.0",
+            "build>=1.0.3",
+            "twine>=4.0.0",
         ],
     },
     keywords="legal, court, api, sdk, courtlistener, case law, dockets, judges, unofficial",
