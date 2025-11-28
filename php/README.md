@@ -1,6 +1,6 @@
 # CourtListener PHP SDK (Unofficial)
 
-An **unofficial**, robust, production-ready PHP SDK for the [CourtListener API](https://www.courtlistener.com/api/).
+An **unofficial**, robust, production-ready PHP SDK for the [CourtListener API](https://www.courtlistener.com/api/rest/v4/).
 
 **⚠️ Important Notice**: This is an unofficial SDK developed by the community and is not affiliated with, endorsed by, or officially supported by CourtListener or Free Law Project.
 
