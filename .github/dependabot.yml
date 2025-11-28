@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/python"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "composer"
+    directory: "/php"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
