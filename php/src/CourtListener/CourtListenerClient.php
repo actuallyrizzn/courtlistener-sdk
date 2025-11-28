@@ -128,7 +128,7 @@ class CourtListenerClient
         $this->loadEnvironmentVariables();
 
         // Set configuration
-        $this->baseUrl = $config['base_url'] ?? $_ENV['COURTLISTENER_BASE_URL'] ?? 'https://www.courtlistener.com/api/';
+        $this->baseUrl = $config['base_url'] ?? $_ENV['COURTLISTENER_BASE_URL'] ?? 'https://www.courtlistener.com/api/rest/v4/';
         $this->apiToken = $config['api_token'] ?? $_ENV['COURTLISTENER_API_TOKEN'] ?? '';
         $this->timeout = $config['timeout'] ?? 30;
         $this->maxRetries = $config['max_retries'] ?? 3;

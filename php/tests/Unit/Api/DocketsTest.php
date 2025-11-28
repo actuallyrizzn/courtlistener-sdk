@@ -240,14 +240,12 @@ class DocketsTest extends TestCase
     {
         $expectedResponse = ['success' => true, 'message' => 'Item deleted successfully'];
 
-        $params = ['confirm' => 'true'];
-
         $this->client->expects($this->once())
             ->method('makeRequest')
             ->with('DELETE', 'dockets/123/')
             ->willReturn($expectedResponse);
 
-        $result = $this->endpoint->delete(123, $params);
+        $result = $this->endpoint->delete(123);
         $this->assertEquals($expectedResponse, $result);
     }
 
@@ -281,5 +279,111 @@ class DocketsTest extends TestCase
         
         $injectedClient = $clientProperty->getValue($this->endpoint);
         $this->assertSame($this->client, $injectedClient);
+    }
+
+    /**
+     * @dataProvider docketSubresourceProvider
+     */
+    public function testDocketSubresourceRequests(string $method, string $pathSegment)
+    {
+        $docketId = 555;
+        $params = ['per_page' => 5];
+        $expectedResponse = ['results' => []];
+
+        $this->client->expects($this->once())
+            ->method('makeRequest')
+            ->with('GET', "dockets/{$docketId}/{$pathSegment}/", ['query' => $params])
+            ->willReturn($expectedResponse);
+
+        $result = $this->endpoint->{$method}($docketId, $params);
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    /**
+     * @dataProvider docketFilterProvider
+     */
+    public function testFilterHelpersMergeParameters(string $method, string $filterKey, string $filterValue)
+    {
+        $params = ['per_page' => 10];
+        $expectedFilters = array_merge($params, [$filterKey => $filterValue]);
+        $expectedResponse = ['count' => 0, 'results' => []];
+
+        $this->client->expects($this->once())
+            ->method('makeRequest')
+            ->with('GET', 'dockets/', ['query' => $expectedFilters])
+            ->willReturn($expectedResponse);
+
+        $result = $this->endpoint->{$method}($filterValue, $params);
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testGetDocketsByDateRangeBuildsFilters()
+    {
+        $params = ['per_page' => 25];
+        $expectedFilters = [
+            'per_page' => 25,
+            'date_filed__gte' => '2024-01-01',
+            'date_filed__lte' => '2024-06-30',
+            'court' => 'test-court'
+        ];
+        $expectedResponse = ['results' => []];
+
+        $this->client->expects($this->once())
+            ->method('makeRequest')
+            ->with('GET', 'dockets/', ['query' => $expectedFilters])
+            ->willReturn($expectedResponse);
+
+        $result = $this->endpoint->getDocketsByDateRange('2024-01-01', '2024-06-30', 'test-court', $params);
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    /**
+     * @dataProvider docketToggleProvider
+     */
+    public function testToggleHelpersSetFlags(string $method, string $flagKey)
+    {
+        $params = ['per_page' => 5];
+        $expectedFilters = array_merge($params, [$flagKey => 'true']);
+        $expectedResponse = ['results' => []];
+
+        $this->client->expects($this->once())
+            ->method('makeRequest')
+            ->with('GET', 'dockets/', ['query' => $expectedFilters])
+            ->willReturn($expectedResponse);
+
+        $result = $this->endpoint->{$method}($params);
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function docketSubresourceProvider(): array
+    {
+        return [
+            ['getDocketEntries', 'docket-entries'],
+            ['getParties', 'parties'],
+            ['getAttorneys', 'attorneys'],
+            ['getRecapDocuments', 'recap'],
+        ];
+    }
+
+    public function docketFilterProvider(): array
+    {
+        return [
+            ['getDocketsByCourt', 'court', 'court-123'],
+            ['getDocketsByCaseType', 'case_type', 'Civil'],
+            ['getDocketsByNatureOfSuit', 'nature_of_suit', '890'],
+            ['getDocketsByJudge', 'assigned_to', 'judge-99'],
+            ['getDocketsByStatus', 'status', 'open'],
+            ['getDocketsByJurisdictionType', 'jurisdiction_type', 'federal'],
+            ['getDocketsByJuryDemand', 'jury_demand', 'jury'],
+        ];
+    }
+
+    public function docketToggleProvider(): array
+    {
+        return [
+            ['getDocketsWithFinancialDisclosures', 'has_financial_disclosures'],
+            ['getDocketsWithAudio', 'has_audio'],
+            ['getDocketsWithRecapDocuments', 'has_recap_documents'],
+        ];
     }
 }

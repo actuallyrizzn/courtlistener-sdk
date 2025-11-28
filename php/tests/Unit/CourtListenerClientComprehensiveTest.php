@@ -77,6 +77,21 @@ class CourtListenerClientComprehensiveTest extends TestCase
         }
     }
 
+    public function testDefaultBaseUrlFallsBackToRestV4()
+    {
+        $originalUrl = $_ENV['COURTLISTENER_BASE_URL'] ?? null;
+        unset($_ENV['COURTLISTENER_BASE_URL']);
+        putenv('COURTLISTENER_BASE_URL');
+
+        $client = new CourtListenerClient(['api_token' => 'fallback-token']);
+        $this->assertEquals('https://www.courtlistener.com/api/rest/v4/', $client->getBaseUrl());
+
+        if ($originalUrl !== null) {
+            $_ENV['COURTLISTENER_BASE_URL'] = $originalUrl;
+            putenv('COURTLISTENER_BASE_URL=' . $originalUrl);
+        }
+    }
+
     public function testMakeRequestGetSuccess()
     {
         $expectedResponse = ['id' => 123, 'name' => 'Test'];

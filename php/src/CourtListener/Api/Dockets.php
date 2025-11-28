@@ -64,7 +64,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketEntries(array $params = []) {
+    public function getDocketEntries($docketId, array $params = []) {
         return $this->client->makeRequest('GET', "dockets/{$docketId}/docket-entries/", [
             'query' => $params
         ]);
@@ -78,7 +78,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getParties(array $params = []) {
+    public function getParties($docketId, array $params = []) {
         return $this->client->makeRequest('GET', "dockets/{$docketId}/parties/", [
             'query' => $params
         ]);
@@ -92,7 +92,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getAttorneys(array $params = []) {
+    public function getAttorneys($docketId, array $params = []) {
         return $this->client->makeRequest('GET', "dockets/{$docketId}/attorneys/", [
             'query' => $params
         ]);
@@ -106,7 +106,7 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getRecapDocuments(array $params = []) {
+    public function getRecapDocuments($docketId, array $params = []) {
         return $this->client->makeRequest('GET', "dockets/{$docketId}/recap/", [
             'query' => $params
         ]);
@@ -140,12 +140,12 @@ class Dockets extends BaseApi
      * Get dockets for a specific court
      *
      * @param string $courtId Court ID
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByCourt(array $params = []) {
-        $courtFilters = array_merge(['court' => $courtId], $filters);
+    public function getDocketsByCourt($courtId, array $params = []) {
+        $courtFilters = array_merge(['court' => $courtId], $params);
         return $this->listDockets($courtFilters);
     }
 
@@ -154,40 +154,39 @@ class Dockets extends BaseApi
      *
      * @param string|null $startDate Start date (Y-m-d format)
      * @param string|null $endDate End date (Y-m-d format)
-     * @param string|null $court Court ID to filter by
-     * @param array $filters Additional filters
+     * @param string|null $courtId Court ID to filter by
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByDateRange($startDate, $endDate, $courtId = null, array $params = []) {
-        $dateFilters = [];
+    public function getDocketsByDateRange($startDate = null, $endDate = null, $courtId = null, array $params = []) {
+        $filters = $params;
         
         if ($startDate) {
-            $dateFilters['date_filed__gte'] = $startDate;
+            $filters['date_filed__gte'] = $startDate;
         }
         
         if ($endDate) {
-            $dateFilters['date_filed__lte'] = $endDate;
+            $filters['date_filed__lte'] = $endDate;
         }
         
-        if ($court) {
-            $dateFilters['court'] = $court;
+        if ($courtId) {
+            $filters['court'] = $courtId;
         }
         
-        $allFilters = array_merge($dateFilters, $filters ?? []);
-        return $this->listDockets($allFilters);
+        return $this->listDockets($filters);
     }
 
     /**
      * Get dockets by case type
      *
      * @param string $caseType Case type
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByCaseType(array $params = []) {
-        $typeFilters = array_merge(['case_type' => $caseType], $filters);
+    public function getDocketsByCaseType($caseType, array $params = []) {
+        $typeFilters = array_merge(['case_type' => $caseType], $params);
         return $this->listDockets($typeFilters);
     }
 
@@ -195,12 +194,12 @@ class Dockets extends BaseApi
      * Get dockets by nature of suit
      *
      * @param string $natureOfSuit Nature of suit
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByNatureOfSuit(array $params = []) {
-        $suitFilters = array_merge(['nature_of_suit' => $natureOfSuit], $filters);
+    public function getDocketsByNatureOfSuit($natureOfSuit, array $params = []) {
+        $suitFilters = array_merge(['nature_of_suit' => $natureOfSuit], $params);
         return $this->listDockets($suitFilters);
     }
 
@@ -208,12 +207,12 @@ class Dockets extends BaseApi
      * Get dockets by assigned judge
      *
      * @param string $judgeId Judge ID
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByJudge(array $params = []) {
-        $judgeFilters = array_merge(['assigned_to' => $judgeId], $filters);
+    public function getDocketsByJudge($judgeId, array $params = []) {
+        $judgeFilters = array_merge(['assigned_to' => $judgeId], $params);
         return $this->listDockets($judgeFilters);
     }
 
@@ -221,48 +220,48 @@ class Dockets extends BaseApi
      * Get dockets with specific status
      *
      * @param string $status Docket status
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByStatus(array $params = []) {
-        $statusFilters = array_merge(['status' => $status], $filters);
+    public function getDocketsByStatus($status, array $params = []) {
+        $statusFilters = array_merge(['status' => $status], $params);
         return $this->listDockets($statusFilters);
     }
 
     /**
      * Get dockets with financial disclosures
      *
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
     public function getDocketsWithFinancialDisclosures(array $params = []) {
-        $financialFilters = array_merge(['has_financial_disclosures' => 'true'], $filters);
+        $financialFilters = array_merge(['has_financial_disclosures' => 'true'], $params);
         return $this->listDockets($financialFilters);
     }
 
     /**
      * Get dockets with audio recordings
      *
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
     public function getDocketsWithAudio(array $params = []) {
-        $audioFilters = array_merge(['has_audio' => 'true'], $filters);
+        $audioFilters = array_merge(['has_audio' => 'true'], $params);
         return $this->listDockets($audioFilters);
     }
 
     /**
      * Get dockets with RECAP documents
      *
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
     public function getDocketsWithRecapDocuments(array $params = []) {
-        $recapFilters = array_merge(['has_recap_documents' => 'true'], $filters);
+        $recapFilters = array_merge(['has_recap_documents' => 'true'], $params);
         return $this->listDockets($recapFilters);
     }
 
@@ -270,12 +269,12 @@ class Dockets extends BaseApi
      * Get dockets by jurisdiction type
      *
      * @param string $jurisdictionType Jurisdiction type
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByJurisdictionType(array $params = []) {
-        $jurisdictionFilters = array_merge(['jurisdiction_type' => $jurisdictionType], $filters);
+    public function getDocketsByJurisdictionType($jurisdictionType, array $params = []) {
+        $jurisdictionFilters = array_merge(['jurisdiction_type' => $jurisdictionType], $params);
         return $this->listDockets($jurisdictionFilters);
     }
 
@@ -287,8 +286,8 @@ class Dockets extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketsByJuryDemand(array $params = []) {
-        $juryFilters = array_merge(['jury_demand' => $juryDemand], $filters);
+    public function getDocketsByJuryDemand($juryDemand, array $params = []) {
+        $juryFilters = array_merge(['jury_demand' => $juryDemand], $params);
         return $this->listDockets($juryFilters);
     }
 }
