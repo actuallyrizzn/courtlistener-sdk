@@ -96,12 +96,12 @@ def test_client_make_request_timeout():
     """Test _make_request with timeout error."""
     from unittest.mock import Mock, patch
     import requests
-    from courtlistener.exceptions import CourtListenerError
+    from courtlistener.exceptions import TimeoutError
     
     client = CourtListenerClient(api_token="test_token")
     
     with patch.object(client.session, 'request', side_effect=requests.exceptions.Timeout("Request timed out")):
-        with pytest.raises(CourtListenerError, match="Request timed out"):
+        with pytest.raises(TimeoutError, match="Request timed out"):
             client._make_request('GET', 'test/endpoint')
 
 
@@ -109,12 +109,12 @@ def test_client_make_request_connection_error():
     """Test _make_request with connection error."""
     from unittest.mock import Mock, patch
     import requests
-    from courtlistener.exceptions import CourtListenerError
+    from courtlistener.exceptions import ConnectionError
     
     client = CourtListenerClient(api_token="test_token")
     
     with patch.object(client.session, 'request', side_effect=requests.exceptions.ConnectionError("Connection failed")):
-        with pytest.raises(CourtListenerError, match="Failed to connect to API"):
+        with pytest.raises(ConnectionError, match="Failed to connect to API"):
             client._make_request('GET', 'test/endpoint')
 
 

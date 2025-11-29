@@ -195,7 +195,7 @@ class TestCourtListenerClientComprehensive:
         ]
         
         with patch('time.sleep') as mock_sleep:
-            with pytest.raises(CourtListenerError) as exc_info:
+            with pytest.raises(TimeoutError) as exc_info:
                 self.client._make_request('GET', 'courts/')
             
             assert "Request timed out" in str(exc_info.value)
@@ -211,7 +211,7 @@ class TestCourtListenerClientComprehensive:
         ]
         
         with patch('time.sleep') as mock_sleep:
-            with pytest.raises(CourtListenerError) as exc_info:
+            with pytest.raises(ConnectionError) as exc_info:
                 self.client._make_request('GET', 'courts/')
             
             assert "Failed to connect to API" in str(exc_info.value)
