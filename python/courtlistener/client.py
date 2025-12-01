@@ -274,9 +274,10 @@ class CourtListenerClient:
         Returns:
             Delay in seconds
         """
-        delay = self.config.retry_delay * (2 ** attempt)
+        base_delay = getattr(self.config, 'retry_delay', 1)
         max_delay = getattr(self.config, 'max_backoff_delay', 60)
-        return min(delay, max_delay)
+        delay = float(base_delay) * (2 ** attempt)
+        return min(delay, float(max_delay))
     
     def _handle_response(self, response: requests.Response) -> Dict[str, Any]:
         """
