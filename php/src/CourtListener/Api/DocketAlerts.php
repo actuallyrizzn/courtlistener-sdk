@@ -41,7 +41,7 @@ class DocketAlerts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketAlerts(array $params = []) {
+    public function getDocketAlerts($id, array $params = []) {
         return $this->get($id, $params);
     }
 

@@ -41,7 +41,7 @@ class RecapQuery extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getRecapQuery(array $params = []) {
+    public function getRecapQuery($id, array $params = []) {
         return $this->get($id, $params);
     }
 

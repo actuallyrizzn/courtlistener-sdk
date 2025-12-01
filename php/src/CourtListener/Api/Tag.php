@@ -41,7 +41,7 @@ class Tag extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getTag(array $params = []) {
+    public function getTag($id, array $params = []) {
         return $this->get($id, $params);
     }
 

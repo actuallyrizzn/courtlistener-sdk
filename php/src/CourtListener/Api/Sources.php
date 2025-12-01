@@ -41,7 +41,7 @@ class Sources extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getSources(array $params = []) {
+    public function getSources($id, array $params = []) {
         return $this->get($id, $params);
     }
 

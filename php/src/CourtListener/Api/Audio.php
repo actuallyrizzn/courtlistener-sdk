@@ -41,7 +41,7 @@ class Audio extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getAudio(array $params = []) {
+    public function getAudio($id, array $params = []) {
         return $this->get($id, $params);
     }
 

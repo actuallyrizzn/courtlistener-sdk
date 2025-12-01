@@ -41,7 +41,7 @@ class PoliticalAffiliations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getPoliticalAffiliations(array $params = []) {
+    public function getPoliticalAffiliations($id, array $params = []) {
         return $this->get($id, $params);
     }
 

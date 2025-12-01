@@ -41,7 +41,7 @@ class OpinionsCited extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsCited(array $params = []) {
+    public function getOpinionsCited($id, array $params = []) {
         return $this->get($id, $params);
     }
 

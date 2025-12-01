@@ -41,7 +41,7 @@ class Parties extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getParties(array $params = []) {
+    public function getParties($id, array $params = []) {
         return $this->get($id, $params);
     }
 

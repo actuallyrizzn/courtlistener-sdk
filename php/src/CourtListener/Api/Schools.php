@@ -41,7 +41,7 @@ class Schools extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getSchools(array $params = []) {
+    public function getSchools($id, array $params = []) {
         return $this->get($id, $params);
     }
 

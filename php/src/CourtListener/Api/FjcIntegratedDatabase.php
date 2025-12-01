@@ -41,7 +41,7 @@ class FjcIntegratedDatabase extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getFjcIntegratedDatabase(array $params = []) {
+    public function getFjcIntegratedDatabase($id, array $params = []) {
         return $this->get($id, $params);
     }
 

@@ -41,7 +41,7 @@ class Financial extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getFinancial(array $params = []) {
+    public function getFinancial($id, array $params = []) {
         return $this->get($id, $params);
     }
 

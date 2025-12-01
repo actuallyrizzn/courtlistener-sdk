@@ -41,7 +41,7 @@ class SpouseIncomes extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getSpouseIncomes(array $params = []) {
+    public function getSpouseIncomes($id, array $params = []) {
         return $this->get($id, $params);
     }
 

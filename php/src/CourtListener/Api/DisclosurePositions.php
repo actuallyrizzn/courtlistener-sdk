@@ -41,7 +41,7 @@ class DisclosurePositions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDisclosurePositions(array $params = []) {
+    public function getDisclosurePositions($id, array $params = []) {
         return $this->get($id, $params);
     }
 

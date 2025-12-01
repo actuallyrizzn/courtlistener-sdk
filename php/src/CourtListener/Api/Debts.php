@@ -41,7 +41,7 @@ class Debts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDebts(array $params = []) {
+    public function getDebts($id, array $params = []) {
         return $this->get($id, $params);
     }
 
