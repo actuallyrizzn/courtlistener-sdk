@@ -5,7 +5,7 @@ This module provides access to docket entries, which represent individual
 filings or events within a docket.
 """
 
-from typing import Dict, List, Optional, Any, TYPE_CHECKING
+from typing import Dict, List, Optional, Any, Union, TYPE_CHECKING
 from ..models.docket_entry import DocketEntry
 from ..utils.filters import build_filters
 from .base import BaseAPI
@@ -33,6 +33,55 @@ class DocketEntriesAPI(BaseAPI):
     def _get_model_class(self):
         """Get the model class associated with this API."""
         return DocketEntry
+    
+    def list(self, page: int = 1, docket_id: Optional[int] = None, **filters) -> List[DocketEntry]:
+        """
+        List docket entries with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            docket_id: Optional docket ID to filter entries by
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of DocketEntry objects
+        """
+        entry_filters = filters.copy() if filters else {}
+        if docket_id:
+            entry_filters['docket'] = docket_id
+        return self.list_entries(docket_id=docket_id, filters=entry_filters)
+    
+    def get(self, entry_id: Union[int, str]) -> DocketEntry:
+        """
+        Get a specific docket entry by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            entry_id: Entry ID
+        
+        Returns:
+            DocketEntry object
+        """
+        return self.get_entry(int(entry_id))
+    
+    def search(self, q: str = None, page: int = 1, **filters) -> Dict[str, Any]:
+        """
+        Search docket entries.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query (optional)
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            Dictionary containing search results
+        """
+        return self.search_docket_entries(page=page, **filters)
     
     def list_entries(self, docket_id: Optional[int] = None, 
                     filters: Optional[Dict[str, Any]] = None,

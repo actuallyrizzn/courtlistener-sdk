@@ -5,7 +5,7 @@ This module provides access to opinion clusters, which group related opinions
 together (e.g., majority, concurring, dissenting opinions in the same case).
 """
 
-from typing import Dict, List, Optional, Any, TYPE_CHECKING
+from typing import Dict, List, Optional, Any, Union, TYPE_CHECKING
 from ..models.cluster import OpinionCluster
 from ..utils.filters import build_filters
 from .base import BaseAPI
@@ -33,6 +33,52 @@ class ClustersAPI(BaseAPI):
     def _get_model_class(self):
         """Get the model class associated with this API."""
         return OpinionCluster
+    
+    def list(self, page: int = 1, q: str = None, **filters) -> List[OpinionCluster]:
+        """
+        List opinion clusters with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            q: Search query (optional)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of OpinionCluster objects
+        """
+        return self.list_clusters(page=page, q=q, **filters)
+    
+    def get(self, cluster_id: Union[int, str]) -> OpinionCluster:
+        """
+        Get a specific opinion cluster by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            cluster_id: Cluster ID
+        
+        Returns:
+            OpinionCluster object
+        """
+        return self.get_cluster(int(cluster_id))
+    
+    def search(self, q: str, page: int = 1, **filters) -> List[OpinionCluster]:
+        """
+        Search opinion clusters.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of OpinionCluster objects
+        """
+        return self.search_clusters(q=q, page=page, **filters)
     
     def list_clusters(self, page: int = 1, q: str = None, **filters) -> List[OpinionCluster]:
         """List opinion clusters."""

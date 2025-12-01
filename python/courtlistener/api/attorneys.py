@@ -1,6 +1,6 @@
 """Attorneys API module for CourtListener SDK."""
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union
 from ..utils.filters import build_filters
 from ..utils.validators import validate_id
 from ..models.base import BaseModel
@@ -25,6 +25,52 @@ class AttorneysAPI(BaseAPI):
     def _get_model_class(self):
         """Get the model class associated with this API."""
         return Attorney
+    
+    def list(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
+        """
+        List attorneys with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            q: Search query (optional)
+            **filters: Additional filter parameters
+        
+        Returns:
+            Dictionary containing API response
+        """
+        return self.list_attorneys(page=page, q=q, **filters)
+    
+    def get(self, attorney_id: Union[int, str]) -> Attorney:
+        """
+        Get a specific attorney by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            attorney_id: Attorney ID
+        
+        Returns:
+            Attorney object
+        """
+        return self.get_attorney(int(attorney_id))
+    
+    def search(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """
+        Search attorneys.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            Dictionary containing search results
+        """
+        return self.search_attorneys(q=q, page=page, **filters)
     
     def list_attorneys(self, page: int = 1, q: str = None, **filters) -> Dict[str, Any]:
         """List attorneys with optional filtering."""

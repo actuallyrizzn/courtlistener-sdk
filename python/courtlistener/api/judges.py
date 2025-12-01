@@ -2,7 +2,7 @@
 Judges API client for CourtListener.
 """
 
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Union
 from ..models.judge import Judge
 from ..exceptions import NotFoundError, APIError
 from .base import BaseAPI
@@ -22,6 +22,54 @@ class JudgesAPI(BaseAPI):
     def _get_model_class(self):
         """Get the model class associated with this API."""
         return Judge
+    
+    def list(self, page: int = 1, **filters) -> List[Judge]:
+        """
+        List judges/people with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Judge objects
+        """
+        return self.list_judges(page=page, **filters)
+    
+    def get(self, judge_id: Union[int, str]) -> Judge:
+        """
+        Get a specific judge by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            judge_id: Judge ID
+        
+        Returns:
+            Judge object
+        
+        Raises:
+            NotFoundError: If judge not found
+        """
+        return self.get_judge(int(judge_id))
+    
+    def search(self, q: str, page: int = 1, **filters) -> List[Judge]:
+        """
+        Search for judges.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Judge objects
+        """
+        return self.search_judges(q=q, page=page, **filters)
     
     def list_judges(self, page: int = 1, **filters) -> List[Judge]:
         """

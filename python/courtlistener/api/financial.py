@@ -1,6 +1,6 @@
 """Financial API module for CourtListener SDK."""
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Union
 from ..utils.filters import build_filters
 from ..utils.validators import validate_id
 from ..models.base import BaseModel
@@ -35,6 +35,52 @@ class FinancialAPI(BaseAPI):
     def _get_model_class(self):
         """Get the model class associated with this API."""
         return FinancialDisclosure
+    
+    def list(self, page: int = 1, q: str = None, **filters) -> List[FinancialDisclosure]:
+        """
+        List financial disclosures with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            q: Search query (optional)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of FinancialDisclosure objects
+        """
+        return self.list_financial_disclosures(page=page, q=q, **filters)
+    
+    def get(self, disclosure_id: Union[int, str]) -> FinancialDisclosure:
+        """
+        Get a specific financial disclosure by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            disclosure_id: Disclosure ID
+        
+        Returns:
+            FinancialDisclosure object
+        """
+        return self.get_disclosure(int(disclosure_id))
+    
+    def search(self, q: str, page: int = 1, **filters) -> List[FinancialDisclosure]:
+        """
+        Search financial disclosures.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of FinancialDisclosure objects
+        """
+        return self.search_financial_disclosures(q=q, page=page, **filters)
     
     def list_disclosures(self, filters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """List financial disclosures with optional filtering."""
