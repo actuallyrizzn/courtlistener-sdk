@@ -133,7 +133,8 @@ class TestDocketsAPIComprehensive:
         mock_response = {"results": []}
         self.mock_client.get.return_value = mock_response
         
-        result = self.api.get_docket_by_number("nonexistent")
+        # Use a valid docket number format that doesn't exist
+        result = self.api.get_docket_by_number("99-99999")
         
         assert result is None
     

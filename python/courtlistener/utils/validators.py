@@ -41,6 +41,13 @@ def validate_citation(citation: str) -> bool:
     """
     Validate legal citation format.
     
+    Supports common citation formats including:
+    - SCOTUS: "576 U.S. 644" or "576 US 644"
+    - Federal Reporter: "123 F.3d 456" or "123 F3d 456" or "123 F. 3d 456"
+    - Federal Supplement: "123 F.Supp. 456" or "123 F Supp 456"
+    - Federal Appendix: "123 F.App'x 456"
+    - State citations: "123 Cal. 3d 456" or "123 N.Y. 456"
+    
     Args:
         citation: Citation string to validate
     
@@ -53,32 +60,47 @@ def validate_citation(citation: str) -> bool:
     if not citation:
         raise ValidationError("Citation cannot be empty")
     
-    # Basic citation patterns
-    patterns = [
-        # SCOTUS: 576 U.S. 644
-        r'^\d+\s+U\.?S\.?\s+\d+$',
-        # Federal Reporter: 123 F.3d 456
-        r'^\d+\s+F\.?\d*d\s+\d+$',
-        # Federal Supplement: 123 F.Supp. 456
-        r'^\d+\s+F\.?Supp\.?\s+\d+$',
-        # State citations: 123 Cal. 3d 456
-        r'^\d+\s+[A-Za-z]+\.?\s+\d+d\s+\d+$',
-    ]
-    
+    # Normalize whitespace
     citation_clean = re.sub(r'\s+', ' ', citation.strip())
+    
+    # Comprehensive citation patterns
+    patterns = [
+        # SCOTUS: 576 U.S. 644 or 576 US 644
+        r'^\d+\s+U\.?S\.?\s+\d+$',
+        # Federal Reporter: 123 F.3d 456, 123 F3d 456, 123 F. 3d 456
+        r'^\d+\s+F\.?\s*\d*d\s+\d+$',
+        # Federal Supplement: 123 F.Supp. 456, 123 F Supp 456, 123 F. Supp. 456
+        r'^\d+\s+F\.?\s*Supp\.?\s+\d+$',
+        # Federal Appendix: 123 F.App'x 456, 123 F Appx 456
+        r'^\d+\s+F\.?\s*App[\'\.]?x\s+\d+$',
+        # State citations with series: 123 Cal. 3d 456, 123 N.Y. 2d 456
+        r'^\d+\s+[A-Za-z]+\.?\s+\d+d\s+\d+$',
+        # State citations without series: 123 Cal. 456, 123 N.Y. 456
+        r'^\d+\s+[A-Za-z]+\.?\s+\d+$',
+    ]
     
     for pattern in patterns:
         if re.match(pattern, citation_clean):
             return True
     
-    # If no pattern matches, still allow it but warn
-    # Many citations might not match standard patterns
-    return True
+    # If no pattern matches, raise validation error
+    raise ValidationError(
+        f"Invalid citation format: '{citation}'. "
+        f"Expected formats include: '576 U.S. 644', '123 F.3d 456', '123 F.Supp. 456', "
+        f"'123 Cal. 3d 456', or similar standard legal citation formats."
+    )
 
 
 def validate_docket_number(docket_number: str) -> bool:
     """
     Validate docket number format.
+    
+    Supports common docket number formats including:
+    - SCOTUS: "21-123"
+    - Federal District: "1:21-cv-12345" or "1-21-cv-12345"
+    - Federal Circuit: "21-1234"
+    - State: "CR-21-12345" or "CV-2021-12345"
+    - Simple numeric: "12345"
     
     Args:
         docket_number: Docket number to validate
@@ -92,25 +114,32 @@ def validate_docket_number(docket_number: str) -> bool:
     if not docket_number:
         raise ValidationError("Docket number cannot be empty")
     
-    # Basic docket number patterns
+    # Comprehensive docket number patterns
     patterns = [
         # SCOTUS: 21-123
         r'^\d+-\d+$',
-        # Federal: 1:21-cv-12345
-        r'^\d+:\d+-cv-\d+$',
-        # State: CR-21-12345
-        r'^[A-Z]+-\d+-\d+$',
-        # Simple numbers
+        # Federal District with colon: 1:21-cv-12345, 1:21-cr-12345, 1:21-mc-12345
+        r'^\d+:\d+-(cv|cr|mc|md|mi|mj|bk|ap)-\d+$',
+        # Federal District with hyphen: 1-21-cv-12345, 1-21-cr-12345
+        r'^\d+-\d+-(cv|cr|mc|md|mi|mj|bk|ap)-\d+$',
+        # Federal Circuit: 21-1234, 21-12345
+        r'^\d+-\d{4,}$',
+        # State with prefix: CR-21-12345, CV-2021-12345, CA-21-12345
+        r'^[A-Z]{1,4}-\d{2,4}-\d+$',
+        # Simple numeric: 12345
         r'^\d+$',
     ]
     
     for pattern in patterns:
-        if re.match(pattern, docket_number):
+        if re.match(pattern, docket_number, re.IGNORECASE):
             return True
     
-    # If no pattern matches, still allow it but warn
-    # Docket numbers can vary significantly
-    return True
+    # If no pattern matches, raise validation error
+    raise ValidationError(
+        f"Invalid docket number format: '{docket_number}'. "
+        f"Expected formats include: '21-123' (SCOTUS), '1:21-cv-12345' (Federal), "
+        f"'CR-21-12345' (State), or numeric formats."
+    )
 
 
 def validate_court_id(court_id: str) -> bool:

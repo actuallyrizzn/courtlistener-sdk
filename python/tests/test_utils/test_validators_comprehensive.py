@@ -74,11 +74,26 @@ class TestValidateCitationComprehensive:
             '123 F Supp 456',
             '123 Cal. 3d 456',
             '123 Cal 3d 456',
-            'Custom Citation Format',  # Should still pass
+            '123 Cal. 456',  # State without series
+            '123 F.App\'x 456',  # Federal Appendix
         ]
         
         for citation in valid_citations:
             assert validate_citation(citation) is True
+    
+    def test_validate_citation_invalid_formats(self):
+        """Test invalid citation formats."""
+        invalid_citations = [
+            'Some random citation format',
+            '123',
+            'ABC',
+            '123 456',
+            'Invalid Citation',
+        ]
+        
+        for citation in invalid_citations:
+            with pytest.raises(ValidationError, match="Invalid citation format"):
+                validate_citation(citation)
 
     def test_validate_citation_empty_string(self):
         """Test empty citation."""
@@ -103,14 +118,32 @@ class TestValidateDocketNumberComprehensive:
         """Test valid docket number formats."""
         valid_dockets = [
             '21-123',           # SCOTUS
-            '1:21-cv-12345',    # Federal
+            '1:21-cv-12345',    # Federal with colon
+            '1-21-cv-12345',    # Federal with hyphen
+            '1:21-cr-12345',    # Federal criminal
             'CR-21-12345',      # State
+            'CV-2021-12345',    # State with year
             '123',              # Simple number
-            'Custom-Docket-123', # Custom format
+            '21-12345',         # Federal Circuit
         ]
         
         for docket in valid_dockets:
             assert validate_docket_number(docket) is True
+    
+    def test_validate_docket_number_invalid_formats(self):
+        """Test invalid docket number formats."""
+        invalid_dockets = [
+            'ABC-123-XYZ',      # Non-standard format
+            'Invalid Docket',
+            'abc-123',          # Lowercase prefix
+            '123-abc',          # Wrong order
+            '',                 # Empty (handled separately)
+        ]
+        
+        for docket in invalid_dockets:
+            if docket:  # Skip empty string as it's tested separately
+                with pytest.raises(ValidationError, match="Invalid docket number format"):
+                    validate_docket_number(docket)
 
     def test_validate_docket_number_empty_string(self):
         """Test empty docket number."""
@@ -354,18 +387,21 @@ class TestEdgeCases:
 
     def test_validate_citation_edge_cases(self):
         """Test citation validation edge cases."""
-        # Test citation with special characters
-        assert validate_citation('Smith v. Jones & Co., 123 F.3d 456') is True
+        # Test citation with special characters (should fail - not a valid format)
+        with pytest.raises(ValidationError, match="Invalid citation format"):
+            validate_citation('Smith v. Jones & Co., 123 F.3d 456')
         
-        # Test very long citation
+        # Test very long citation (should fail - not a valid format)
         long_citation = 'A' * 1000
-        assert validate_citation(long_citation) is True
+        with pytest.raises(ValidationError, match="Invalid citation format"):
+            validate_citation(long_citation)
 
     def test_validate_docket_number_edge_cases(self):
         """Test docket number validation edge cases."""
-        # Test very long docket number
+        # Test very long docket number (should fail - not a valid format)
         long_docket = 'A' * 1000
-        assert validate_docket_number(long_docket) is True
+        with pytest.raises(ValidationError, match="Invalid docket number format"):
+            validate_docket_number(long_docket)
 
     def test_validate_court_id_edge_cases(self):
         """Test court ID validation edge cases."""

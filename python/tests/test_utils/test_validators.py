@@ -99,9 +99,9 @@ class TestValidateCitation:
         assert result is True
 
     def test_validate_citation_non_standard(self):
-        """Test non-standard citation (should still pass)."""
-        result = validate_citation('Some random citation format')
-        assert result is True
+        """Test non-standard citation (should fail)."""
+        with pytest.raises(ValidationError, match="Invalid citation format"):
+            validate_citation('Some random citation format')
 
 
 class TestValidateDocketNumber:
@@ -138,9 +138,9 @@ class TestValidateDocketNumber:
             validate_docket_number(None)
 
     def test_validate_docket_number_non_standard(self):
-        """Test non-standard docket number (should still pass)."""
-        result = validate_docket_number('ABC-123-XYZ')
-        assert result is True
+        """Test non-standard docket number (should fail)."""
+        with pytest.raises(ValidationError, match="Invalid docket number format"):
+            validate_docket_number('ABC-123-XYZ')
 
 
 class TestValidateCourtId:
