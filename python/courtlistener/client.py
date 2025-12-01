@@ -255,12 +255,26 @@ class CourtListenerClient:
             except requests.exceptions.RequestException as e:
                 if attempt == self.config.max_retries:
                     raise CourtListenerError(f"Request failed: {str(e)}")
-                time.sleep(self.config.retry_delay)
+                backoff_delay = self._calculate_backoff_delay(attempt)
+                time.sleep(backoff_delay)
             
             except APIError as e:
                 if attempt == self.config.max_retries:
                     raise e
                 time.sleep(self.config.retry_delay)
+    
+    def _calculate_backoff_delay(self, attempt: int) -> float:
+        """
+        Calculate exponential backoff delay for retry attempts.
+        
+        Args:
+            attempt: Current attempt number (0-indexed)
+        
+        Returns:
+            Delay in seconds
+        """
+        delay = self.config.retry_delay * (2 ** attempt)
+        return min(delay, self.config.max_backoff_delay)
     
     def _handle_response(self, response: requests.Response) -> Dict[str, Any]:
         """

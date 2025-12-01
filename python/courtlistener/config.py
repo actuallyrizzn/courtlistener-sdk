@@ -23,6 +23,7 @@ class Config:
     DEFAULT_MAX_RETRIES = 3
     DEFAULT_RETRY_DELAY = 1
     DEFAULT_RATE_LIMIT_DELAY = 1
+    DEFAULT_MAX_BACKOFF_DELAY = 60  # Maximum delay cap for exponential backoff
     
     def __init__(
         self,
@@ -32,6 +33,7 @@ class Config:
         max_retries: Optional[int] = None,
         retry_delay: Optional[float] = None,
         rate_limit_delay: Optional[float] = None,
+        max_backoff_delay: Optional[float] = None,
     ):
         """
         Initialize configuration.
@@ -50,6 +52,7 @@ class Config:
         self.max_retries = max_retries or self.DEFAULT_MAX_RETRIES
         self.retry_delay = retry_delay or self.DEFAULT_RETRY_DELAY
         self.rate_limit_delay = rate_limit_delay or self.DEFAULT_RATE_LIMIT_DELAY
+        self.max_backoff_delay = max_backoff_delay or self.DEFAULT_MAX_BACKOFF_DELAY
         
         self._validate_config()
     
