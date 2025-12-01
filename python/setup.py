@@ -32,6 +32,9 @@ setup(
     license="GNU Affero General Public License v3.0",
     url="https://github.com/actuallyrizzn/courtlistener-sdk",
     packages=find_packages(),
+    package_data={
+        "courtlistener": ["py.typed"],
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
