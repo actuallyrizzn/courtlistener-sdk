@@ -187,10 +187,14 @@ def test_client_handle_response_429():
     
     mock_response = Mock()
     mock_response.status_code = 429
+    mock_response.headers = {'Retry-After': '5'}
     mock_response.json.return_value = {"detail": "Rate limited"}
     
-    with pytest.raises(RateLimitError, match="Rate limit exceeded"):
+    with pytest.raises(RateLimitError, match="Rate limit exceeded") as exc_info:
         client._handle_response(mock_response)
+    
+    # Check that retry_after was extracted
+    assert exc_info.value.retry_after == 5
 
 
 def test_client_handle_response_500():

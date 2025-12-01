@@ -4,10 +4,10 @@
 The CourtListener Python SDK now provides **100% coverage** of all documented CourtListener API endpoints. This document provides a comprehensive overview of all supported endpoints and their capabilities.
 
 ## Coverage Statistics
-- **Total Endpoints**: 36
+- **Total Endpoints**: 39
 - **Coverage**: 100%
-- **API Modules**: 36
-- **Data Models**: 36+
+- **API Modules**: 39
+- **Data Models**: 39+
 - **Test Coverage**: 100%
 
 ## Complete Endpoint List

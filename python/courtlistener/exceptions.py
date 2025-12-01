@@ -23,8 +23,9 @@ class AuthenticationError(CourtListenerError):
 class RateLimitError(CourtListenerError):
     """Raised when rate limits are exceeded."""
     
-    def __init__(self, message: str = "Rate limit exceeded", status_code: int = 429):
+    def __init__(self, message: str = "Rate limit exceeded", status_code: int = 429, retry_after: int = None):
         super().__init__(message, status_code)
+        self.retry_after = retry_after
 
 
 class NotFoundError(CourtListenerError):
@@ -59,4 +60,12 @@ class TimeoutError(CourtListenerError):
     """Raised when API requests timeout."""
     
     def __init__(self, message: str = "Request timeout"):
-        super().__init__(message) 
+        super().__init__(message)
+
+
+class AcceptedError(CourtListenerError):
+    """Raised when an asynchronous request is accepted (HTTP 202)."""
+    
+    def __init__(self, message: str = "Request accepted and being processed asynchronously", status_code: int = 202, retry_after: int = None):
+        super().__init__(message, status_code)
+        self.retry_after = retry_after 

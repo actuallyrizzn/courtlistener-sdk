@@ -27,6 +27,56 @@ class DocketsAPI(BaseAPI):
         """Get the model class associated with this API."""
         return Docket
     
+    def list(self, page: int = 1, **filters) -> List[Docket]:
+        """
+        List dockets with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Docket objects
+        """
+        return self.list_dockets(page=page, **filters)
+    
+    def get(self, docket_id: Union[int, str]) -> Docket:
+        """
+        Get a specific docket by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            docket_id: Docket ID
+        
+        Returns:
+            Docket object
+        
+        Raises:
+            NotFoundError: If docket not found
+        """
+        return self.get_docket(int(docket_id))
+    
+    def search(self, q: str, page: int = 1, **filters) -> Dict[str, Any]:
+        """
+        Search dockets using the search API.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            Search results dictionary
+        """
+        search_filters = filters.copy() if filters else {}
+        search_filters['page'] = page
+        return self.client.search.search_dockets(q, filters=search_filters)
+    
     def list_dockets(self, page: int = 1, **filters) -> List[Docket]:
         """
         List dockets with optional filtering and pagination.

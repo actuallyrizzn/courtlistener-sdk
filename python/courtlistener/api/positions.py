@@ -5,7 +5,7 @@ This module provides access to judicial positions, which represent the
 appointments and roles of judges in courts.
 """
 
-from typing import Dict, List, Optional, Any, TYPE_CHECKING
+from typing import Dict, List, Optional, Any, Union, TYPE_CHECKING
 from ..models.position import Position
 from ..utils.filters import build_filters
 from .base import BaseAPI
@@ -33,6 +33,52 @@ class PositionsAPI(BaseAPI):
     def _get_model_class(self):
         """Get the model class associated with this API."""
         return Position
+    
+    def list(self, page: int = 1, q: str = None, **filters) -> List[Position]:
+        """
+        List positions with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            q: Search query (optional)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Position objects
+        """
+        return self.list_positions(page=page, q=q, **filters)
+    
+    def get(self, position_id: Union[int, str]) -> Position:
+        """
+        Get a specific position by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            position_id: Position ID
+        
+        Returns:
+            Position object
+        """
+        return self.get_position(int(position_id))
+    
+    def search(self, q: str, page: int = 1, **filters) -> List[Position]:
+        """
+        Search positions.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Position objects
+        """
+        return self.search_positions(q=q, page=page, **filters)
     
     def list_positions(self, page: int = 1, q: str = None, **filters) -> List[Position]:
         """List positions."""

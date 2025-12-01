@@ -1,6 +1,6 @@
 """Citations API module for CourtListener SDK."""
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Union
 from ..utils.filters import build_filters
 from ..utils.validators import validate_id
 from ..models.base import BaseModel
@@ -25,6 +25,53 @@ class CitationsAPI(BaseAPI):
     def _get_model_class(self):
         """Get the model class associated with this API."""
         return Citation
+    
+    def list(self, page: int = 1, **filters) -> Dict[str, Any]:
+        """
+        List citations with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            Dictionary containing API response
+        """
+        return self.list_citations(page=page, **filters)
+    
+    def get(self, citation_id: Union[int, str]) -> Dict[str, Any]:
+        """
+        Get a specific citation by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            citation_id: Citation ID
+        
+        Returns:
+            Dictionary containing citation data
+        """
+        return self.client.get(f'citations/{citation_id}/')
+    
+    def search(self, q: str = None, page: int = 1, **filters) -> Dict[str, Any]:
+        """
+        Search citations.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query (optional)
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            Dictionary containing search results
+        """
+        if q:
+            filters['q'] = q
+        return self.search_citations(page=page, **filters)
     
     def get_citations_by_opinion(self, opinion_id: int) -> Dict[str, Any]:
         """Get citations by a specific opinion."""

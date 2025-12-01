@@ -2,7 +2,7 @@
 Courts API client for CourtListener.
 """
 
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Union
 from ..models.court import Court
 from ..exceptions import NotFoundError, APIError
 from .base import BaseAPI
@@ -14,6 +14,56 @@ class CourtsAPI(BaseAPI):
     def _get_endpoint(self) -> str:
         """Get the API endpoint for this module."""
         return "courts/"
+    
+    def list(self, page: int = 1, q: str = None, filters: dict = None, **kwargs) -> List[Court]:
+        """
+        List courts with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            q: Search query (optional)
+            filters: Filter dictionary (optional)
+            **kwargs: Additional filter parameters
+        
+        Returns:
+            List of Court objects
+        """
+        return self.list_courts(page=page, q=q, filters=filters, **kwargs)
+    
+    def get(self, court_id: Union[str, int]) -> Court:
+        """
+        Get a specific court by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            court_id: Court ID
+        
+        Returns:
+            Court object
+        
+        Raises:
+            NotFoundError: If court not found
+        """
+        return self.get_court(str(court_id))
+    
+    def search(self, q: str, page: int = 1, **filters) -> List[Court]:
+        """
+        Search courts.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Court objects
+        """
+        return self.search_courts(q=q, page=page, **filters)
     
     def list_courts(self, page: int = 1, q: str = None, filters: dict = None, **kwargs) -> List[Court]:
         """List courts."""

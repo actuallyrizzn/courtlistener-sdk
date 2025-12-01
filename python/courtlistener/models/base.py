@@ -68,15 +68,18 @@ class BaseModel:
         return getattr(self, key)
     
     def __contains__(self, key: str) -> bool:
-        """Check if attribute exists."""
-        return hasattr(self, key)
+        """Check if attribute exists and has a non-None value."""
+        if not hasattr(self, key):
+            return False
+        value = getattr(self, key, None)
+        return value is not None
     
     def __repr__(self) -> str:
         """String representation of the model."""
         class_name = self.__class__.__name__
-        if hasattr(self, 'id'):
+        if hasattr(self, 'id') and self.id is not None:
             return f"{class_name}(id={self.id})"
-        elif hasattr(self, 'name'):
+        elif hasattr(self, 'name') and self.name is not None:
             return f"{class_name}(name='{self.name}')"
         else:
             return f"{class_name}()"

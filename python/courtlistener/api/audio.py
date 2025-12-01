@@ -1,6 +1,6 @@
 """Audio API module for CourtListener SDK."""
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Union
 from ..utils.filters import build_filters
 from ..utils.validators import validate_id
 from ..models.base import BaseModel
@@ -25,6 +25,52 @@ class AudioAPI(BaseAPI):
     def _get_model_class(self):
         """Get the model class associated with this API."""
         return Audio
+    
+    def list(self, page: int = 1, q: str = None, **filters) -> List[Audio]:
+        """
+        List audio files with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            q: Search query (optional)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Audio objects
+        """
+        return self.list_audio(page=page, q=q, **filters)
+    
+    def get(self, audio_id: Union[int, str]) -> Optional[Audio]:
+        """
+        Get a specific audio file by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            audio_id: Audio ID
+        
+        Returns:
+            Audio object or None if not found
+        """
+        return self.get_audio(int(audio_id))
+    
+    def search(self, q: str, page: int = 1, **filters) -> List[Audio]:
+        """
+        Search audio files.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Audio objects
+        """
+        return self.search_audio(q=q, page=page, **filters)
     
     def list_audio(self, page: int = 1, q: str = None, **filters) -> List[Audio]:
         """List audio files."""

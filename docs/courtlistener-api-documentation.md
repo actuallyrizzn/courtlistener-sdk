@@ -1025,7 +1025,7 @@ You can obtain an API token by registering at [CourtListener](https://www.courtl
 
 ## Documentation Coverage Summary
 
-**Total Endpoints Documented:** 36
+**Total Endpoints Documented:** 39
 **Detailed Existing Endpoints:** 13
 **Enhanced New Endpoints:** 23
 

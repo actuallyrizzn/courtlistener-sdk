@@ -66,15 +66,15 @@ For large result sets, use pagination to iterate through all results:
 ```python
 # Iterate through all dockets
 for docket in client.dockets.list_all():
-    print(docket['case_name'])
+    print(docket.case_name)
 
 # Iterate through all opinions with filtering
 for opinion in client.opinions.list_all(court="scotus"):
-    print(opinion['case_name'])
+    print(opinion.case_name)
 
 # Iterate through financial disclosures
 for disclosure in client.financial_disclosures.list_all():
-    print(disclosure['id'], disclosure['date_received'])
+    print(disclosure.id, disclosure.date_received)
 ```
 
 **PHP:**
@@ -152,23 +152,23 @@ for gift in gifts['results']:
 cases = client.search.list(q="first amendment", court="scotus")
 
 for case in cases['results']:
-    if case['type'] == 'o':  # Opinion
-        opinion = client.opinions.get(case['id'])
-        print(f"Case: {opinion['case_name']}")
+    if case.type == 'o':  # Opinion
+        opinion = client.opinions.get(case.id)
+        print(f"Case: {opinion.case_name}")
         
         # Get related docket
-        docket = client.dockets.get(opinion['docket'])
-        print(f"Court: {docket['court']}")
+        docket = client.dockets.get(opinion.docket)
+        print(f"Court: {docket.court}")
         
         # Get parties
-        parties = client.parties.list(docket=docket['id'])
-        for party in parties['results']:
-            print(f"Party: {party['name']} ({party['type']})")
+        parties = client.parties.list(docket=docket.id)
+        for party in parties:
+            print(f"Party: {party.name} ({party.type})")
         
         # Get attorneys
-        attorneys = client.attorneys.list(docket=docket['id'])
-        for attorney in attorneys['results']:
-            print(f"Attorney: {attorney['name']}")
+        attorneys = client.attorneys.list(docket=docket.id)
+        for attorney in attorneys:
+            print(f"Attorney: {attorney.name}")
 ```
 
 ### Alert Management

@@ -2,7 +2,7 @@
 Opinions API module for CourtListener SDK.
 """
 
-from typing import Dict, Any, Optional, Iterator, List
+from typing import Dict, Any, Optional, Iterator, List, Union
 from ..utils.filters import build_filters, build_date_range_filter
 from ..utils.pagination import PageIterator
 from ..utils.validators import validate_id
@@ -26,6 +26,56 @@ class OpinionsAPI(BaseAPI):
     def _get_model_class(self):
         """Get the model class associated with this API."""
         return Opinion
+    
+    def list(self, page: int = 1, q: str = None, filters: dict = None, **kwargs) -> List[Opinion]:
+        """
+        List opinions with optional filtering and pagination.
+        
+        Standard method name for listing resources. This is the preferred method.
+        
+        Args:
+            page: Page number (default: 1)
+            q: Search query (optional)
+            filters: Filter dictionary (optional)
+            **kwargs: Additional filter parameters
+        
+        Returns:
+            List of Opinion objects
+        """
+        return self.list_opinions(page=page, q=q, filters=filters, **kwargs)
+    
+    def get(self, opinion_id: Union[int, str]) -> Opinion:
+        """
+        Get a specific opinion by ID.
+        
+        Standard method name for getting a resource. This is the preferred method.
+        
+        Args:
+            opinion_id: Opinion ID
+        
+        Returns:
+            Opinion object
+        
+        Raises:
+            NotFoundError: If opinion not found
+        """
+        return self.get_opinion(int(opinion_id))
+    
+    def search(self, q: str, page: int = 1, **filters) -> List[Opinion]:
+        """
+        Search opinions.
+        
+        Standard method name for searching resources. This is the preferred method.
+        
+        Args:
+            q: Search query
+            page: Page number (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Opinion objects
+        """
+        return self.search_opinions(q=q, page=page, **filters)
     
     def list_opinions(self, page: int = 1, q: str = None, filters: dict = None, **kwargs) -> List[Opinion]:
         """List opinions."""
