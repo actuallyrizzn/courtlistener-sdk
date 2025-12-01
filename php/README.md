@@ -14,7 +14,7 @@ An **unofficial**, robust, production-ready PHP SDK for the [CourtListener API](
 - **Extensive Documentation**: Complete API reference and usage examples
 - **PSR-4 Autoloading**: Modern PHP autoloading standards
 - **Comprehensive Testing**: 2,174+ tests including unit, integration, mock, live, and E2E tests
-- **Code Quality Tools**: PHPStan, PHP_CodeSniffer, and PHP-CS-Fixer integration
+- **Code Quality Tools**: PHPStan static analysis integration
 - **Production Ready**: Battle-tested with real API integration and comprehensive error handling
 
 ## Installation
@@ -216,16 +216,6 @@ COURTLISTENER_API_TOKEN=your_token_here
 ```
 
 ## Code Quality
-
-Check code style:
-```bash
-composer cs-check
-```
-
-Fix code style issues:
-```bash
-composer cs-fix
-```
 
 Run static analysis:
 ```bash
