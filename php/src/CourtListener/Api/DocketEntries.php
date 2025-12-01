@@ -41,7 +41,7 @@ class DocketEntries extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocketEntries(array $params = []) {
+    public function getDocketEntries($id, array $params = []) {
         return $this->get($id, $params);
     }
 

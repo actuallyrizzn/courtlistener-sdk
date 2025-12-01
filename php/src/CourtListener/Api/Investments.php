@@ -41,7 +41,7 @@ class Investments extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getInvestments(array $params = []) {
+    public function getInvestments($id, array $params = []) {
         return $this->get($id, $params);
     }
 

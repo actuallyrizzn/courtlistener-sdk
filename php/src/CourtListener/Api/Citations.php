@@ -41,7 +41,7 @@ class Citations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getCitations(array $params = []) {
+    public function getCitations($id, array $params = []) {
         return $this->get($id, $params);
     }
 

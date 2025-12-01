@@ -41,7 +41,7 @@ class Positions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getPositions(array $params = []) {
+    public function getPositions($id, array $params = []) {
         return $this->get($id, $params);
     }
 

@@ -41,7 +41,7 @@ class Agreements extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getAgreements(array $params = []) {
+    public function getAgreements($id, array $params = []) {
         return $this->get($id, $params);
     }
 

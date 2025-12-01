@@ -41,7 +41,7 @@ class Courts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getCourt(array $params = []) {
+    public function getCourt($id, array $params = []) {
         return $this->get($id, $params);
     }
 

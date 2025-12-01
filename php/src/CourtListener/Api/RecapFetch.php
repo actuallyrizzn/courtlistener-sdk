@@ -41,7 +41,7 @@ class RecapFetch extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getRecapFetch(array $params = []) {
+    public function getRecapFetch($id, array $params = []) {
         return $this->get($id, $params);
     }
 

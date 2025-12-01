@@ -41,7 +41,7 @@ class People extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getPeople(array $params = []) {
+    public function getPeople($id, array $params = []) {
         return $this->get($id, $params);
     }
 

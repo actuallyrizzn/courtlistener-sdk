@@ -41,7 +41,7 @@ class RecapDocuments extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getRecapDocuments(array $params = []) {
+    public function getRecapDocuments($id, array $params = []) {
         return $this->get($id, $params);
     }
 

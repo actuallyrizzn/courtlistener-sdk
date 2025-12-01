@@ -41,7 +41,7 @@ class Opinions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinion(array $params = []) {
+    public function getOpinion($id, array $params = []) {
         return $this->get($id, $params);
     }
 
@@ -64,7 +64,7 @@ class Opinions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsCited(array $params = []) {
+    public function getOpinionsCited($opinionId, array $params = []) {
         return $this->client->makeRequest('GET', "opinions/{$opinionId}/cited/", [
             'query' => $params
         ]);
@@ -78,7 +78,7 @@ class Opinions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsCiting(array $params = []) {
+    public function getOpinionsCiting($opinionId, array $params = []) {
         return $this->client->makeRequest('GET', "opinions/{$opinionId}/citing/", [
             'query' => $params
         ]);
@@ -92,7 +92,7 @@ class Opinions extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getClusters(array $params = []) {
+    public function getClusters($opinionId, array $params = []) {
         return $this->client->makeRequest('GET', "opinions/{$opinionId}/clusters/", [
             'query' => $params
         ]);
@@ -102,12 +102,12 @@ class Opinions extends BaseApi
      * Get opinions by court
      *
      * @param string $courtId Court ID
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsByCourt(array $params = []) {
-        $courtFilters = array_merge(['court' => $courtId], $filters);
+    public function getOpinionsByCourt($courtId, array $params = []) {
+        $courtFilters = array_merge(['court' => $courtId], $params);
         return $this->listOpinions($courtFilters);
     }
 
@@ -115,12 +115,12 @@ class Opinions extends BaseApi
      * Get opinions by judge
      *
      * @param string $judgeId Judge ID
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsByJudge(array $params = []) {
-        $judgeFilters = array_merge(['author' => $judgeId], $filters);
+    public function getOpinionsByJudge($judgeId, array $params = []) {
+        $judgeFilters = array_merge(['author' => $judgeId], $params);
         return $this->listOpinions($judgeFilters);
     }
 
@@ -163,12 +163,12 @@ class Opinions extends BaseApi
     /**
      * Get non-precedential opinions
      *
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
     public function getNonPrecedentialOpinions(array $params = []) {
-        $nonPrecedentialFilters = array_merge(['stat_Non-Precedential' => 'on'], $filters);
+        $nonPrecedentialFilters = array_merge(['stat_Non-Precedential' => 'on'], $params);
         return $this->listOpinions($nonPrecedentialFilters);
     }
 
@@ -176,24 +176,24 @@ class Opinions extends BaseApi
      * Get opinions by type
      *
      * @param string $type Opinion type
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsByType(array $params = []) {
-        $typeFilters = array_merge(['type' => $type], $filters);
+    public function getOpinionsByType($type, array $params = []) {
+        $typeFilters = array_merge(['type' => $type], $params);
         return $this->listOpinions($typeFilters);
     }
 
     /**
      * Get opinions with audio
      *
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
     public function getOpinionsWithAudio(array $params = []) {
-        $audioFilters = array_merge(['has_audio' => 'true'], $filters);
+        $audioFilters = array_merge(['has_audio' => 'true'], $params);
         return $this->listOpinions($audioFilters);
     }
 
@@ -201,12 +201,12 @@ class Opinions extends BaseApi
      * Get opinions by jurisdiction
      *
      * @param string $jurisdiction Jurisdiction
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsByJurisdiction(array $params = []) {
-        $jurisdictionFilters = array_merge(['jurisdiction' => $jurisdiction], $filters);
+    public function getOpinionsByJurisdiction($jurisdiction, array $params = []) {
+        $jurisdictionFilters = array_merge(['jurisdiction' => $jurisdiction], $params);
         return $this->listOpinions($jurisdictionFilters);
     }
 
@@ -214,12 +214,12 @@ class Opinions extends BaseApi
      * Get opinions by resource type
      *
      * @param string $resourceType Resource type
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsByResourceType(array $params = []) {
-        $resourceFilters = array_merge(['resource_type' => $resourceType], $filters);
+    public function getOpinionsByResourceType($resourceType, array $params = []) {
+        $resourceFilters = array_merge(['resource_type' => $resourceType], $params);
         return $this->listOpinions($resourceFilters);
     }
 
@@ -243,12 +243,12 @@ class Opinions extends BaseApi
      * Get opinions by cluster
      *
      * @param string $clusterId Cluster ID
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsByCluster(array $params = []) {
-        $clusterFilters = array_merge(['cluster' => $clusterId], $filters);
+    public function getOpinionsByCluster($clusterId, array $params = []) {
+        $clusterFilters = array_merge(['cluster' => $clusterId], $params);
         return $this->listOpinions($clusterFilters);
     }
 
@@ -257,18 +257,18 @@ class Opinions extends BaseApi
      *
      * @param int $minCitations Minimum citation count
      * @param int|null $maxCitations Maximum citation count
-     * @param array $filters Additional filters
+     * @param array $params Additional filters
      * @return array
      * @throws CourtListenerException
      */
-    public function getOpinionsByCitationCount(array $params = []) {
+    public function getOpinionsByCitationCount($minCitations, $maxCitations = null, array $params = []) {
         $citationFilters = ['citation_count__gte' => $minCitations];
         
         if ($maxCitations !== null) {
             $citationFilters['citation_count__lte'] = $maxCitations;
         }
         
-        $allFilters = array_merge($citationFilters, $filters);
+        $allFilters = array_merge($citationFilters, $params);
         return $this->listOpinions($allFilters);
     }
 }

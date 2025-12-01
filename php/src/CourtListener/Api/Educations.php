@@ -41,7 +41,7 @@ class Educations extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getEducations(array $params = []) {
+    public function getEducations($id, array $params = []) {
         return $this->get($id, $params);
     }
 

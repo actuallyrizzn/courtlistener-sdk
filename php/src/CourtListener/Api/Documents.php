@@ -41,7 +41,7 @@ class Documents extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getDocuments(array $params = []) {
+    public function getDocuments($id, array $params = []) {
         return $this->get($id, $params);
     }
 

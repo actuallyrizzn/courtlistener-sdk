@@ -41,7 +41,7 @@ class NonInvestmentIncomes extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getNonInvestmentIncomes(array $params = []) {
+    public function getNonInvestmentIncomes($id, array $params = []) {
         return $this->get($id, $params);
     }
 

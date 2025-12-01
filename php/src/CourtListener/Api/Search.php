@@ -41,7 +41,7 @@ class Search extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getSearch(array $params = []) {
+    public function getSearch($id, array $params = []) {
         return $this->get($id, $params);
     }
 

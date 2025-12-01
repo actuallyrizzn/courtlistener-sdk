@@ -41,7 +41,7 @@ class RetentionEvents extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getRetentionEvents(array $params = []) {
+    public function getRetentionEvents($id, array $params = []) {
         return $this->get($id, $params);
     }
 

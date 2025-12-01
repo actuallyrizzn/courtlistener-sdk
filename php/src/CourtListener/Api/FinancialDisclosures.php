@@ -41,7 +41,7 @@ class FinancialDisclosures extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getFinancialDisclosures(array $params = []) {
+    public function getFinancialDisclosures($id, array $params = []) {
         return $this->get($id, $params);
     }
 

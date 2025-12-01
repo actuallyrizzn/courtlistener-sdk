@@ -41,7 +41,7 @@ class Gifts extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getGifts(array $params = []) {
+    public function getGifts($id, array $params = []) {
         return $this->get($id, $params);
     }
 

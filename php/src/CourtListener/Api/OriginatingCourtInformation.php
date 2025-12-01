@@ -41,7 +41,7 @@ class OriginatingCourtInformation extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getOriginatingCourtInformation(array $params = []) {
+    public function getOriginatingCourtInformation($id, array $params = []) {
         return $this->get($id, $params);
     }
 

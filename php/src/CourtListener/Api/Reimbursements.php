@@ -41,7 +41,7 @@ class Reimbursements extends BaseApi
      * @return array
      * @throws CourtListenerException
      */
-    public function getReimbursements(array $params = []) {
+    public function getReimbursements($id, array $params = []) {
         return $this->get($id, $params);
     }
 
