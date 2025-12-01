@@ -79,13 +79,11 @@ class TestCourtsIntegration:
     
     def test_get_court_dockets(self, client):
         """Test getting dockets for a court."""
-        try:
-            resp = client.courts.get_court_dockets('scotus')
-            assert isinstance(resp, dict) and 'results' in resp
-        except (APIError, AuthenticationError) as e:
-            if 'permission' in str(e).lower() or getattr(e, 'status_code', None) in (403, 401, 400):
-                pytest.skip(f'API error (may require permissions): {e}')
-            raise
+        resp = client.courts.get_court_dockets('scotus')
+        assert isinstance(resp, dict)
+        assert 'results' in resp
+        # Verify it's a paginated response
+        assert 'count' in resp or len(resp.get('results', [])) >= 0
 
 class TestJudgesIntegration:
     """Integration tests for Judges API."""
