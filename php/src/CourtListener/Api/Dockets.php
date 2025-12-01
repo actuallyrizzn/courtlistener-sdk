@@ -23,11 +23,11 @@ class Dockets extends BaseApi
     }
 
     /**
-     * List dockets with advanced filtering
+     * List dockets with advanced filtering and pagination
      *
-     * @param array $params Query parameters
-     * @return array
-     * @throws CourtListenerException
+     * @param array $params Query parameters (e.g., ['page' => 1, 'court' => 'scotus'])
+     * @return array Response containing 'count', 'next', 'previous', and 'results' keys
+     * @throws CourtListenerException If the API request fails
      */
     public function listDockets(array $params = []) {
         return $this->list($params);
@@ -37,20 +37,21 @@ class Dockets extends BaseApi
      * Get a specific docket by ID
      *
      * @param int|string $id Docket ID
-     * @param array $params Query parameters
-     * @return array
-     * @throws CourtListenerException
+     * @param array $params Additional query parameters
+     * @return array Docket data
+     * @throws CourtListenerException If the API request fails
+     * @throws NotFoundException If the docket is not found
      */
     public function getDocket($id, array $params = []) {
         return $this->get($id, $params);
     }
 
     /**
-     * Search dockets
+     * Search dockets using the search API
      *
-     * @param array $params Search parameters
-     * @return array
-     * @throws CourtListenerException
+     * @param array $params Search parameters (e.g., ['q' => 'search query', 'page' => 1])
+     * @return array Response containing 'count', 'next', 'previous', and 'results' keys
+     * @throws CourtListenerException If the API request fails
      */
     public function searchDockets(array $params = []) {
         return $this->search($params);
@@ -60,9 +61,10 @@ class Dockets extends BaseApi
      * Get docket entries for a specific docket
      *
      * @param int|string $docketId Docket ID
-     * @param array $params Query parameters
-     * @return array
-     * @throws CourtListenerException
+     * @param array $params Query parameters (e.g., ['page' => 1, 'per_page' => 10])
+     * @return array Response containing 'count', 'next', 'previous', and 'results' keys
+     * @throws CourtListenerException If the API request fails
+     * @throws NotFoundException If the docket is not found
      */
     public function getDocketEntries($docketId, array $params = []) {
         return $this->client->makeRequest('GET', "dockets/{$docketId}/docket-entries/", [

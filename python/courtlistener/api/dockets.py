@@ -30,6 +30,17 @@ class DocketsAPI(BaseAPI):
     def list_dockets(self, page: int = 1, **filters) -> List[Docket]:
         """
         List dockets with optional filtering and pagination.
+        
+        Args:
+            page: Page number for pagination (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            List of Docket objects
+        
+        Raises:
+            APIError: If the API request fails
+            AuthenticationError: If authentication fails
         """
         params = {"page": page, **filters}
         response = self.client.get("dockets/", params=params)
@@ -103,7 +114,21 @@ class DocketsAPI(BaseAPI):
         return self.list_dockets(court_filters)
     
     def get_docket_entries(self, docket_id: int, page: int = 1, **filters) -> Dict[str, Any]:
-        """Get docket entries for a specific docket."""
+        """
+        Get docket entries for a specific docket.
+        
+        Args:
+            docket_id: Docket ID
+            page: Page number for pagination (default: 1)
+            **filters: Additional filter parameters
+        
+        Returns:
+            Dictionary containing paginated docket entries
+        
+        Raises:
+            NotFoundError: If docket not found
+            APIError: If the API request fails
+        """
         params = {'docket': docket_id, 'page': page}
         params.update(filters)
         return self.client.get('docket-entries/', params=params)
