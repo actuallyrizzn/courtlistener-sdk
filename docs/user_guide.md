@@ -13,8 +13,10 @@ Welcome to the **unofficial** CourtListener SDK! This guide covers both Python a
 - [Installation](#installation)
 - [Authentication](#authentication)
 - [Quick Start](#quick-start)
+- [Core Concepts](#core-concepts)
 - [API Endpoints](#api-endpoints)
 - [Pagination & Filtering](#pagination--filtering)
+- [Advanced Pagination](#advanced-pagination)
 - [Error Handling](#error-handling)
 - [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
@@ -29,11 +31,15 @@ cd python
 pip install -r requirements.txt
 ```
 
+For detailed Python installation and setup, see [Python README](../python/README.md#installation).
+
 ### PHP SDK
 ```bash
 cd php
 composer install
 ```
+
+For detailed PHP installation and setup, see [PHP README](../php/README.md#installation).
 
 ## Authentication
 
@@ -57,6 +63,11 @@ $client = new CourtListenerClient(['api_token' => 'your_token_here']);
 
 ## Quick Start
 
+For detailed quick-start guides with more examples:
+
+- **Python**: See [Python Quick Start](../python/README.md#quick-start)
+- **PHP**: See [PHP Quick Start](../php/README.md#quick-start)
+
 ### Python
 ```python
 from courtlistener import CourtListenerClient
@@ -72,11 +83,38 @@ for docket in dockets:
 use CourtListener\CourtListenerClient;
 
 $client = new CourtListenerClient();
-$dockets = $client->dockets->listDockets(['page' => 1]);
+$dockets = $client->dockets->list(['page' => 1]);
 foreach ($dockets['results'] as $docket) {
     echo $docket['case_name'] . ' ' . $docket['docket_number'] . "\n";
 }
 ```
+
+## Core Concepts
+
+### Data Models
+
+The SDK returns model objects (Python) or arrays (PHP) that provide easy access to API data.
+
+**Python** - Model objects with attribute access:
+```python
+docket = client.dockets.get(12345)
+print(docket.case_name)  # Attribute access
+print(docket.docket_number)
+```
+
+**PHP** - Arrays with key access:
+```php
+$docket = $client->dockets->get(12345);
+echo $docket['case_name'];  // Array access
+echo $docket['docket_number'];
+```
+
+### Standard Methods
+
+All endpoints support these standard methods:
+- `list(**kwargs)` - List resources with filtering and pagination
+- `get(id)` - Get a specific resource by ID
+- `search(**kwargs)` - Search resources with query parameters
 
 ## API Endpoints
 
@@ -133,20 +171,18 @@ The SDK provides access to all 39 CourtListener API endpoints, organized by cate
 - `client.fjc_integrated_database` — FJC database integration
 - `client.disclosure_positions` — Disclosure position data
 
-Each endpoint provides methods like `list()`, `get()`, and `search()` for flexible access.
-
 ### Example: List Opinions
 
 **Python:**
 ```python
 opinions = client.opinions.list(page=1, court="scotus")
-for opinion in opinions['results']:
-    print(opinion['id'], opinion['case_name'])
+for opinion in opinions:
+    print(opinion.id, opinion.case_name)
 ```
 
 **PHP:**
 ```php
-$opinions = $client->opinions->listOpinions(['page' => 1, 'court' => 'scotus']);
+$opinions = $client->opinions->list(['page' => 1, 'court' => 'scotus']);
 foreach ($opinions['results'] as $opinion) {
     echo $opinion['id'] . ' ' . $opinion['case_name'] . "\n";
 }
@@ -157,13 +193,13 @@ foreach ($opinions['results'] as $opinion) {
 **Python:**
 ```python
 results = client.search.list(q="first amendment", page=1)
-for result in results['results']:
-    print(result['case_name'])
+for result in results:
+    print(result.case_name)
 ```
 
 **PHP:**
 ```php
-$results = $client->search->search(['q' => 'first amendment', 'page' => 1]);
+$results = $client->search->list(['q' => 'first amendment', 'page' => 1]);
 foreach ($results['results'] as $result) {
     echo $result['case_name'] . "\n";
 }
@@ -174,32 +210,15 @@ foreach ($results['results'] as $result) {
 **Python:**
 ```python
 disclosures = client.financial_disclosures.list(page=1)
-for disclosure in disclosures['results']:
-    print(disclosure['id'], disclosure['date_received'])
+for disclosure in disclosures:
+    print(disclosure.id, disclosure.date_received)
 ```
 
 **PHP:**
 ```php
-$disclosures = $client->financialDisclosures->listFinancialDisclosures(['page' => 1]);
+$disclosures = $client->financialDisclosures->list(['page' => 1]);
 foreach ($disclosures['results'] as $disclosure) {
     echo $disclosure['id'] . ' ' . $disclosure['date_received'] . "\n";
-}
-```
-
-### Example: Docket Entries
-
-**Python:**
-```python
-entries = client.docket_entries.list(docket=12345, page=1)
-for entry in entries['results']:
-    print(entry['entry_number'], entry['description'])
-```
-
-**PHP:**
-```php
-$entries = $client->docketEntries->listDocketEntries(['docket' => 12345, 'page' => 1]);
-foreach ($entries['results'] as $entry) {
-    echo $entry['entry_number'] . ' ' . $entry['description'] . "\n";
 }
 ```
 
@@ -232,27 +251,155 @@ results = client.search.list(
 **PHP:**
 ```php
 use CourtListener\Utils\Pagination;
-use CourtListener\Utils\Filters;
 
 // Get the second page of dockets for a specific court
-$page2 = $client->dockets->listDockets(['page' => 2, 'court' => 'scotus']);
+$page2 = $client->dockets->list(['page' => 2, 'court' => 'scotus']);
 
 // Filter opinions by date
-$opinions = $client->opinions->listOpinions(['date_filed__gte' => '2020-01-01']);
+$opinions = $client->opinions->list(['date_filed__gte' => '2020-01-01']);
 
 // Filter financial disclosures by date range
-$disclosures = $client->financialDisclosures->listFinancialDisclosures([
+$disclosures = $client->financialDisclosures->list([
     'date_received__gte' => '2023-01-01',
     'date_received__lte' => '2023-12-31'
 ]);
 
 // Search with multiple filters
-$results = $client->search->search([
+$results = $client->search->list([
     'q' => 'constitutional law',
     'court' => 'scotus',
     'date_filed__gte' => '2020-01-01'
 ]);
 ```
+
+## Advanced Pagination
+
+For large datasets, use advanced pagination patterns to efficiently retrieve all results.
+
+### Python: Iterator Pattern
+
+**Using paginate() method:**
+```python
+from courtlistener import CourtListenerClient
+
+client = CourtListenerClient()
+
+# Iterate through all dockets with automatic pagination
+for docket in client.dockets.paginate(court="scotus"):
+    print(f"Processing: {docket.case_name}")
+    # Process each docket
+```
+
+**Manual pagination with progress tracking:**
+```python
+page = 1
+total_processed = 0
+
+while True:
+    dockets = client.dockets.list(page=page, court="scotus", page_size=100)
+    
+    if not dockets:
+        break
+    
+    for docket in dockets:
+        # Process docket
+        total_processed += 1
+    
+    print(f"Processed page {page}, total: {total_processed}")
+    page += 1
+    
+    # Respect rate limits
+    time.sleep(0.5)
+```
+
+**Bulk operations with pagination:**
+```python
+# Collect all IDs first, then process in batches
+all_ids = []
+page = 1
+
+while True:
+    opinions = client.opinions.list(page=page, court="scotus", page_size=100)
+    if not opinions:
+        break
+    all_ids.extend([op.id for op in opinions])
+    page += 1
+
+# Process in batches
+batch_size = 50
+for i in range(0, len(all_ids), batch_size):
+    batch = all_ids[i:i + batch_size]
+    # Process batch
+    print(f"Processing batch {i // batch_size + 1}")
+```
+
+### PHP: Manual Pagination
+
+**Iterate through all results:**
+```php
+use CourtListener\CourtListenerClient;
+use CourtListener\Utils\Pagination;
+
+$client = new CourtListenerClient();
+$page = 1;
+$totalProcessed = 0;
+
+do {
+    $dockets = $client->dockets->list(array_merge(
+        ['court' => 'scotus'],
+        Pagination::getParams($page, 100)
+    ));
+    
+    if (empty($dockets['results'])) {
+        break;
+    }
+    
+    foreach ($dockets['results'] as $docket) {
+        // Process docket
+        $totalProcessed++;
+    }
+    
+    echo "Processed page $page, total: $totalProcessed\n";
+    $page++;
+    
+    // Respect rate limits
+    usleep(500000);  // 0.5 seconds
+} while (!empty($dockets['results']));
+```
+
+**Bulk operations with pagination:**
+```php
+// Collect all IDs first, then process in batches
+$allIds = [];
+$page = 1;
+
+do {
+    $opinions = $client->opinions->list(array_merge(
+        ['court' => 'scotus'],
+        Pagination::getParams($page, 100)
+    ));
+    
+    if (empty($opinions['results'])) {
+        break;
+    }
+    
+    foreach ($opinions['results'] as $opinion) {
+        $allIds[] = $opinion['id'];
+    }
+    
+    $page++;
+} while (!empty($opinions['results']));
+
+// Process in batches
+$batchSize = 50;
+for ($i = 0; $i < count($allIds); $i += $batchSize) {
+    $batch = array_slice($allIds, $i, $batchSize);
+    // Process batch
+    echo "Processing batch " . (($i / $batchSize) + 1) . "\n";
+}
+```
+
+For more advanced pagination examples, see [Advanced Usage Guide](./advanced_usage.md#iterating-with-pagination).
 
 ## Error Handling
 
@@ -276,47 +423,65 @@ Use try/catch blocks to handle errors gracefully:
 
 **Python:**
 ```python
+from courtlistener import CourtListenerClient
+from courtlistener.exceptions import (
+    CourtListenerError,
+    RateLimitError,
+    NotFoundError
+)
+import time
+
 try:
     dockets = client.dockets.list(page=1)
-except CourtListenerError as e:
-    print("API error:", e)
 except RateLimitError as e:
     print("Rate limited, waiting...")
     time.sleep(5)  # Wait before retrying
 except NotFoundError as e:
     print("Resource not found:", e)
+except CourtListenerError as e:
+    print("API error:", e)
 ```
 
 **PHP:**
 ```php
+use CourtListener\CourtListenerClient;
 use CourtListener\Exceptions\CourtListenerException;
 use CourtListener\Exceptions\AuthenticationException;
 use CourtListener\Exceptions\RateLimitException;
 use CourtListener\Exceptions\NotFoundException;
 
 try {
-    $dockets = $client->dockets->listDockets(['page' => 1]);
-} catch (CourtListenerException $e) {
-    echo "API error: " . $e->getMessage();
+    $dockets = $client->dockets->list(['page' => 1]);
 } catch (RateLimitException $e) {
-    echo "Rate limited, waiting...";
+    echo "Rate limited, waiting...\n";
     sleep(5);  // Wait before retrying
 } catch (NotFoundException $e) {
-    echo "Resource not found: " . $e->getMessage();
+    echo "Resource not found: " . $e->getMessage() . "\n";
+} catch (CourtListenerException $e) {
+    echo "API error: " . $e->getMessage() . "\n";
 }
 ```
 
 ## Best Practices
-- Use pagination for large result sets
-- Respect API rate limits (handle HTTP 202 responses)
-- Store your API token securely
-- Use the provided data models for type safety
-- See `tests/manual_debug/` for advanced test scripts
+
+- **Use pagination** for large result sets to avoid memory issues
+- **Respect API rate limits** - handle HTTP 202 responses and rate limit errors gracefully
+- **Store API tokens securely** - use environment variables or secure configuration
+- **Use data models** - leverage model objects (Python) for type safety and better IDE support
+- **Handle errors** - always wrap API calls in try/catch blocks
+- **Batch operations** - when processing many items, collect IDs first then process in batches
+- **Progress tracking** - for long-running operations, track progress and allow for interruption
 
 ## Troubleshooting
-- If you see HTTP 202 responses, wait and retry (API is rate limiting or processing)
-- For attribute errors, ensure you are using the correct data model
-- See [Troubleshooting Guide](./troubleshooting.md) for more
+
+- **HTTP 202 responses**: The API is rate limiting or processing your request asynchronously. Wait and retry.
+- **Attribute errors**: Ensure you are using model objects correctly. In Python, use `obj.attribute` not `obj['key']`.
+- **Rate limit errors**: Implement exponential backoff and respect `Retry-After` headers.
+- **Not found errors**: Verify the resource ID exists and you have permission to access it.
+
+For more troubleshooting help, see the [Troubleshooting Guide](./troubleshooting.md).
 
 ---
-For full API details, see the [API Reference](./api_reference.md). 
+
+For full API details, see the [API Reference](./api_reference.md).  
+For advanced usage patterns, see [Advanced Usage Guide](./advanced_usage.md).

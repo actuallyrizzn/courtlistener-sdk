@@ -19,7 +19,7 @@ Multi-language SDKs for the [CourtListener API](https://www.courtlistener.com/ap
 - **Installation**: `composer install` (in `php/` directory)
 
 ## Features
-- **100% API Coverage**: Complete support for all 36+ CourtListener API endpoints
+- **100% API Coverage**: Complete support for all 39 CourtListener API endpoints
 - **Multi-Language Support**: Python (complete) and PHP (complete)
 - **Comprehensive Data Models**: Language-specific models for all data types including financial disclosures, alerts, people, and more
 - **Robust Error Handling**: Production-ready error handling with retry logic and rate limiting
@@ -30,6 +30,11 @@ Multi-language SDKs for the [CourtListener API](https://www.courtlistener.com/ap
 - **Extensive Documentation**: Complete API reference and usage examples
 
 ## Quick Start
+
+Get started quickly with language-specific guides:
+
+- **Python**: See [Python Quick Start](./python/README.md#quick-start) for detailed Python examples
+- **PHP**: See [PHP Quick Start](./php/README.md#quick-start) for detailed PHP examples
 
 ### Python
 ```bash
@@ -44,6 +49,8 @@ dockets = client.dockets.list(page=1)
 for docket in dockets:
     print(docket.case_name, docket.docket_number)
 ```
+
+For more Python examples, see [`python/README.md`](./python/README.md).
 
 ### PHP
 ```bash
@@ -61,6 +68,8 @@ foreach ($dockets['results'] as $docket) {
     echo $docket['case_name'] . ' ' . $docket['docket_number'] . "\n";
 }
 ```
+
+For more PHP examples, see [`php/README.md`](./php/README.md).
 
 ## Development Tooling
 

@@ -64,17 +64,30 @@ For large result sets, use pagination to iterate through all results:
 
 **Python:**
 ```python
-# Iterate through all dockets
-for docket in client.dockets.list_all():
+# Iterate through all dockets using paginate() method
+for docket in client.dockets.paginate():
     print(docket.case_name)
 
 # Iterate through all opinions with filtering
-for opinion in client.opinions.list_all(court="scotus"):
+for opinion in client.opinions.paginate(court="scotus"):
     print(opinion.case_name)
 
 # Iterate through financial disclosures
-for disclosure in client.financial_disclosures.list_all():
+for disclosure in client.financial_disclosures.paginate():
     print(disclosure.id, disclosure.date_received)
+
+# Manual pagination with progress tracking
+page = 1
+total = 0
+while True:
+    dockets = client.dockets.list(page=page, page_size=100)
+    if not dockets:
+        break
+    for docket in dockets:
+        # Process docket
+        total += 1
+    print(f"Processed page {page}, total: {total}")
+    page += 1
 ```
 
 **PHP:**
@@ -83,21 +96,33 @@ use CourtListener\Utils\Pagination;
 
 // Iterate through all dockets with manual pagination
 $page = 1;
+$total = 0;
 do {
-    $dockets = $client->dockets->listDockets(Pagination::getParams($page, 100));
-    foreach ($dockets['results'] as $docket) {
-        echo $docket['case_name'] . "\n";
+    $dockets = $client->dockets->list(array_merge(
+        Pagination::getParams($page, 100)
+    ));
+    if (empty($dockets['results'])) {
+        break;
     }
+    foreach ($dockets['results'] as $docket) {
+        // Process docket
+        $total++;
+    }
+    echo "Processed page $page, total: $total\n";
     $page++;
+    usleep(500000);  // Respect rate limits
 } while (!empty($dockets['results']));
 
 // Iterate through all opinions with filtering
 $page = 1;
 do {
-    $opinions = $client->opinions->listOpinions(array_merge(
+    $opinions = $client->opinions->list(array_merge(
         ['court' => 'scotus'],
         Pagination::getParams($page, 100)
     ));
+    if (empty($opinions['results'])) {
+        break;
+    }
     foreach ($opinions['results'] as $opinion) {
         echo $opinion['case_name'] . "\n";
     }
