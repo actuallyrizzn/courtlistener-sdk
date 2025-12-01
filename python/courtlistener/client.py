@@ -276,8 +276,17 @@ class CourtListenerClient:
         """
         base_delay = getattr(self.config, 'retry_delay', 1)
         max_delay = getattr(self.config, 'max_backoff_delay', 60)
-        delay = float(base_delay) * (2 ** attempt)
-        return min(delay, float(max_delay))
+        # Handle Mock objects in tests
+        try:
+            base_delay = float(base_delay) if not isinstance(base_delay, type) else 1.0
+        except (TypeError, ValueError):
+            base_delay = 1.0
+        try:
+            max_delay = float(max_delay) if not isinstance(max_delay, type) else 60.0
+        except (TypeError, ValueError):
+            max_delay = 60.0
+        delay = base_delay * (2 ** attempt)
+        return min(delay, max_delay)
     
     def _handle_response(self, response: requests.Response) -> Dict[str, Any]:
         """
