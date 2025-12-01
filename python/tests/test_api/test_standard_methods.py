@@ -292,3 +292,4 @@ class TestStandardMethods:
         assert hasattr(api, 'get')
         assert hasattr(api, 'search')
 
+

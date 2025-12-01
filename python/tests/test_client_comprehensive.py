@@ -302,13 +302,13 @@ class TestCourtListenerClientComprehensive:
         """Test handling 429 rate limit error."""
         mock_response = Mock()
         mock_response.status_code = 429
+        mock_response.headers = {'Retry-After': '5'}
         
-        with patch('time.sleep') as mock_sleep:
-            with pytest.raises(RateLimitError) as exc_info:
-                self.client._handle_response(mock_response)
-            
-            assert "Rate limit exceeded" in str(exc_info.value)
-            mock_sleep.assert_called_once_with(2.0)  # rate_limit_delay
+        with pytest.raises(RateLimitError) as exc_info:
+            self.client._handle_response(mock_response)
+        
+        assert "Rate limit exceeded" in str(exc_info.value)
+        assert exc_info.value.retry_after == 5
     
     def test_handle_response_500_server_error(self):
         """Test handling 500 server error."""
