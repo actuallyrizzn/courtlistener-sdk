@@ -61,7 +61,7 @@ $client = new CourtListenerClient(['api_token' => 'your_token_here']);
 ```python
 from courtlistener import CourtListenerClient
 client = CourtListenerClient()
-dockets = client.dockets.list_dockets(page=1)
+dockets = client.dockets.list(page=1)
 for docket in dockets:
     print(docket.case_name, docket.docket_number)
 ```

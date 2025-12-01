@@ -41,8 +41,8 @@ pip install -r requirements.txt
 from courtlistener import CourtListenerClient
 client = CourtListenerClient()
 dockets = client.dockets.list(page=1)
-for docket in dockets['results']:
-    print(docket['case_name'], docket['docket_number'])
+for docket in dockets:
+    print(docket.case_name, docket.docket_number)
 ```
 
 ### PHP

@@ -226,12 +226,13 @@ def generate_endpoint_summary():
     print("=" * 50)
     
     categories = {
-        "Core Endpoints": 5,
-        "Financial Disclosure": 9,
-        "RECAP": 8,
-        "People & Education": 7,
-        "Alerts": 2,
-        "Specialized": 6
+        "Core Endpoints": 8,  # search, dockets, opinions, clusters, courts, judges, positions, audio
+        "Financial Disclosure": 9,  # financial, financial_disclosures, investments, non_investment_incomes, agreements, gifts, reimbursements, debts, disclosure_positions, spouse_incomes
+        "RECAP": 6,  # docket_entries, parties, attorneys, recap_documents, recap_fetch, recap_query, documents
+        "People & Education": 5,  # people, schools, educations, aba_ratings, political_affiliations
+        "Alerts": 2,  # alerts, docket_alerts
+        "Citations": 2,  # citations, opinions_cited
+        "Administrative": 6  # sources, retention_events, tag, originating_court_information, fjc_integrated_database, disclosure_positions
     }
     
     total_endpoints = sum(categories.values())

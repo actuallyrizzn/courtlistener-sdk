@@ -114,14 +114,14 @@ Each module provides methods for a specific resource:
 ### Example: Get a Docket
 ```python
 docket = client.dockets.get(12345)
-print(docket['case_name'], docket['docket_number'])
+print(docket.case_name, docket.docket_number)
 ```
 
 ### Example: List Financial Disclosures
 ```python
 disclosures = client.financial_disclosures.list(page=1)
-for disclosure in disclosures['results']:
-    print(disclosure['id'], disclosure['date_received'])
+for disclosure in disclosures:
+    print(disclosure.id, disclosure.date_received)
 ```
 
 ### Example: Search with Filters
@@ -131,8 +131,8 @@ results = client.search.list(
     court="scotus",
     date_filed__gte="2020-01-01"
 )
-for result in results['results']:
-    print(result['case_name'])
+for result in results:
+    print(result.case_name)
 ```
 
 ## Data Models
