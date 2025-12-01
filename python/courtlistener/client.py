@@ -240,7 +240,7 @@ class CourtListenerClient:
                     message = "Request timed out"
                     if detail:
                         message = f"{message}: {detail}"
-                    raise TimeoutError(message)
+                    raise TimeoutError(message) from exc
                 time.sleep(self.config.retry_delay)
             
             except requests.exceptions.ConnectionError as exc:
@@ -249,7 +249,7 @@ class CourtListenerClient:
                     message = "Failed to connect to API"
                     if detail:
                         message = f"{message}: {detail}"
-                    raise ConnectionError(message)
+                    raise ConnectionError(message) from exc
                 time.sleep(self.config.retry_delay)
             
             except requests.exceptions.RequestException as e:

@@ -130,7 +130,7 @@ class CourtListenerClient
         // Set configuration
         $this->baseUrl = $config['base_url'] ?? $_ENV['COURTLISTENER_BASE_URL'] ?? 'https://www.courtlistener.com/api/rest/v4/';
         $this->apiToken = $config['api_token'] ?? $_ENV['COURTLISTENER_API_TOKEN'] ?? '';
-        $this->timeout = $config['timeout'] ?? 30;
+        $this->timeout = $config['timeout'] ?? 10;
         $this->maxRetries = $config['max_retries'] ?? 3;
         $this->retryDelay = $config['retry_delay'] ?? 1.0;
 
@@ -270,7 +270,9 @@ class CourtListenerClient
                     sleep($this->retryDelay * $attempt);
                     continue;
                 }
-                throw new CourtListenerException('Connection error: ' . $e->getMessage());
+                $exception = new CourtListenerException('Connection error: ' . $e->getMessage());
+                $exception->setPrevious($e);
+                throw $exception;
             } catch (GuzzleException $e) {
                 throw new CourtListenerException('Request failed: ' . $e->getMessage());
             }

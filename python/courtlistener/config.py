@@ -19,7 +19,7 @@ class Config:
     
     # Default settings
     DEFAULT_BASE_URL = "https://www.courtlistener.com/api/rest/v4/"
-    DEFAULT_TIMEOUT = 30
+    DEFAULT_TIMEOUT = 10
     DEFAULT_MAX_RETRIES = 3
     DEFAULT_RETRY_DELAY = 1
     DEFAULT_RATE_LIMIT_DELAY = 1
