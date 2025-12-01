@@ -1,6 +1,6 @@
 {
     "name": "courtlistener/sdk-php",
-    "description": "An unofficial PHP SDK for the CourtListener REST API",
+    "description": "An unofficial PHP SDK for the CourtListener REST API. Provides comprehensive access to CourtListener's extensive legal database including dockets, opinions, judges, financial disclosures, and more. Features include full API coverage, type-safe models, pagination support, error handling, and comprehensive documentation.",
     "type": "library",
     "license": "AGPL-3.0-or-later",
     "authors": [
@@ -18,10 +18,18 @@
         "case law",
         "dockets",
         "judges",
-        "unofficial"
+        "opinions",
+        "financial disclosures",
+        "judicial data",
+        "legal research",
+        "pacer",
+        "recap",
+        "unofficial",
+        "rest",
+        "client"
     ],
     "require": {
-        "php": ">=8.1",
+        "php": "^8.1",
         "guzzlehttp/guzzle": "7.10.0",
         "vlucas/phpdotenv": "5.6.2"
     },
