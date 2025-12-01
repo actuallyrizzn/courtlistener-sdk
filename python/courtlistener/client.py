@@ -17,6 +17,7 @@ from .exceptions import (
     APIError,
     ConnectionError,
     TimeoutError,
+    AcceptedError,
 )
 from .utils.pagination import PageIterator
 from .api.docket_entries import DocketEntriesAPI
@@ -274,7 +275,8 @@ class CourtListenerClient:
             Delay in seconds
         """
         delay = self.config.retry_delay * (2 ** attempt)
-        return min(delay, self.config.max_backoff_delay)
+        max_delay = getattr(self.config, 'max_backoff_delay', 60)
+        return min(delay, max_delay)
     
     def _handle_response(self, response: requests.Response) -> Dict[str, Any]:
         """
@@ -292,6 +294,23 @@ class CourtListenerClient:
         if response.status_code == 200:
             return response.json()
         
+        # Handle HTTP 202 Accepted (async processing)
+        if response.status_code == 202:
+            retry_after = None
+            headers = getattr(response, 'headers', {})
+            if headers and hasattr(headers, 'get'):
+                retry_after_str = headers.get('Retry-After')
+                if retry_after_str:
+                    try:
+                        retry_after = int(retry_after_str)
+                    except (ValueError, TypeError):
+                        pass
+            raise AcceptedError("Request accepted and being processed asynchronously", retry_after=retry_after)
+        
+        # Handle other successful responses (201, 204, etc.)
+        if 201 <= response.status_code < 300:
+            return response.json()
+        
         elif response.status_code == 401:
             raise AuthenticationError("Invalid API token")
         
@@ -301,11 +320,14 @@ class CourtListenerClient:
         elif response.status_code == 429:
             # Rate limited - extract Retry-After header if present
             retry_after = None
-            if 'Retry-After' in response.headers:
-                try:
-                    retry_after = int(response.headers['Retry-After'])
-                except (ValueError, TypeError):
-                    pass
+            headers = getattr(response, 'headers', {})
+            if headers and hasattr(headers, 'get'):
+                retry_after_str = headers.get('Retry-After')
+                if retry_after_str:
+                    try:
+                        retry_after = int(retry_after_str)
+                    except (ValueError, TypeError):
+                        pass
             raise RateLimitError("Rate limit exceeded", retry_after=retry_after)
         
         elif response.status_code >= 500:
