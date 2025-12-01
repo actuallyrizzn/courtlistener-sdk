@@ -17,6 +17,7 @@ from .exceptions import (
     APIError,
     ConnectionError,
     TimeoutError,
+    AcceptedError,
 )
 from .utils.pagination import PageIterator
 from .api.docket_entries import DocketEntriesAPI
@@ -256,6 +257,24 @@ class CourtListenerClient:
                 if attempt == self.config.max_retries:
                     raise CourtListenerError(f"Request failed: {str(e)}")
                 time.sleep(self.config.retry_delay)
+            
+            except AcceptedError as e:
+                # HTTP 202 - wait for Retry-After or default delay, then retry
+                wait_time = e.retry_after if e.retry_after is not None else self.config.retry_delay
+                if attempt < self.config.max_retries:
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    raise e
+            
+            except AcceptedError as e:
+                # HTTP 202 - wait for Retry-After or default delay, then retry
+                wait_time = e.retry_after if e.retry_after is not None else self.config.retry_delay
+                if attempt < self.config.max_retries:
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    raise e
             
             except APIError as e:
                 if attempt == self.config.max_retries:

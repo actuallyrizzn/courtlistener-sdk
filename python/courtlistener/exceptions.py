@@ -2,6 +2,8 @@
 Custom exceptions for the CourtListener SDK.
 """
 
+from typing import Optional
+
 
 class CourtListenerError(Exception):
     """Base exception for all CourtListener SDK errors."""
@@ -59,4 +61,19 @@ class TimeoutError(CourtListenerError):
     """Raised when API requests timeout."""
     
     def __init__(self, message: str = "Request timeout"):
-        super().__init__(message) 
+        super().__init__(message)
+
+
+class AcceptedError(CourtListenerError):
+    """Raised when HTTP 202 Accepted is returned (async processing)."""
+    
+    def __init__(self, message: str = "Request accepted and being processed", retry_after: Optional[int] = None):
+        """
+        Initialize AcceptedError.
+        
+        Args:
+            message: Error message
+            retry_after: Number of seconds to wait before retrying (from Retry-After header)
+        """
+        super().__init__(message)
+        self.retry_after = retry_after 
