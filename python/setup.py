@@ -63,6 +63,6 @@ setup(
     project_urls={
         "Bug Reports": "https://github.com/actuallyrizzn/courtlistener-sdk/issues",
         "Source": "https://github.com/actuallyrizzn/courtlistener-sdk",
-        "Documentation": "https://github.com/actuallyrizzn/courtlistener-sdk/docs",
+        "Documentation": "https://github.com/actuallyrizzn/courtlistener-sdk/tree/main/docs",
     },
 ) 
