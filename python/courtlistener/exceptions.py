@@ -2,6 +2,8 @@
 Custom exceptions for the CourtListener SDK.
 """
 
+from typing import Optional
+
 
 class CourtListenerError(Exception):
     """Base exception for all CourtListener SDK errors."""
@@ -23,8 +25,17 @@ class AuthenticationError(CourtListenerError):
 class RateLimitError(CourtListenerError):
     """Raised when rate limits are exceeded."""
     
-    def __init__(self, message: str = "Rate limit exceeded", status_code: int = 429):
+    def __init__(self, message: str = "Rate limit exceeded", status_code: int = 429, retry_after: Optional[int] = None):
+        """
+        Initialize RateLimitError.
+        
+        Args:
+            message: Error message
+            status_code: HTTP status code (default 429)
+            retry_after: Number of seconds to wait before retrying (from Retry-After header)
+        """
         super().__init__(message, status_code)
+        self.retry_after = retry_after
 
 
 class NotFoundError(CourtListenerError):

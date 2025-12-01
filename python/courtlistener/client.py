@@ -299,9 +299,14 @@ class CourtListenerClient:
             raise NotFoundError("Resource not found")
         
         elif response.status_code == 429:
-            # Rate limited - wait and retry
-            time.sleep(self.config.rate_limit_delay)
-            raise RateLimitError("Rate limit exceeded")
+            # Rate limited - extract Retry-After header if present
+            retry_after = None
+            if 'Retry-After' in response.headers:
+                try:
+                    retry_after = int(response.headers['Retry-After'])
+                except (ValueError, TypeError):
+                    pass
+            raise RateLimitError("Rate limit exceeded", retry_after=retry_after)
         
         elif response.status_code >= 500:
             raise APIError(f"Server error: {response.status_code}")
