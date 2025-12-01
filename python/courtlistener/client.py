@@ -275,23 +275,23 @@ class CourtListenerClient:
         Raises:
             Various CourtListenerError subclasses based on response status
         """
-        if response.status_code == 200:
+        # Handle successful responses (2xx)
+        if 200 <= response.status_code < 300:
             return response.json()
         
-        elif response.status_code == 401:
+        # Handle error responses
+        if response.status_code == 401:
             raise AuthenticationError("Invalid API token")
-        
+        elif response.status_code == 403:
+            raise AuthenticationError("Access forbidden")
         elif response.status_code == 404:
             raise NotFoundError("Resource not found")
-        
         elif response.status_code == 429:
             # Rate limited - wait and retry
             time.sleep(self.config.rate_limit_delay)
             raise RateLimitError("Rate limit exceeded")
-        
         elif response.status_code >= 500:
             raise APIError(f"Server error: {response.status_code}")
-        
         else:
             # Try to get error message from response
             try:
@@ -339,21 +339,6 @@ class CourtListenerClient:
             return True
         except Exception as e:
             raise CourtListenerError(f"Connection test failed: {str(e)}")
-    
-    def _handle_error(self, response):
-        """Handle API errors."""
-        if response.status_code == 401:
-            raise AuthenticationError("Invalid API token")
-        elif response.status_code == 403:
-            raise AuthenticationError("Access forbidden")
-        elif response.status_code == 404:
-            raise NotFoundError("Resource not found")
-        elif response.status_code == 429:
-            raise RateLimitError("Rate limit exceeded")
-        elif response.status_code >= 500:
-            raise APIError(f"Server error: {response.status_code}")
-        else:
-            raise APIError(f"API error: {response.status_code}")
     
     def __repr__(self) -> str:
         """String representation of the client."""

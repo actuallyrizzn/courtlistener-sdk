@@ -409,7 +409,7 @@ class TestCourtListenerClientComprehensive:
         mock_response.status_code = 401
         
         with pytest.raises(AuthenticationError) as exc_info:
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
         
         assert "Invalid API token" in str(exc_info.value)
     
@@ -419,7 +419,7 @@ class TestCourtListenerClientComprehensive:
         mock_response.status_code = 403
         
         with pytest.raises(AuthenticationError) as exc_info:
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
         
         assert "Access forbidden" in str(exc_info.value)
     
@@ -429,7 +429,7 @@ class TestCourtListenerClientComprehensive:
         mock_response.status_code = 404
         
         with pytest.raises(NotFoundError) as exc_info:
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
         
         assert "Resource not found" in str(exc_info.value)
     
@@ -439,7 +439,7 @@ class TestCourtListenerClientComprehensive:
         mock_response.status_code = 429
         
         with pytest.raises(RateLimitError) as exc_info:
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
         
         assert "Rate limit exceeded" in str(exc_info.value)
     
@@ -449,7 +449,7 @@ class TestCourtListenerClientComprehensive:
         mock_response.status_code = 500
         
         with pytest.raises(APIError) as exc_info:
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
         
         assert "Server error: 500" in str(exc_info.value)
     
@@ -459,7 +459,7 @@ class TestCourtListenerClientComprehensive:
         mock_response.status_code = 418
         
         with pytest.raises(APIError) as exc_info:
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
         
         assert "API error: 418" in str(exc_info.value)
     

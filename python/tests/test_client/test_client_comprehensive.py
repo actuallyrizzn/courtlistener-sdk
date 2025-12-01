@@ -433,7 +433,7 @@ class TestCourtListenerClient:
         mock_response.status_code = 401
         
         with pytest.raises(AuthenticationError, match="Invalid API token"):
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
 
     def test_handle_error_403(self):
         """Test _handle_error with 403 status."""
@@ -441,7 +441,7 @@ class TestCourtListenerClient:
         mock_response.status_code = 403
         
         with pytest.raises(AuthenticationError, match="Access forbidden"):
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
 
     def test_handle_error_404(self):
         """Test _handle_error with 404 status."""
@@ -449,7 +449,7 @@ class TestCourtListenerClient:
         mock_response.status_code = 404
         
         with pytest.raises(NotFoundError, match="Resource not found"):
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
 
     def test_handle_error_429(self):
         """Test _handle_error with 429 status."""
@@ -457,7 +457,7 @@ class TestCourtListenerClient:
         mock_response.status_code = 429
         
         with pytest.raises(RateLimitError, match="Rate limit exceeded"):
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
 
     def test_handle_error_500(self):
         """Test _handle_error with 500 status."""
@@ -465,7 +465,7 @@ class TestCourtListenerClient:
         mock_response.status_code = 500
         
         with pytest.raises(APIError, match="Server error: 500"):
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
 
     def test_handle_error_other(self):
         """Test _handle_error with other status."""
@@ -473,7 +473,7 @@ class TestCourtListenerClient:
         mock_response.status_code = 400
         
         with pytest.raises(APIError, match="API error: 400"):
-            self.client._handle_error(mock_response)
+            self.client._handle_response(mock_response)
 
     def test_repr(self):
         """Test __repr__ method."""
