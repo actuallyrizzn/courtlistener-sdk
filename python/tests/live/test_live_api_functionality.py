@@ -7,8 +7,11 @@ import pytest
 import os
 from courtlistener import CourtListenerClient
 from courtlistener.exceptions import CourtListenerError, APIError
+from tests.conftest import skip_live_tests
 
 
+@skip_live_tests
+@pytest.mark.live
 class TestLiveAPIFunctionality:
     """Live API tests for specific functionality."""
     

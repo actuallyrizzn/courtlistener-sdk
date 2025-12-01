@@ -9,8 +9,11 @@ import time
 import threading
 from courtlistener import CourtListenerClient
 from courtlistener.exceptions import CourtListenerError
+from tests.conftest import skip_live_tests
 
 
+@skip_live_tests
+@pytest.mark.live
 class TestLiveAPIPerformance:
     """Live API tests for performance."""
     

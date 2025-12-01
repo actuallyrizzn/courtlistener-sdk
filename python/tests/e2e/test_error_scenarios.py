@@ -14,8 +14,11 @@ from courtlistener.exceptions import (
     ConnectionError,
     TimeoutError
 )
+from tests.conftest import skip_e2e_tests
 
 
+@skip_e2e_tests
+@pytest.mark.e2e
 class TestErrorScenarios:
     """End-to-end tests for error scenarios."""
     

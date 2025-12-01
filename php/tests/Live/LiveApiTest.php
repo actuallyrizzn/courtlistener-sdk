@@ -22,6 +22,11 @@ class LiveApiTest extends TestCase
 
     protected function setUp(): void
     {
+        // Skip live tests unless CL_RUN_LIVE=1 is set
+        if (getenv('CL_RUN_LIVE') !== '1') {
+            $this->markTestSkipped('Live tests require CL_RUN_LIVE=1 environment variable');
+        }
+        
         $apiToken = getenv('COURTLISTENER_API_TOKEN') ?: null;
         
         if (!$apiToken) {

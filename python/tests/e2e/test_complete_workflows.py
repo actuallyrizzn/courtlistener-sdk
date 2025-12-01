@@ -6,8 +6,11 @@ import pytest
 import os
 from unittest.mock import Mock, patch
 from courtlistener import CourtListenerClient
+from tests.conftest import skip_e2e_tests
 
 
+@skip_e2e_tests
+@pytest.mark.e2e
 class TestCompleteWorkflows:
     """End-to-end tests for complete workflows."""
     

@@ -19,6 +19,11 @@ class EndToEndTest extends TestCase
 
     protected function setUp(): void
     {
+        // Skip E2E tests unless CL_RUN_LIVE=1 is set
+        if (getenv('CL_RUN_LIVE') !== '1') {
+            $this->markTestSkipped('E2E tests require CL_RUN_LIVE=1 environment variable');
+        }
+        
         $this->client = new CourtListenerClient(['api_token' => 'test-token']);
     }
 

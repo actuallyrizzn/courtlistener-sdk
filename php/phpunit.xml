@@ -45,6 +45,8 @@
     <groups>
         <exclude>
             <group>slow</group>
+            <group>live</group>
+            <group>e2e</group>
         </exclude>
     </groups>
 </phpunit>
