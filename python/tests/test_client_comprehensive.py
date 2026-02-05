@@ -42,7 +42,7 @@ class TestCourtListenerClientComprehensive:
     
     def setup_method(self):
         """Set up test fixtures."""
-        with patch('courtlistener.client.Config') as mock_config_class:
+        with patch('courtlistener.config.Config') as mock_config_class:
             self.mock_config = Mock()
             self.mock_config.get_headers.return_value = {"Authorization": "Token test-token"}
             self.mock_config.base_url = "https://api.courtlistener.com/api/rest/v4/"
@@ -52,7 +52,7 @@ class TestCourtListenerClientComprehensive:
             self.mock_config.rate_limit_delay = 2.0
             mock_config_class.return_value = self.mock_config
             
-            with patch('courtlistener.client.requests.Session') as mock_session_class:
+            with patch('courtlistener.transport.requests.Session') as mock_session_class:
                 self.mock_session = Mock()
                 mock_session_class.return_value = self.mock_session
                 
@@ -68,60 +68,40 @@ class TestCourtListenerClientComprehensive:
     
     def test_init_with_all_parameters(self):
         """Test client initialization with all parameters."""
-        with patch('courtlistener.client.Config') as mock_config_class:
-            mock_config = Mock()
-            mock_config.get_headers.return_value = {"Authorization": "Token test-token"}
-            mock_config_class.return_value = mock_config
+        with patch('courtlistener.transport.requests.Session') as mock_session_class:
+            mock_session = Mock()
+            mock_session_class.return_value = mock_session
             
-            with patch('courtlistener.client.requests.Session') as mock_session_class:
-                mock_session = Mock()
-                mock_session_class.return_value = mock_session
+            with patch.object(CourtListenerClient, '_init_api_modules'):
+                client = CourtListenerClient(
+                    api_token="test-token",
+                    base_url="https://api.courtlistener.com/api/rest/v4/",
+                    timeout=30,
+                    max_retries=3,
+                    retry_delay=1.0,
+                    rate_limit_delay=2.0
+                )
                 
-                with patch.object(CourtListenerClient, '_init_api_modules'):
-                    client = CourtListenerClient(
-                        api_token="test-token",
-                        base_url="https://api.courtlistener.com/api/rest/v4/",
-                        timeout=30,
-                        max_retries=3,
-                        retry_delay=1.0,
-                        rate_limit_delay=2.0
-                    )
-                    
-                    assert client.config == mock_config
-                    assert client.session == mock_session
-                    mock_config_class.assert_called_once_with(
-                        api_token="test-token",
-                        base_url="https://api.courtlistener.com/api/rest/v4/",
-                        timeout=30,
-                        max_retries=3,
-                        retry_delay=1.0,
-                        rate_limit_delay=2.0
-                    )
+                assert client.config.api_token == "test-token"
+                assert client.config.base_url == "https://api.courtlistener.com/api/rest/v4/"
+                assert client.config.timeout == 30
+                assert client.config.max_retries == 3
+                assert client.config.retry_delay == 1.0
+                assert client.config.rate_limit_delay == 2.0
+                assert client.session == mock_session
     
     def test_init_with_minimal_parameters(self):
         """Test client initialization with minimal parameters."""
-        with patch('courtlistener.client.Config') as mock_config_class:
-            mock_config = Mock()
-            mock_config.get_headers.return_value = {}
-            mock_config_class.return_value = mock_config
+        with patch('courtlistener.transport.requests.Session') as mock_session_class:
+            mock_session = Mock()
+            mock_session_class.return_value = mock_session
             
-            with patch('courtlistener.client.requests.Session') as mock_session_class:
-                mock_session = Mock()
-                mock_session_class.return_value = mock_session
+            with patch.object(CourtListenerClient, '_init_api_modules'):
+                # Need to provide api_token since Config validates it
+                client = CourtListenerClient(api_token="test-token")
                 
-                with patch.object(CourtListenerClient, '_init_api_modules'):
-                    client = CourtListenerClient()
-                    
-                    assert client.config == mock_config
-                    assert client.session == mock_session
-                    mock_config_class.assert_called_once_with(
-                        api_token=None,
-                        base_url=None,
-                        timeout=None,
-                        max_retries=None,
-                        retry_delay=None,
-                        rate_limit_delay=None
-                    )
+                assert client.config.api_token == "test-token"
+                assert client.session == mock_session
     
     def test_api_token_property(self):
         """Test api_token property."""
@@ -133,13 +113,13 @@ class TestCourtListenerClientComprehensive:
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"results": []}
-        self.mock_session.request.return_value = mock_response
+        self.client.transport.session.request.return_value = mock_response
         
         result = self.client._make_request('GET', 'courts/', params={"page": 1})
         
         assert result == {"results": []}
-        self.mock_session.request.assert_called_once()
-        call_args = self.mock_session.request.call_args
+        self.client.transport.session.request.assert_called_once()
+        call_args = self.client.transport.session.request.call_args
         assert call_args[0] == ('GET', 'https://api.courtlistener.com/api/rest/v4/courts/')
         assert call_args[1]['params'] == {"page": 1}
         assert call_args[1]['timeout'] == 30
@@ -149,12 +129,12 @@ class TestCourtListenerClientComprehensive:
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"id": 1}
-        self.mock_session.request.return_value = mock_response
+        self.client.transport.session.request.return_value = mock_response
         
         result = self.client._make_request('POST', 'alerts/', data={"query": "test"})
         
         assert result == {"id": 1}
-        call_args = self.mock_session.request.call_args
+        call_args = self.client.transport.session.request.call_args
         assert call_args[0] == ('POST', 'https://api.courtlistener.com/api/rest/v4/alerts/')
         assert call_args[1]['data'] == {"query": "test"}
     
@@ -163,12 +143,12 @@ class TestCourtListenerClientComprehensive:
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"id": 1}
-        self.mock_session.request.return_value = mock_response
+        self.client.transport.session.request.return_value = mock_response
         
         result = self.client._make_request('POST', 'alerts/', json_data={"query": "test"})
         
         assert result == {"id": 1}
-        call_args = self.mock_session.request.call_args
+        call_args = self.client.transport.session.request.call_args
         assert call_args[0] == ('POST', 'https://api.courtlistener.com/api/rest/v4/alerts/')
         assert call_args[1]['json'] == {"query": "test"}
     
@@ -177,17 +157,17 @@ class TestCourtListenerClientComprehensive:
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"results": []}
-        self.mock_session.request.return_value = mock_response
+        self.client.transport.session.request.return_value = mock_response
         
         result = self.client._make_request('GET', '/courts/')
         
         assert result == {"results": []}
-        call_args = self.mock_session.request.call_args
+        call_args = self.client.transport.session.request.call_args
         assert call_args[0] == ('GET', 'https://api.courtlistener.com/api/rest/v4/courts/')
     
     def test_make_request_timeout_retry(self):
         """Test request timeout with retry logic."""
-        self.mock_session.request.side_effect = [
+        self.client.transport.session.request.side_effect = [
             requests.exceptions.Timeout(),
             requests.exceptions.Timeout(),
             requests.exceptions.Timeout(),
@@ -203,7 +183,7 @@ class TestCourtListenerClientComprehensive:
     
     def test_make_request_connection_error_retry(self):
         """Test request connection error with retry logic."""
-        self.mock_session.request.side_effect = [
+        self.client.transport.session.request.side_effect = [
             requests.exceptions.ConnectionError(),
             requests.exceptions.ConnectionError(),
             requests.exceptions.ConnectionError(),
@@ -219,7 +199,7 @@ class TestCourtListenerClientComprehensive:
     
     def test_make_request_generic_request_exception_retry(self):
         """Test request generic RequestException with retry logic."""
-        self.mock_session.request.side_effect = [
+        self.client.transport.session.request.side_effect = [
             requests.exceptions.RequestException("Network error"),
             requests.exceptions.RequestException("Network error"),
             requests.exceptions.RequestException("Network error"),
@@ -236,7 +216,7 @@ class TestCourtListenerClientComprehensive:
     def test_make_request_api_error_retry(self):
         """Test request APIError with retry logic."""
         api_error = APIError("Temporary error")
-        self.mock_session.request.side_effect = [
+        self.client.transport.session.request.side_effect = [
             api_error,
             api_error,
             api_error,
@@ -256,7 +236,7 @@ class TestCourtListenerClientComprehensive:
         mock_response.status_code = 200
         mock_response.json.return_value = {"results": []}
         
-        self.mock_session.request.side_effect = [
+        self.client.transport.session.request.side_effect = [
             requests.exceptions.Timeout(),
             requests.exceptions.Timeout(),
             mock_response,  # Success on third attempt
@@ -344,7 +324,7 @@ class TestCourtListenerClientComprehensive:
     
     def test_get_method(self):
         """Test get method."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
+        with patch.object(self.client.transport, '_make_request') as mock_make_request:
             mock_make_request.return_value = {"results": []}
             
             result = self.client.get('courts/', params={"page": 1})
@@ -354,7 +334,7 @@ class TestCourtListenerClientComprehensive:
     
     def test_post_method_with_data(self):
         """Test post method with data."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
+        with patch.object(self.client.transport, '_make_request') as mock_make_request:
             mock_make_request.return_value = {"id": 1}
             
             result = self.client.post('alerts/', data={"query": "test"})
@@ -364,7 +344,7 @@ class TestCourtListenerClientComprehensive:
     
     def test_post_method_with_json_data(self):
         """Test post method with json_data."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
+        with patch.object(self.client.transport, '_make_request') as mock_make_request:
             mock_make_request.return_value = {"id": 1}
             
             result = self.client.post('alerts/', json_data={"query": "test"})
@@ -374,14 +354,14 @@ class TestCourtListenerClientComprehensive:
     
     def test_paginate_method(self):
         """Test paginate method."""
-        with patch('courtlistener.client.PageIterator') as mock_paginator_class:
-            mock_paginator = Mock()
-            mock_paginator_class.return_value = mock_paginator
-            
-            result = self.client.paginate('courts/', params={"page": 1})
-            
-            assert result == mock_paginator
-            mock_paginator_class.assert_called_once_with(self.client, 'courts/', {"page": 1})
+        from courtlistener.utils.pagination import PageIterator
+        
+        result = self.client.paginate('courts/', params={"page": 1})
+        
+        assert isinstance(result, PageIterator)
+        assert result.client == self.client
+        assert result.endpoint == 'courts/'
+        assert result.params == {"page": 1}
     
     def test_test_connection_success(self):
         """Test successful connection test."""
@@ -481,55 +461,50 @@ class TestCourtListenerClientComprehensive:
     
     def test_init_api_modules(self):
         """Test _init_api_modules method."""
-        with patch('courtlistener.client.Config') as mock_config_class:
-            mock_config = Mock()
-            mock_config.get_headers.return_value = {}
-            mock_config_class.return_value = mock_config
+        with patch('courtlistener.transport.requests.Session') as mock_session_class:
+            mock_session = Mock()
+            mock_session_class.return_value = mock_session
             
-            with patch('courtlistener.client.requests.Session') as mock_session_class:
-                mock_session = Mock()
-                mock_session_class.return_value = mock_session
-                
-                client = CourtListenerClient()
-                
-                # Check that all API modules are initialized
-                assert hasattr(client, 'courts')
-                assert hasattr(client, 'clusters')
-                assert hasattr(client, 'opinions')
-                assert hasattr(client, 'dockets')
-                assert hasattr(client, 'judges')
-                assert hasattr(client, 'opinion_clusters')
-                assert hasattr(client, 'positions')
-                assert hasattr(client, 'financial')
-                assert hasattr(client, 'audio')
-                assert hasattr(client, 'search')
-                assert hasattr(client, 'docket_entries')
-                assert hasattr(client, 'attorneys')
-                assert hasattr(client, 'parties')
-                assert hasattr(client, 'documents')
-                assert hasattr(client, 'citations')
-                assert hasattr(client, 'recap_documents')
-                assert hasattr(client, 'financial_disclosures')
-                assert hasattr(client, 'investments')
-                assert hasattr(client, 'non_investment_incomes')
-                assert hasattr(client, 'agreements')
-                assert hasattr(client, 'gifts')
-                assert hasattr(client, 'reimbursements')
-                assert hasattr(client, 'debts')
-                assert hasattr(client, 'disclosure_positions')
-                assert hasattr(client, 'spouse_incomes')
-                assert hasattr(client, 'opinions_cited')
-                assert hasattr(client, 'alerts')
-                assert hasattr(client, 'docket_alerts')
-                assert hasattr(client, 'people')
-                assert hasattr(client, 'schools')
-                assert hasattr(client, 'educations')
-                assert hasattr(client, 'sources')
-                assert hasattr(client, 'retention_events')
-                assert hasattr(client, 'aba_ratings')
-                assert hasattr(client, 'political_affiliations')
-                assert hasattr(client, 'tag')
-                assert hasattr(client, 'recap_fetch')
-                assert hasattr(client, 'recap_query')
-                assert hasattr(client, 'originating_court_information')
-                assert hasattr(client, 'fjc_integrated_database')
+            client = CourtListenerClient(api_token="test-token")
+            
+            # Check that all API modules are initialized
+            assert hasattr(client, 'courts')
+            assert hasattr(client, 'clusters')
+            assert hasattr(client, 'opinions')
+            assert hasattr(client, 'dockets')
+            assert hasattr(client, 'judges')
+            assert hasattr(client, 'opinion_clusters')
+            assert hasattr(client, 'positions')
+            assert hasattr(client, 'financial')
+            assert hasattr(client, 'audio')
+            assert hasattr(client, 'search')
+            assert hasattr(client, 'docket_entries')
+            assert hasattr(client, 'attorneys')
+            assert hasattr(client, 'parties')
+            assert hasattr(client, 'documents')
+            assert hasattr(client, 'citations')
+            assert hasattr(client, 'recap_documents')
+            assert hasattr(client, 'financial_disclosures')
+            assert hasattr(client, 'investments')
+            assert hasattr(client, 'non_investment_incomes')
+            assert hasattr(client, 'agreements')
+            assert hasattr(client, 'gifts')
+            assert hasattr(client, 'reimbursements')
+            assert hasattr(client, 'debts')
+            assert hasattr(client, 'disclosure_positions')
+            assert hasattr(client, 'spouse_incomes')
+            assert hasattr(client, 'opinions_cited')
+            assert hasattr(client, 'alerts')
+            assert hasattr(client, 'docket_alerts')
+            assert hasattr(client, 'people')
+            assert hasattr(client, 'schools')
+            assert hasattr(client, 'educations')
+            assert hasattr(client, 'sources')
+            assert hasattr(client, 'retention_events')
+            assert hasattr(client, 'aba_ratings')
+            assert hasattr(client, 'political_affiliations')
+            assert hasattr(client, 'tag')
+            assert hasattr(client, 'recap_fetch')
+            assert hasattr(client, 'recap_query')
+            assert hasattr(client, 'originating_court_information')
+            assert hasattr(client, 'fjc_integrated_database')
