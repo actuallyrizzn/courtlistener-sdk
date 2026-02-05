@@ -375,7 +375,7 @@ class TestCourtListenerClient:
 
     def test_get_method(self):
         """Test get method."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
+        with patch.object(self.client.transport, '_make_request') as mock_make_request:
             mock_make_request.return_value = {"results": []}
             
             result = self.client.get('courts/', params={"page": 1})
@@ -385,7 +385,7 @@ class TestCourtListenerClient:
 
     def test_post_method(self):
         """Test post method."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
+        with patch.object(self.client.transport, '_make_request') as mock_make_request:
             mock_make_request.return_value = {"success": True}
             
             result = self.client.post('search/', data={"q": "test"})
@@ -395,7 +395,7 @@ class TestCourtListenerClient:
 
     def test_post_method_with_json(self):
         """Test post method with JSON data."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
+        with patch.object(self.client.transport, '_make_request') as mock_make_request:
             mock_make_request.return_value = {"success": True}
             
             result = self.client.post('search/', json_data={"q": "test"})
