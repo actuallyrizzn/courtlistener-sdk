@@ -482,7 +482,6 @@ class TestCourtListenerClientComprehensive:
             assert result == {"results": []}
             # Transport.make_request is called with positional args
             mock_make_request.assert_called_once_with('GET', 'courts/', {"page": 1}, None, None)
-            mock_make_request.assert_called_once_with('GET', 'courts/', params={"page": 1})
     
     def test_init_api_modules(self):
         """Test _init_api_modules method."""
