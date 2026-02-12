@@ -344,13 +344,13 @@ class TestCourtListenerClientComprehensive:
     
     def test_get_method(self):
         """Test get method."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
-            mock_make_request.return_value = {"results": []}
+        with patch.object(self.client._transport, 'get') as mock_get:
+            mock_get.return_value = {"results": []}
             
             result = self.client.get('courts/', params={"page": 1})
             
             assert result == {"results": []}
-            mock_make_request.assert_called_once_with('GET', 'courts/', params={"page": 1})
+            mock_get.assert_called_once_with('courts/', {"page": 1})
     
     def test_post_method_with_data(self):
         """Test post method with data."""

@@ -498,7 +498,8 @@ class TestCourtListenerClient:
             result = self.client._request('GET', 'courts/', params={"page": 1})
             
             assert result == {"results": []}
-            mock_make_request.assert_called_once_with('GET', 'courts/', params={"page": 1})
+            # Transport.make_request is called with positional args
+            mock_make_request.assert_called_once_with('GET', 'courts/', {"page": 1}, None, None)
 
     def test_request_method_with_kwargs(self):
         """Test _request method with various kwargs."""
