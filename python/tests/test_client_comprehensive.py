@@ -56,7 +56,7 @@ class TestCourtListenerClientComprehensive:
                 self.mock_session = Mock()
                 mock_session_class.return_value = self.mock_session
                 
-                with patch.object(CourtListenerClient, '_init_api_modules'):
+                with patch.object(CourtListenerClient, '_init_endpoint_attributes'):
                     self.client = CourtListenerClient(
                         api_token="test-token",
                         base_url="https://api.courtlistener.com/api/rest/v4/",
@@ -77,7 +77,7 @@ class TestCourtListenerClientComprehensive:
                 mock_session = Mock()
                 mock_session_class.return_value = mock_session
                 
-                with patch.object(CourtListenerClient, '_init_api_modules'):
+                with patch.object(CourtListenerClient, '_init_endpoint_attributes'):
                     client = CourtListenerClient(
                         api_token="test-token",
                         base_url="https://api.courtlistener.com/api/rest/v4/",
@@ -109,7 +109,7 @@ class TestCourtListenerClientComprehensive:
                 mock_session = Mock()
                 mock_session_class.return_value = mock_session
                 
-                with patch.object(CourtListenerClient, '_init_api_modules'):
+                with patch.object(CourtListenerClient, '_init_endpoint_attributes'):
                     client = CourtListenerClient()
                     
                     assert client.config == mock_config
