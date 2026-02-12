@@ -9,17 +9,20 @@ Multi-language SDKs for the [CourtListener API](https://www.courtlistener.com/ap
 ### Python SDK
 - **Location**: [`python/`](./python/)
 - **Status**: ✅ Complete and Production Ready
-- **Features**: 100% API coverage, comprehensive models, robust error handling
+- **Features**: 100% API coverage, async/await support, comprehensive models, robust error handling
 - **Installation**: `pip install -r python/requirements.txt`
+- **Async Support**: ✅ AsyncClient with httpx for concurrent requests
 
 ### PHP SDK
 - **Location**: [`php/`](./php/)
 - **Status**: ✅ Complete and Production Ready
-- **Features**: 100% API coverage, comprehensive models, robust error handling
+- **Features**: 100% API coverage, promise-based async, comprehensive models, robust error handling
 - **Installation**: `composer install` (in `php/` directory)
+- **Async Support**: ✅ AsyncClient with Guzzle promises for concurrent requests
 
 ## Features
 - **100% API Coverage**: Complete support for all 39 CourtListener API endpoints
+- **Async/Concurrent Support**: AsyncClient in Python (httpx) and promise-based async in PHP (Guzzle)
 - **Multi-Language Support**: Python (complete) and PHP (complete)
 - **Comprehensive Data Models**: Language-specific models for all data types including financial disclosures, alerts, people, and more
 - **Robust Error Handling**: Production-ready error handling with retry logic and rate limiting
@@ -42,12 +45,31 @@ cd python
 pip install -r requirements.txt
 ```
 
+**Synchronous:**
 ```python
 from courtlistener import CourtListenerClient
 client = CourtListenerClient()
 dockets = client.dockets.list(page=1)
 for docket in dockets:
     print(docket.case_name, docket.docket_number)
+```
+
+**Async/Concurrent:**
+```python
+import asyncio
+from courtlistener import AsyncCourtListenerClient
+
+async def main():
+    async with AsyncCourtListenerClient() as client:
+        # Run multiple requests concurrently
+        results = await asyncio.gather(
+            client.courts.list(page=1),
+            client.dockets.list(page=1),
+            client.opinions.list(page=1),
+        )
+        return results
+
+asyncio.run(main())
 ```
 
 For more Python examples, see [`python/README.md`](./python/README.md).
@@ -58,6 +80,7 @@ cd php
 composer install
 ```
 
+**Synchronous:**
 ```php
 <?php
 use CourtListener\CourtListenerClient;
@@ -67,6 +90,24 @@ $dockets = $client->dockets->list(['page' => 1]);
 foreach ($dockets['results'] as $docket) {
     echo $docket['case_name'] . ' ' . $docket['docket_number'] . "\n";
 }
+```
+
+**Async/Promises:**
+```php
+<?php
+use CourtListener\AsyncCourtListenerClient;
+use GuzzleHttp\Promise\Utils;
+
+$client = new AsyncCourtListenerClient();
+
+// Run multiple requests concurrently
+$promises = [
+    'courts' => $client->getAsync('courts/', ['page' => 1]),
+    'dockets' => $client->getAsync('dockets/', ['page' => 1]),
+    'opinions' => $client->getAsync('opinions/', ['page' => 1]),
+];
+
+$results = Utils::unwrap($promises);
 ```
 
 For more PHP examples, see [`php/README.md`](./php/README.md).

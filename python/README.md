@@ -6,6 +6,7 @@ An **unofficial**, robust, production-ready Python SDK for the [CourtListener AP
 
 ## Features
 - **100% API Coverage**: Complete support for all 36+ CourtListener API endpoints
+- **Async/Await Support**: AsyncClient with httpx for concurrent requests and non-blocking I/O
 - **Comprehensive Data Models**: Pythonic models for all data types including financial disclosures, alerts, people, and more
 - **Robust Error Handling**: Production-ready error handling with retry logic and rate limiting
 - **Advanced Pagination**: Cursor-based pagination support for efficient data retrieval
@@ -20,12 +21,28 @@ pip install -r requirements.txt
 ```
 
 ## Quick Start
+
+### Synchronous Client
 ```python
 from courtlistener import CourtListenerClient
 client = CourtListenerClient()
 dockets = client.dockets.list(page=1)
 for docket in dockets['results']:
     print(docket['case_name'], docket['docket_number'])
+```
+
+### Async Client
+```python
+import asyncio
+from courtlistener import AsyncCourtListenerClient
+
+async def main():
+    async with AsyncCourtListenerClient() as client:
+        dockets = await client.dockets.list(page=1)
+        for docket in dockets['results']:
+            print(docket['case_name'], docket['docket_number'])
+
+asyncio.run(main())
 ```
 
 ## Available Endpoints
@@ -90,8 +107,57 @@ COURTLISTENER_API_TOKEN=your_token_here
 ```
 Or pass it directly:
 ```python
+# Synchronous
 client = CourtListenerClient(api_token="your_token_here")
+
+# Async
+async with AsyncCourtListenerClient(api_token="your_token_here") as client:
+    # ... use client
 ```
+
+## Async/Concurrent Usage
+
+The SDK provides full async support through `AsyncCourtListenerClient` using httpx:
+
+### Basic Async Usage
+```python
+import asyncio
+from courtlistener import AsyncCourtListenerClient
+
+async def fetch_data():
+    async with AsyncCourtListenerClient() as client:
+        # Make async requests
+        courts = await client.courts.list(page=1)
+        docket = await client.dockets.get(123456)
+        return courts, docket
+
+asyncio.run(fetch_data())
+```
+
+### Concurrent Requests
+```python
+import asyncio
+from courtlistener import AsyncCourtListenerClient
+
+async def fetch_multiple():
+    async with AsyncCourtListenerClient() as client:
+        # Run multiple requests concurrently
+        results = await asyncio.gather(
+            client.courts.list(page=1),
+            client.dockets.list(page=1),
+            client.opinions.list(page=1),
+        )
+        courts, dockets, opinions = results
+        return results
+
+asyncio.run(fetch_multiple())
+```
+
+### Limitations
+- **Context Manager Required**: AsyncClient must be used with `async with` to properly manage connections
+- **Python 3.7+**: Requires Python 3.7 or higher for async/await support
+- **httpx Dependency**: AsyncClient uses httpx instead of requests
+- **No Sync Fallback**: AsyncClient methods cannot be called from synchronous code without an event loop
 
 ## Tests & Debugging
 All manual and debug test scripts are in [`tests/manual_debug/`](./tests/manual_debug/). See the documentation for details on running and extending tests.

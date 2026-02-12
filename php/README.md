@@ -6,6 +6,7 @@ An **unofficial**, robust, production-ready PHP SDK for the [CourtListener API](
 
 ## Features
 - **100% API Coverage**: Complete support for all 39 CourtListener API endpoints
+- **Async/Promise Support**: AsyncClient with Guzzle promises for concurrent requests
 - **Comprehensive Data Models**: PHP classes for all data types including financial disclosures, alerts, people, and more
 - **Robust Error Handling**: Production-ready error handling with retry logic and rate limiting
 - **Advanced Pagination**: Cursor-based pagination support for efficient data retrieval
@@ -25,6 +26,7 @@ composer install
 
 ## Quick Start
 
+### Synchronous Client
 ```php
 <?php
 require_once 'vendor/autoload.php';
@@ -38,6 +40,28 @@ foreach ($dockets['results'] as $docket) {
 }
 ```
 
+### Async Client with Promises
+```php
+<?php
+require_once 'vendor/autoload.php';
+
+use CourtListener\AsyncCourtListenerClient;
+use GuzzleHttp\Promise\Utils;
+
+$client = new AsyncCourtListenerClient(['api_token' => 'your_token_here']);
+
+// Single async request
+$promise = $client->getAsync('dockets/', ['page' => 1]);
+$result = $promise->wait();
+
+// Multiple concurrent requests
+$promises = [
+    'courts' => $client->getAsync('courts/', ['page' => 1]),
+    'dockets' => $client->getAsync('dockets/', ['page' => 1]),
+];
+$results = Utils::unwrap($promises);
+```
+
 ## Authentication
 
 Set your API token in a `.env` file:
@@ -47,8 +71,93 @@ COURTLISTENER_API_TOKEN=your_token_here
 
 Or pass it directly:
 ```php
+// Synchronous
 $client = new CourtListenerClient(['api_token' => 'your_token_here']);
+
+// Async
+$asyncClient = new AsyncCourtListenerClient(['api_token' => 'your_token_here']);
 ```
+
+## Async/Promise-Based Usage
+
+The SDK provides promise-based async support through `AsyncCourtListenerClient` using Guzzle's async interface:
+
+### Basic Async Usage
+```php
+<?php
+use CourtListener\AsyncCourtListenerClient;
+
+$client = new AsyncCourtListenerClient();
+
+// Make an async request that returns a promise
+$promise = $client->getAsync('courts/', ['page' => 1]);
+
+// Wait for the promise to resolve
+$result = $promise->wait();
+```
+
+### Concurrent Requests
+```php
+<?php
+use CourtListener\AsyncCourtListenerClient;
+use GuzzleHttp\Promise\Utils;
+
+$client = new AsyncCourtListenerClient();
+
+// Make multiple requests concurrently
+$promises = [
+    'courts' => $client->getAsync('courts/', ['page' => 1]),
+    'dockets' => $client->getAsync('dockets/', ['page' => 1]),
+    'opinions' => $client->getAsync('opinions/', ['page' => 1]),
+];
+
+// Wait for all promises to resolve
+$results = Utils::unwrap($promises);
+
+echo "Courts: " . count($results['courts']['results']) . "\n";
+echo "Dockets: " . count($results['dockets']['results']) . "\n";
+echo "Opinions: " . count($results['opinions']['results']) . "\n";
+```
+
+### Batch Requests
+```php
+<?php
+use CourtListener\AsyncCourtListenerClient;
+
+$client = new AsyncCourtListenerClient();
+
+$requests = [
+    ['method' => 'GET', 'endpoint' => 'courts/', 'options' => ['query' => ['page' => 1]]],
+    ['method' => 'GET', 'endpoint' => 'dockets/', 'options' => ['query' => ['page' => 1]]],
+];
+
+$promise = $client->makeRequestsBatch($requests);
+$results = $promise->wait();
+```
+
+### Promise Chaining
+```php
+<?php
+use CourtListener\AsyncCourtListenerClient;
+
+$client = new AsyncCourtListenerClient();
+
+$client->getAsync('courts/', ['page' => 1])
+    ->then(function ($result) {
+        echo "First request completed\n";
+        return $result['results'][0] ?? null;
+    })
+    ->then(function ($firstCourt) {
+        echo "Processing: " . ($firstCourt['short_name'] ?? 'Unknown') . "\n";
+    })
+    ->wait();
+```
+
+### Limitations
+- **No Automatic Connection Management**: Unlike Python's async client, PHP client doesn't require context managers
+- **Promise-Based**: Uses Guzzle promises rather than PHP 8.1+ fibers
+- **Error Handling**: Errors must be handled in promise rejection handlers or with try-catch when calling `wait()`
+- **Blocking Wait**: Calling `wait()` on promises blocks execution until resolution
 
 ## Available Endpoints
 
