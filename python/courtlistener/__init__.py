@@ -30,6 +30,7 @@ __author__ = "CourtListener SDK Community"
 __email__ = "actuallyrizzn@gmail.com"
 
 from .client import CourtListenerClient
+from .async_client import AsyncCourtListenerClient
 from .exceptions import (
     CourtListenerError,
     AuthenticationError,
@@ -41,6 +42,7 @@ from .exceptions import (
 
 __all__ = [
     "CourtListenerClient",
+    "AsyncCourtListenerClient",
     "CourtListenerError",
     "AuthenticationError",
     "RateLimitError",
