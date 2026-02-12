@@ -35,7 +35,7 @@ class TestAuthenticationErrors:
     
     def test_expired_token(self):
         """Test error handling for expired token (mocked)."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = AuthenticationError('Token expired')
             client = CourtListenerClient(api_token='dummy')
             with pytest.raises(AuthenticationError):
@@ -75,7 +75,7 @@ class TestAPIErrors:
     
     def test_429_rate_limited(self):
         """Test 429 Rate Limited error handling (mocked)."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = RateLimitError('Rate limit exceeded')
             client = CourtListenerClient(api_token='dummy')
             with pytest.raises(RateLimitError):
@@ -83,7 +83,7 @@ class TestAPIErrors:
     
     def test_500_server_error(self):
         """Test 500 Server Error handling (mocked)."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = APIError('Internal server error', status_code=500)
             client = CourtListenerClient(api_token='dummy')
             with pytest.raises(APIError) as exc_info:

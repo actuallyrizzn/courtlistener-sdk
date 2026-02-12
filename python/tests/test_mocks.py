@@ -22,7 +22,7 @@ class TestMockSuccessfulResponses:
             ]
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.return_value = mock_response
             client = CourtListenerClient(api_token='dummy')
             result = client.search.search_opinions(q='test')
@@ -43,7 +43,7 @@ class TestMockSuccessfulResponses:
             'date_filed': '2020-01-01T00:00:00Z'
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.return_value = mock_response
             client = CourtListenerClient(api_token='dummy')
             result = client.dockets.get_docket(1)
@@ -64,7 +64,7 @@ class TestMockSuccessfulResponses:
             'html': '<p>This is the opinion text</p>'
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.return_value = mock_response
             client = CourtListenerClient(api_token='dummy')
             result = client.opinions.get_opinion(1)
@@ -85,7 +85,7 @@ class TestMockSuccessfulResponses:
             'url': 'scotus'
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.return_value = mock_response
             client = CourtListenerClient(api_token='dummy')
             result = client.courts.get_court('scotus')
@@ -105,7 +105,7 @@ class TestMockErrorResponses:
     
     def test_mock_authentication_error(self):
         """Test mocking authentication error response."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = AuthenticationError('Invalid token')
             client = CourtListenerClient(api_token='dummy')
             
@@ -115,7 +115,7 @@ class TestMockErrorResponses:
     
     def test_mock_rate_limit_error(self):
         """Test mocking rate limit error response."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = RateLimitError('Rate limit exceeded')
             client = CourtListenerClient(api_token='dummy')
             
@@ -125,7 +125,7 @@ class TestMockErrorResponses:
     
     def test_mock_404_error(self):
         """Test mocking 404 Not Found error response."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = NotFoundError('Not found')
             client = CourtListenerClient(api_token='dummy')
             
@@ -135,7 +135,7 @@ class TestMockErrorResponses:
     
     def test_mock_400_error(self):
         """Test mocking 400 Bad Request error response."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = APIError('Bad request', status_code=400)
             client = CourtListenerClient(api_token='dummy')
             
@@ -145,7 +145,7 @@ class TestMockErrorResponses:
     
     def test_mock_500_error(self):
         """Test mocking 500 Server Error response."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = APIError('Internal server error', status_code=500)
             client = CourtListenerClient(api_token='dummy')
             
@@ -155,7 +155,7 @@ class TestMockErrorResponses:
     
     def test_mock_validation_error(self):
         """Test mocking validation error response."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = ValidationError('Invalid date format')
             client = CourtListenerClient(api_token='dummy')
             
@@ -176,7 +176,7 @@ class TestMockPaginationScenarios:
             'results': [{'id': 1, 'case_name': 'Test Case 1'}]
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.return_value = mock_response
             client = CourtListenerClient(api_token='dummy')
             result = client.opinions.list_opinions(page=1)
@@ -195,7 +195,7 @@ class TestMockPaginationScenarios:
             'results': [{'id': 2, 'case_name': 'Test Case 2'}]
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.return_value = mock_response
             client = CourtListenerClient(api_token='dummy')
             result = client.opinions.list_opinions(page=2)
@@ -214,7 +214,7 @@ class TestMockPaginationScenarios:
             'results': [{'id': 2, 'case_name': 'Test Case 2'}]
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.return_value = mock_response
             client = CourtListenerClient(api_token='dummy')
             result = client.opinions.list_opinions(page=2)
@@ -232,7 +232,7 @@ class TestMockPaginationScenarios:
             'results': [{'id': 100, 'case_name': 'Test Case 100'}]
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.return_value = mock_response
             client = CourtListenerClient(api_token='dummy')
             result = client.opinions.list_opinions(page=10)
@@ -250,7 +250,7 @@ class TestMockPaginationScenarios:
             'results': []
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.return_value = mock_response
             client = CourtListenerClient(api_token='dummy')
             result = client.search.search_opinions(q='nonexistent')
@@ -268,7 +268,7 @@ class TestMockRateLimiting:
     
     def test_mock_rate_limit_exceeded(self):
         """Test mocking rate limit exceeded."""
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = RateLimitError('Rate limit exceeded')
             client = CourtListenerClient(api_token='dummy')
             
@@ -365,7 +365,7 @@ class TestMockComplexScenarios:
             }
         }
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             def mock_request_side_effect(method, endpoint, **kwargs):
                 # Return appropriate mock response based on endpoint
                 params = kwargs.get('params', {})
@@ -409,7 +409,7 @@ class TestMockComplexScenarios:
                 'results': [{'id': i, 'case_name': f'Test Case {i}'} for i in range((page-1)*100+1, page*100+1)]
             })
         
-        with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+        with patch('courtlistener.transport.Transport.make_request') as mock_request:
             mock_request.side_effect = [r for r in mock_responses]
             client = CourtListenerClient(api_token='dummy')
             

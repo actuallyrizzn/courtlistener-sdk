@@ -43,7 +43,7 @@ def test_error_handling_not_found(client):
 
 def test_rate_limiting_behavior():
     """Test rate limiting handling (mocked)."""
-    with patch('courtlistener.client.CourtListenerClient._make_request') as mock_request:
+    with patch('courtlistener.transport.Transport.make_request') as mock_request:
         mock_request.side_effect = RateLimitError('Rate limit exceeded')
         client = CourtListenerClient(api_token='dummy')
         with pytest.raises(RateLimitError):
