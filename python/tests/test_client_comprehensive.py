@@ -52,7 +52,7 @@ class TestCourtListenerClientComprehensive:
             self.mock_config.rate_limit_delay = 2.0
             mock_config_class.return_value = self.mock_config
             
-            with patch('courtlistener.client.requests.Session') as mock_session_class:
+            with patch('courtlistener.transport.requests.Session') as mock_session_class:
                 self.mock_session = Mock()
                 mock_session_class.return_value = self.mock_session
                 
@@ -73,7 +73,7 @@ class TestCourtListenerClientComprehensive:
             mock_config.get_headers.return_value = {"Authorization": "Token test-token"}
             mock_config_class.return_value = mock_config
             
-            with patch('courtlistener.client.requests.Session') as mock_session_class:
+            with patch('courtlistener.transport.requests.Session') as mock_session_class:
                 mock_session = Mock()
                 mock_session_class.return_value = mock_session
                 
@@ -105,7 +105,7 @@ class TestCourtListenerClientComprehensive:
             mock_config.get_headers.return_value = {}
             mock_config_class.return_value = mock_config
             
-            with patch('courtlistener.client.requests.Session') as mock_session_class:
+            with patch('courtlistener.transport.requests.Session') as mock_session_class:
                 mock_session = Mock()
                 mock_session_class.return_value = mock_session
                 
@@ -486,7 +486,7 @@ class TestCourtListenerClientComprehensive:
             mock_config.get_headers.return_value = {}
             mock_config_class.return_value = mock_config
             
-            with patch('courtlistener.client.requests.Session') as mock_session_class:
+            with patch('courtlistener.transport.requests.Session') as mock_session_class:
                 mock_session = Mock()
                 mock_session_class.return_value = mock_session
                 

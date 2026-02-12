@@ -375,33 +375,33 @@ class TestCourtListenerClient:
 
     def test_get_method(self):
         """Test get method."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
-            mock_make_request.return_value = {"results": []}
+        with patch.object(self.client._transport, 'get') as mock_get:
+            mock_get.return_value = {"results": []}
             
             result = self.client.get('courts/', params={"page": 1})
             
             assert result == {"results": []}
-            mock_make_request.assert_called_once_with('GET', 'courts/', params={"page": 1})
+            mock_get.assert_called_once_with('courts/', {"page": 1})
 
     def test_post_method(self):
         """Test post method."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
-            mock_make_request.return_value = {"success": True}
+        with patch.object(self.client._transport, 'post') as mock_post:
+            mock_post.return_value = {"success": True}
             
             result = self.client.post('search/', data={"q": "test"})
             
             assert result == {"success": True}
-            mock_make_request.assert_called_once_with('POST', 'search/', data={"q": "test"}, json_data=None)
+            mock_post.assert_called_once_with('search/', {"q": "test"}, None)
 
     def test_post_method_with_json(self):
         """Test post method with JSON data."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
-            mock_make_request.return_value = {"success": True}
+        with patch.object(self.client._transport, 'post') as mock_post:
+            mock_post.return_value = {"success": True}
             
             result = self.client.post('search/', json_data={"q": "test"})
             
             assert result == {"success": True}
-            mock_make_request.assert_called_once_with('POST', 'search/', data=None, json_data={"q": "test"})
+            mock_post.assert_called_once_with('search/', None, {"q": "test"})
 
     def test_paginate_method(self):
         """Test paginate method."""
@@ -444,8 +444,9 @@ class TestCourtListenerClient:
         """Test _handle_error with 403 status."""
         mock_response = Mock()
         mock_response.status_code = 403
+        mock_response.json.return_value = {"detail": "Access forbidden"}
         
-        with pytest.raises(AuthenticationError, match="Access forbidden"):
+        with pytest.raises(APIError, match="Access forbidden"):
             self.client._handle_error(mock_response)
 
     def test_handle_error_404(self):
@@ -460,6 +461,7 @@ class TestCourtListenerClient:
         """Test _handle_error with 429 status."""
         mock_response = Mock()
         mock_response.status_code = 429
+        mock_response.headers = {}
         
         with pytest.raises(RateLimitError, match="Rate limit exceeded"):
             self.client._handle_error(mock_response)
@@ -476,8 +478,9 @@ class TestCourtListenerClient:
         """Test _handle_error with other status."""
         mock_response = Mock()
         mock_response.status_code = 400
+        mock_response.json.return_value = {"detail": "Bad request"}
         
-        with pytest.raises(APIError, match="API error: 400"):
+        with pytest.raises(APIError, match="Bad request"):
             self.client._handle_error(mock_response)
 
     def test_repr(self):
@@ -489,7 +492,7 @@ class TestCourtListenerClient:
 
     def test_request_method(self):
         """Test _request method."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
+        with patch.object(self.client._transport, 'make_request') as mock_make_request:
             mock_make_request.return_value = {"results": []}
             
             result = self.client._request('GET', 'courts/', params={"page": 1})
