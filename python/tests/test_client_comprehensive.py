@@ -354,23 +354,23 @@ class TestCourtListenerClientComprehensive:
     
     def test_post_method_with_data(self):
         """Test post method with data."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
-            mock_make_request.return_value = {"id": 1}
+        with patch.object(self.client._transport, 'post') as mock_post:
+            mock_post.return_value = {"id": 1}
             
             result = self.client.post('alerts/', data={"query": "test"})
             
             assert result == {"id": 1}
-            mock_make_request.assert_called_once_with('POST', 'alerts/', data={"query": "test"}, json_data=None)
+            mock_post.assert_called_once_with('alerts/', {"query": "test"}, None)
     
     def test_post_method_with_json_data(self):
         """Test post method with json_data."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
-            mock_make_request.return_value = {"id": 1}
+        with patch.object(self.client._transport, 'post') as mock_post:
+            mock_post.return_value = {"id": 1}
             
             result = self.client.post('alerts/', json_data={"query": "test"})
             
             assert result == {"id": 1}
-            mock_make_request.assert_called_once_with('POST', 'alerts/', data=None, json_data={"query": "test"})
+            mock_post.assert_called_once_with('alerts/', None, {"query": "test"})
     
     def test_paginate_method(self):
         """Test paginate method."""
@@ -417,8 +417,9 @@ class TestCourtListenerClientComprehensive:
         """Test _handle_error with 403 status."""
         mock_response = Mock()
         mock_response.status_code = 403
+        mock_response.json.return_value = {"detail": "Access forbidden"}
         
-        with pytest.raises(AuthenticationError) as exc_info:
+        with pytest.raises(APIError) as exc_info:
             self.client._handle_error(mock_response)
         
         assert "Access forbidden" in str(exc_info.value)
@@ -437,6 +438,7 @@ class TestCourtListenerClientComprehensive:
         """Test _handle_error with 429 status."""
         mock_response = Mock()
         mock_response.status_code = 429
+        mock_response.headers = {}
         
         with pytest.raises(RateLimitError) as exc_info:
             self.client._handle_error(mock_response)
@@ -457,11 +459,12 @@ class TestCourtListenerClientComprehensive:
         """Test _handle_error with other status code."""
         mock_response = Mock()
         mock_response.status_code = 418
+        mock_response.json.return_value = {"detail": "I'm a teapot"}
         
         with pytest.raises(APIError) as exc_info:
             self.client._handle_error(mock_response)
         
-        assert "API error: 418" in str(exc_info.value)
+        assert "I'm a teapot" in str(exc_info.value)
     
     def test_repr(self):
         """Test string representation."""
@@ -471,12 +474,14 @@ class TestCourtListenerClientComprehensive:
     
     def test_request_method(self):
         """Test _request method for test compatibility."""
-        with patch.object(self.client, '_make_request') as mock_make_request:
+        with patch.object(self.client._transport, 'make_request') as mock_make_request:
             mock_make_request.return_value = {"results": []}
             
             result = self.client._request('GET', 'courts/', params={"page": 1})
             
             assert result == {"results": []}
+            # Transport.make_request is called with positional args
+            mock_make_request.assert_called_once_with('GET', 'courts/', {"page": 1}, None, None)
             mock_make_request.assert_called_once_with('GET', 'courts/', params={"page": 1})
     
     def test_init_api_modules(self):
