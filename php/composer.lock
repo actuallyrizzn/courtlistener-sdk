@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1358f7e5149e2b8460c86a8330ce8bbc",
+    "content-hash": "7cb6ccda29fbd28c2c1dad923e310ec6",
     "packages": [
         {
             "name": "graham-campbell/result-type",
@@ -1315,11 +1315,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.38",
+            "version": "2.1.46",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dfaf1f530e1663aa167bc3e52197adb221582629",
-                "reference": "dfaf1f530e1663aa167bc3e52197adb221582629",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a193923fc2d6325ef4e741cf3af8c3e8f54dbf25",
+                "reference": "a193923fc2d6325ef4e741cf3af8c3e8f54dbf25",
                 "shasum": ""
             },
             "require": {
@@ -1364,7 +1364,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-30T17:12:46+00:00"
+            "time": "2026-04-01T09:25:14+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
